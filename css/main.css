@@ -7085,7 +7085,7 @@ h3#story_whenwhat {
   .navbar-menu {
     padding: 0; }
   .title:not(.last-child) {
-    margin-bottom: 0rem; } }
+    margin-bottom: 1rem; } }
 
 @media screen and (min-width: 1024px) {
   #main {
