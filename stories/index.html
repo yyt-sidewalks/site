@@ -283,14 +283,18 @@
 							}
 						});
 						if(isstory){
-							render('story');
+							setTimeout(function() {
+								render('story');
+							}, 1000);
 						}else{
 							render('nostory');
 						}
 					}
 				});
 			}else{
-				render('all');
+				setTimeout(function() {
+					render('all');
+				}, 1000);
 			}
 			$('.otheroption,#storyform .field,#cancelstory, #mainmap label,#mainmap .help,#disclaimer').hide();
 			$('#mainmap').show();
