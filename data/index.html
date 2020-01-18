@@ -44,7 +44,7 @@
 						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/priorities/">Priorities</a>
 						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/obstructions/">Obstructions</a>
 						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/data/">Data</a>
-						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/Resources/">Resources</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/resources/">Resources</a>
 					</div>
 				</div>
 			</div>
@@ -74,6 +74,9 @@
 						</div>
 						<div class="field">
 							<button class="button is-primary" id="zoommap">Zoom</button>
+							<span id="zoomcontrols">
+								<span class="spanlabel">More</span><span id="gradient"></span><span class="spanlabel">Less</span>
+							</span>
 							<button class="button is-primary" id="shrinkmap"><i class="fas fa-times"></i></button>
 						</div>
 					</div>
@@ -218,6 +221,7 @@
 				});
 			}
 		});
+		zoombg=true;
 		$(function() {
 			$('#censusdata').change(function(){
 				updateareas($(this).val());

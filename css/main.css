@@ -7031,6 +7031,14 @@ a.navbar-item {
     #controls .button.showndata:hover {
       background-color: #D0D1CD; }
 
+#controls .spanlabel {
+  display: inline-block;
+  height: 36px;
+  line-height: 36px;
+  vertical-align: top;
+  font-weight: bold;
+  margin: 0 1em; }
+
 .field label {
   width: 100%;
   clear: both;
@@ -7065,6 +7073,13 @@ h3#story_whenwhat {
 #stories .message-body {
   border-width: 2px;
   padding: 1em; }
+
+#gradient {
+  width: 100px;
+  display: inline-block;
+  height: 36px;
+  opacity: 0.6;
+  background: linear-gradient(90deg, #da1500, #168900); }
 
 @media screen and (max-width: 1023px) {
   .navbar-menu {

@@ -44,7 +44,7 @@
 						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/priorities/">Priorities</a>
 						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/obstructions/">Obstructions</a>
 						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/data/">Data</a>
-						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/Resources/">Resources</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/resources/">Resources</a>
 					</div>
 				</div>
 			</div>
@@ -56,6 +56,14 @@
 					<div class="subtitle is-size-6-touch">The current snow-clearing priorities for the City of St. John's.</div>
 					<div id="controls">
 						<button class="button is-primary" id="zoommap">Zoom</button>
+						<span id="zoomcontrols">
+							<button class="button is-primary datatoggle" id="showpriority_1" data-layer="priority_1">Priority 1</button>
+							<button class="button is-primary datatoggle" id="showpriority_2" data-layer="priority_2">Priority 2</button>
+							<button class="button is-primary datatoggle" id="showpriority_3" data-layer="priority_3">Priority 3</button>
+							<button class="button is-primary datatoggle" id="showschool_zones" data-layer="school_zones">School Zones</button>
+							<button class="button is-primary datatoggle" id="showdoubleside" data-layer="doubleside">Both Sides</button>
+							<button class="button is-primary datatoggle" id="showsingleside" data-layer="singleside">Single Side</button>
+						</span>
 						<button class="button is-primary" id="shrinkmap"><i class="fas fa-times"></i></button>
 					</div>
 				</div>
@@ -95,9 +103,9 @@
 	</footer>
 	<script type="text/javascript" src="../lib/main.js"></script>
 	<script>
-		var prioritytoggle = false,layertoggles={};
+		var layertoggles={};
 		var gradient=["#168900","#2c7c00","#416f00","#576200","#6d5500","#834900","#993c00","#af2f00","#c42200","#da1500"];
-		var prioritylayers={};
+		var alllayers={};
 		var map = L.map('map',{zoomControl: false}).setView([47.5670, -52.7292], 14); //Initialize the map
 		new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);
 		//Add a basemap
@@ -114,7 +122,6 @@
 				}
 			});
 			thislayer.addTo(map);
-			$('#prioritieslegend').append('<li><span class="legendbox" style="background:'+v.colour+';opacity:'+v.opacity+'">&nbsp;</span><strong>'+v.legend+'</strong><span id="'+k+'ctl" class="datatoggle" data-layer="'+k+'">hide</span></li>');
 			$.ajax({
 				dataType: "json",
 				url: "../data/"+k+".json",
@@ -124,16 +131,21 @@
 					});
 				}
 			});
-			prioritylayers[k]=thislayer;
+			alllayers[k]=thislayer;
 			layertoggles[k]=false;
+			$('#show'+k).click(function(){
+				togglelayers(k);
+			});
 		});
 		function togglelayers(l) {
-			$.each(layertoggles,function(k,v){
-				map.removeLayer(prioritylayers[k]);
-				layertoggles[k] = !layertoggles[k];
-				$('#'+k+'ctl').text('show');
-			});
-			$('#prioritiesctl').text('show');
+			if(!layertoggles[l]){
+				map.removeLayer(alllayers[l]);
+				$('#show'+l).addClass('showndata');
+			} else {
+				map.addLayer(alllayers[l]);
+				$('#show'+l).removeClass('showndata');
+			}
+			layertoggles[l] = !layertoggles[l];
 		}
 	</script>
 	<link rel="stylesheet" href="../css/leaflet.css">
