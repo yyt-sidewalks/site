@@ -1,0 +1,14 @@
+.leaflet-popup-content-wrapper{
+  border-radius:0;
+  }
+.leaflet-popup-content{
+  margin: 1em;
+}
+.leaflet-container a.leaflet-popup-close-button{
+  padding: 8px 8px 0 0;
+  color:#282828;
+  width:unset;
+  height:unset;
+  font-family:unset;
+  font-size:1.5em;
+}

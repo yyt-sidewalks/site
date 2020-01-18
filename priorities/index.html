@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta property="og:url" content="https://yyt-sidewalks.github.io/site/" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Sidewalks in St John's, NL" />
+		<meta property="og:description" content="A site for tracking sidewalk and pedestrian safety and usage in St. John's, NL" />
+		<title>YYT Sidewalks - Stories</title>
+		<link rel="stylesheet" href="../css/main.css">
+		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+<!--leaflet-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+<!--Location Plugin-->
+<script src='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.min.js'></script>
+<link href='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.css' rel='stylesheet' />
+<!--Tabletop and GeoJson-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
+<script src="../lib/geojson.js"></script>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar">
+			<div class="container is-fluid">
+				<div class="navbar-brand">
+					<a class="navbar-item" href="https://yyt-sidewalks.github.io/site">
+						<img src="../images/icons/001-crossing.png" alt="Sidewalks in St. John's, NL" height="28">
+					</a>
+					<div class="navbar-burger burger" data-target="navbar">
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+				</div>
+				<div id="navbar" class="navbar-menu">
+					<div class="navbar-start">
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site">Home</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/about/">About</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/stories/">Stories</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/priorities/">Priorities</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/obstructions/">Obstructions</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/data/">Data</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/Resources/">Resources</a>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<section id="main" class="section">
+			<div class="container is-fluid">
+				<div class="content">
+					<div class="title is-size-2 is-size-4-touch">Priorities</div>
+					<div class="subtitle is-size-6-touch">The current snow-clearing priorities for the City of St. John's.</div>
+					<div id="controls">
+						<button class="button is-primary" id="zoommap">Zoom</button>
+						<button class="button is-primary" id="shrinkmap"><i class="fas fa-times"></i></button>
+					</div>
+				</div>
+				<div class="content">
+					<div class="map">
+						<div id="map"></div>
+					</div>
+				</div>
+				<div class="content">
+					<div id="blurb">
+						<h3 class="is-size-3">About this page</h3>
+						<p>The data on this page is meant to help foster discussion about the impact built obstructions - such as poles, signs, and other infrastructure - has on the ability to clear sidewalks of snow, and allow proper movement for pedestrians as well as those using devices such as walkers, wheelchairs, etc.</p>
+						<p>Not every pole, sign, etc. encased in concrete should be marked. Rather, add obstructions that would prevent ease of movement or maintenance / clearing of snow, etc.</p>
+						<h4 class="is-size-4">How to use this page</h4>
+						<p>To add a point, click 'add to map', and find the location of the obstruction. Click on the map, and enter the information in the popup: select the type, and submit. You can add a description if you like. This will add data to a googlespreadsheet, and will reload the map showing your point. When you're done, click 'done' on the top left hand corner.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+	<footer class="footer has-text-centered">
+		<div class="container is-fluid">
+			<div class="columns">
+				<div class="column is-8-desktop is-offset-2-desktop">
+					<p>
+						<small>
+						Source code licensed <a href="http://opensource.org/licenses/mit-license.php">MIT</a>
+						</small>
+					</p>
+					<p style="margin-top: 1rem;">
+						<a href="http://bulma.io">
+						<img src="../made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
+						</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<script type="text/javascript" src="../lib/main.js"></script>
+	<script>
+		var prioritytoggle = false,layertoggles={};
+		var gradient=["#168900","#2c7c00","#416f00","#576200","#6d5500","#834900","#993c00","#af2f00","#c42200","#da1500"];
+		var prioritylayers={};
+		var map = L.map('map',{zoomControl: false}).setView([47.5670, -52.7292], 14); //Initialize the map
+		new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);
+		//Add a basemap
+		var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		}).addTo(map);
+
+		var priorities={"school_zones":{"colour":"#f2ff00","size":"24","opacity":"0.6","legend": "School Zones"},"singleside":{"colour":"#3c00ff","size":"14","opacity":"0.4","legend": "Single Side Cleared"},"doubleside":{"colour":"#ff8000","size":"14","opacity":"0.4","legend": "Both Sizes Cleared"},"priority_3":{"colour":"#42ff65","size":"4","opacity":"1","legend": "Priority 3"},"priority_2":{"colour":"#02e2f2","size":"4","opacity":"1","legend": "Priority 2"},"priority_1":{"colour":"#ff4545","size":"4","opacity":"1","legend": "Priority 1"}};
+		
+		$.each(priorities,function(k,v){
+			var thislayer = new L.geoJson(null,{
+				style: function(){
+					return {color: v.colour, opacity: v.opacity, weight: v.size}
+				}
+			});
+			thislayer.addTo(map);
+			$('#prioritieslegend').append('<li><span class="legendbox" style="background:'+v.colour+';opacity:'+v.opacity+'">&nbsp;</span><strong>'+v.legend+'</strong><span id="'+k+'ctl" class="datatoggle" data-layer="'+k+'">hide</span></li>');
+			$.ajax({
+				dataType: "json",
+				url: "../data/"+k+".json",
+				success: function(data) {
+					$(data.features).each(function(key, data) {
+						thislayer.addData(data);
+					});
+				}
+			});
+			prioritylayers[k]=thislayer;
+			layertoggles[k]=false;
+		});
+		function togglelayers(l) {
+			$.each(layertoggles,function(k,v){
+				map.removeLayer(prioritylayers[k]);
+				layertoggles[k] = !layertoggles[k];
+				$('#'+k+'ctl').text('show');
+			});
+			$('#prioritiesctl').text('show');
+		}
+	</script>
+	<link rel="stylesheet" href="../css/leaflet.css">
+	</body>
+</html>

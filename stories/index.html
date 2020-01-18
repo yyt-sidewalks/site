@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta property="og:url" content="https://yyt-sidewalks.github.io/site/" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Sidewalks in St John's, NL" />
+		<meta property="og:description" content="A site for tracking sidewalk and pedestrian safety and usage in St. John's, NL" />
+		<title>YYT Sidewalks - Stories</title>
+		<link rel="stylesheet" href="../css/main.css">
+		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+<!--leaflet-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+<!--Location Plugin-->
+<script src='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.min.js'></script>
+<link href='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.css' rel='stylesheet' />
+<!--Tabletop and GeoJson-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
+<script src="../lib/geojson.js"></script>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.1.1/jquery-confirm.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar">
+			<div class="container is-fluid">
+				<div class="navbar-brand">
+					<a class="navbar-item" href="https://yyt-sidewalks.github.io/site">
+						<img src="../images/icons/001-crossing.png" alt="Sidewalks in St. John's, NL" height="28">
+					</a>
+					<div class="navbar-burger burger" data-target="navbar">
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+				</div>
+				<div id="navbar" class="navbar-menu">
+					<div class="navbar-start">
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site">Home</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/about/">About</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/stories/">Stories</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/priorities/">Priorities</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/obstructions/">Obstructions</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/data/">Data</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/Resources/">Resources</a>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<section id="main" class="section">
+			<div class="container is-fluid">
+				<div class="content">
+					<div class="title is-size-2 is-size-4-touch">Stories</div>
+					<div class="subtitle is-size-6-touch">Tales of incidents, accidents, and hazardous walking in St. John's, NL</div>
+					<div id="controls">
+						<button class="button is-primary" id="zoommap">Zoom</button>
+						<span id="zoomcontrols">
+							<button class="button is-primary" id="addstory">Add a Story</button>
+						</span>
+						<button class="button is-primary" id="cancelstory">Cancel Story</button>
+						<button class="button is-primary" id="shrinkmap"><i class="fas fa-times"></i></button>
+					</div>
+				</div>
+				<div class="content">
+					<span role="form" id="storyform">
+						<div id="disclaimer" class="message is-warning">
+							<div class="message-header">
+								<p>Disclaimer: Before you add a story</p>
+								<button id="hidedisclaimer" class="delete" aria-label="delete"></button>
+							</div>
+							<div class="message-body">
+								<p>This site is open-access, and stores its data in googlespreadsheets. There's no means of protecting your identity, so any data you add will be viewable by others. By using this site, you agree to have the contents published and made available to others using open access means and technologies. Reuse is by design, and will be permitted. All precautions should be taken to anonymize your data - by using an alias or your first name, and by leaving out identifying information such as phone numbers, your home address, email addresses etc.</p>
+								<p>Add as much detail as you can. If you're uncomfortable leaving your name, simply use an alias like 'pedestrian','anonymous','someone who walks to work', etc.</p>
+								<p>For more information on how the data is collected, and who can see what, see the About page.</p>
+							</div>
+						</div>
+						<div class="field">
+							<label for="who">Who are you?</label>
+							<p class="help">Your name, first name, or an alias you're comfortable with being seen by the public</p>
+							<div class="control">
+								<input type="text" class="input requiredField" id="who" data-fieldid="1602612507" placeholder="">
+							</div>
+						</div>
+						<div class="field">
+							<label for="were">You were</label>
+							<p class="help">What were you doing while walking?</p>
+							<div class="control">
+								<div class="select">
+									<select id="were" class="requiredField" data-fieldid="781021393">
+										<option value="">Select what you were doing</option>
+										<option value="Walking on a sidewalk">Walking on a sidewalk</option>
+										<option value="Walking in the road">Walking in the road</option>
+										<option value="Using a crosswalk">Using a crosswalk</option>
+										<option value="At an intersection with lights">At an intersection with lights</option>
+										<option value="Intersection without lights">Intersection without lights</option>
+										<option value="Crossing the road">Crossing the road</option>
+										<option value="Other">Other</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="field" id="mainmap">
+							<label for="location">Location</label>
+							<p class="help">Where were walking? Click to drop a pin</p>
+							<div class="control">
+								<div id="location" class="map">
+									<div id="map"></div>
+								</div>
+							</div>
+						</div>
+						<div class="field">
+							<label for="story">Tell your story</label>
+							<p class="help">Write out your story. HTML tags will be retained: &lt;p&gt;&lt;br&gt;. Links, and other tags, will be removed. No photos can be added here. But you can provide a link below, if you wish.</p>
+							<div class="control">
+								<textarea class="textarea" rows="7" id="story" data-fieldid="704003002"></textarea>
+							</div>
+						</div>
+						<div class="field">
+							<label for="when">When: Exact</label>
+							<p class="help">If you know the exact date and time, you can provide it here</p>
+							<div class="control is-grouped is-grouped-multiline" id="when">
+								<input type="text" class="input" id="day" data-fieldid="1239551970" placeholder="DD" title="Day">
+								<input type="text" class="input" id="month" data-fieldid="1239551970" placeholder="MM" title="Month">
+								<input type="text" class="input" id="year" data-fieldid="1239551970" placeholder="YYYY" title="Year">
+								<input type="text" class="input" id="hour" data-fieldid="1239551970" placeholder="HH" title="Hour">
+								<input type="text" class="input" id="minute" data-fieldid="1239551970" placeholder="MM" title="Minutes">
+								<div class="select">
+									<select id="ampm" data-fieldid="1239551970">
+										<option value="AM">AM</option>
+										<option value="PM">PM</option>
+									</select>
+								</div>
+							</div>
+							<label for="timeofyear">When: Approximate</label>
+							<p class="help">If you can't recall the exact date or time, indicate a time of year and day</p>
+							<div class="control is-grouped">
+								<div class="select">
+									<select id="timeofyear" data-fieldid="696106486">
+										<option value="">Select a Time of Year</option>
+										<option value="Winter">Winter</option>
+										<option value="Spring">Spring</option>
+										<option value="Fall">Fall</option>
+										<option value="Summer">Summer</option>
+									</select>
+								</div>
+								<div class="select">
+									<select id="timeofday" data-fieldid="804270683">
+										<option value="">Select a Time of Day</option>
+										<option value="Morning">Morning</option>
+										<option value="Afternoon">Afternoon</option>
+										<option value="Evening">Evening</option>
+										<option value="Late Night">Late Night</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="field is-grouped is-grouped-multiline">
+							<label for="sidewalk">Sidewalk Conditions</label>
+							<p class="help">What was the condition of the sidewalk? Click all that apply</p>
+							<div id="sidewalk" class="control multiselection" data-fieldid="1906426664">
+								<button class="button multiselect" data-value="Uncleared due to Storm" data-fieldid="1906426664">Uncleared due to Storm</button>
+								<button class="button multiselect" data-value="Passable, but covered in Ice" data-fieldid="1906426664">Passable, but covered in Ice</button>
+								<button class="button multiselect" data-value="Passable, but covered in Snow" data-fieldid="1906426664">Passable, but covered in Snow</button>
+								<button class="button multiselect" data-value="Covered over by clearing of road (city or private)" data-fieldid="1906426664">Covered over by clearing of road (city or private)</button>
+								<button class="button multiselect" data-value="Uneven due to potholes, cracks etc." data-fieldid="1906426664">Uneven due to potholes, cracks etc.</button>
+								<button class="button multiselect" data-value="No Street Lights" data-fieldid="1906426664">No Street Lights</button>
+								<button class="button multiselect" data-value="__other_option__" data-otherid="sidewalk_other" data-fieldid="1906426664">Other (Please Provide)</button>
+								<input type="text" class="input otheroption" id="sidewalk_other" data-fieldid="1906426664">
+							</div>
+						</div>
+						<div class="field is-grouped is-grouped-multiline">
+							<label for="weather">Weather Conditions</label>
+							<p class="help">What was the weather like? Click all that apply</p>
+							<div id="weather" class="control multiselection" data-fieldid="1873397874">
+								<button class="button multiselect" data-value="Rain" data-fieldid="1873397874">Rain</button>
+								<button class="button multiselect" data-value="Snow" data-fieldid="1873397874">Snow</button>
+								<button class="button multiselect" data-value="Windy" data-fieldid="1873397874">Windy</button>
+								<button class="button multiselect" data-value="__other_option__" data-otherid="weather_other" data-fieldid="1873397874">Other (Please Provide)</button>
+								<input type="text" class="input otheroption" id="weather_other" data-fieldid="1873397874">
+							</div>
+						</div>
+						<div class="field is-grouped is-grouped-multiline">
+							<label for="involved">Vehicles Involved</label>
+							<p class="help">Was a vehicle involved in your story? Click all that apply</p>
+							<div id="involved" class="control multiselection" data-fieldid="391043660">
+								<button class="button multiselect" data-value="Car" data-fieldid="391043660">Car</button>
+								<button class="button multiselect" data-value="Motorbike" data-fieldid="391043660">Motorbike</button>
+								<button class="button multiselect" data-value="Heavy Truck" data-fieldid="391043660">Heavy Truck</button>
+								<button class="button multiselect" data-value="Construction Vehicle" data-fieldid="391043660">Construction Vehicle</button>
+								<button class="button multiselect" data-value="Bike" data-fieldid="391043660">Bike</button>
+								<button class="button multiselect" data-value="__other_option__" data-otherid="involved_other" data-fieldid="391043660">Other (Please Provide)</button>
+								<input type="text" class="input otheroption" id="involved_other" data-fieldid="391043660">
+							</div>
+						</div>
+						<div class="field">
+							<label for="source">Source</label>
+							<p class="help">Where does this story come from? Please indicate whether it's your's, or from somewhere else</p>
+							<div class="control">
+								<div class="select">
+									<select id="source" data-fieldid="1960531732">
+										<option value="Self-Report">Self-Report</option>
+										<option value="Reporting about someone else">Reporting about someone else</option>
+										<option value="News Article or Website">News Article or Website</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="field">
+							<label for="link">Link to News Article or Website</label>
+							<p class="help">If this story is mentioned in a news article, or somewhere online, and is publicly accessible, please provide the link</p>
+							<div class="control">
+								<textarea class="textarea" rows="2" id="link" placeholder="Enter a url" data-fieldid="1209409642"></textarea>
+							</div>
+						</div>
+						<div class="field is-grouped is-grouped-multiline">
+							<label for="impact">Impact</label>
+							<p class="help">What kind of impact did this story have on your life? Were you injured, or otherwise?</p>
+							<div id="impact" class="control multiselection" data-fieldid="1273564528">
+								<button class="button multiselect" data-value="Injury" data-fieldid="1273564528">Injury</button>
+								<button class="button multiselect" data-value="Required Medical Leave, EI, or Time off Work over 3 months" data-fieldid="1273564528">Required Medical Leave, EI, or Time off Work over 3 months</button>
+								<button class="button multiselect" data-value="Lost Income" data-fieldid="1273564528">Lost Income</button>
+								<button class="button multiselect" data-value="__other_option__" data-otherid="impact_other" data-fieldid="1273564528">Other (Please Provide)</button>
+								<input type="text" class="input otheroption" id="impact_other" data-fieldid="1273564528">
+							</div>
+						</div>
+						<div class="field">
+							<button id="submit" class="button is-primary">Save</button>
+						</div>
+						<input type="hidden" id="longitude" data-fieldid="1768929940">
+						<input type="hidden" id="latitude" data-fieldid="165837975">
+					</span>
+				</div>
+				<div class="content">
+					<div id="blurb">
+						<h3 class="is-size-3">About this page</h3>
+						<p>The data on this page is meant to help foster discussion about what we can do to make sidewalks safer for pedestrians. Contributors can tell their stories, and locate where something happened on a map. Hopefully, over time, there will be an account of where and what is wrong with our sidewalk safety in St. John's, NL.</p>
+						<h4 class="is-size-4">How to use this page</h4>
+						<p>To add a story, click 'add a story', and fill out the form. You need to tell us who you are, and a bit about the story - the rest is up to you. No photos can be added here, but you can link the story to another site, like Facebook or a news site, if you wish. This will add data to a googlespreadsheet, and will reload the map showing your point. When you're done, click 'save' at the bottom of the page.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+		<footer class="footer has-text-centered">
+			<div class="container is-fluid">
+				<div class="columns">
+					<div class="column is-8-desktop is-offset-2-desktop">
+						<p>
+							<small>
+							Source code licensed <a href="http://opensource.org/licenses/mit-license.php">MIT</a>
+							</small>
+						</p>
+						<p style="margin-top: 1rem;">
+							<a href="http://bulma.io">
+							<img src="../made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
+							</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<script type="text/javascript" src="../lib/main.js"></script>
+		<script>
+			var thisstory=getUrlParameter('story');
+			var formId = '1FAIpQLSerphvNjHwCoKz5sxr8ZsMPuFEFqCoO_yKdoALAfFYpttGprQ';
+			var gsheet = '2PACX-1vSa_6CHPls4Qkb7_WgmQXS5XR6jlNNOiqQube0BCY7lObB0YghyMoV2b04gngLntl5IteT_p_uDlAln';
+			var sharedgsheet ='https://docs.google.com/spreadsheets/d/1C9vcW_ystvMG-7l-2cJB4JQ2XBlCt7I3GSK9F3wp2-E/edit?usp=sharing';
+			if(thisstory!=''){
+				var fullstory='';
+				var isstory=false;
+				var storydetails = Tabletop.init( {
+					key: sharedgsheet,
+					simpleSheet: true,
+					parseNumbers: true,
+					callback: function(data, tabletop) {
+						$.each(data,function(k,v){
+							if(v.Identifier==thisstory && v.Active=='Yes'){
+								isstory=true;
+								fullstory=v;
+							}
+						});
+						if(isstory){
+							render('story');
+						}else{
+							render('nostory');
+						}
+					}
+				});
+			}else{
+				render('all');
+			}
+			$('.otheroption,#storyform .field,#cancelstory, #mainmap label,#mainmap .help,#disclaimer').hide();
+			$('#mainmap').show();
+			var map = L.map('map', {
+				zoom: 19,
+				zoomControl: false
+			}); //Initialize the map
+		
+			//Add a basemap
+			var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+			}).addTo(map);
+			//Add Location Options - override the plugin default popup and circle
+			var locOptions = {
+				drawCircle: false,
+				showPopup: false,
+				follow:true,
+				watch: true,
+				setView: true,
+				enableHighAccuracy: true,
+				position: 'bottomleft'
+			};
+			new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);
+		
+			//Add Location
+			var loc = L.control.locate(locOptions).addTo(map);
+		
+			//Endable Location at page load and do things once the location is found
+			loc.start();
+			
+			var marker, circle, lat, lng; //create variables used throughout the map
+			marker=false;
+
+			setTimeout(function() {
+				if(lat) {
+					return false;
+				}else{
+					loc.stop();
+					map.setView([47.57,-52.71], 14);
+				}
+			}, 2000);
+		
+			//Add form response points
+			//Add an empty geojson layer for the google sheet points and create the popup
+			var gps = new L.geoJson(null, {
+				pointToLayer: function(feature, latlng) {
+					var thisicon=L.icon({
+						iconUrl: '../images/icons/story.png',
+						iconSize: [40, 40], // size of the icon
+						iconAnchor: [20, 44], // point of the icon which will correspond to marker's location
+						popupAnchor:[-3, -76] // point from which the popup should open relative to the iconAnchor
+					});
+					return L.marker(latlng, {icon: thisicon});
+				},
+				onEachFeature: function(feature, layer) {
+					var popupcontent='<h6>'+feature.properties.Identifier+'</h6>';
+					if(feature.properties.Description){
+						popupcontent=popupcontent+'<p>'+feature.properties.Description+'</p>';
+					}
+					layer.bindPopup(popupcontent);
+					$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
+				}
+			});
+
+			function render(e){
+				switch(e){
+					case "all":
+				
+			
+			var multiselects={};
+			var otheroptions={};
+			var disclaimerignore=false;
+			$('#addstory').click(function(){
+				$('#shrinkmap').click();
+				$('#storyform .field,#cancelstory, #mainmap label,#mainmap .help,#disclaimer').show();
+				$('#mainmap #map,#mainmap .map').css({'min-height':'300px','height':'300px','max-height':'300px'});
+				map._onResize();
+				map.setZoom(17);
+				$('#addstory').hide();
+				if(disclaimerignore){
+					$('#disclaimer').hide();
+				}
+				map.on('click', collectData);
+			});
+			$('#cancelstory').click(function(){
+				$('#storyform .field,#cancelstory, #mainmap label,#mainmap .help,#disclaimer').hide();
+				$('#map,.map').attr('style','');
+				$('#mainmap,#addstory').show();
+				map._onResize();
+				map.setZoom(15);
+				map.off('click', collectData);
+			});
+			$('#hidedisclaimer').click(function(){
+				disclaimerignore=true;
+				$('#disclaimer').hide();
+			});
+			var fullsubmits=[];
+			$('#submit').click(function(){
+				$.confirm({
+					title: 'Confirm!',
+					content: "This will save and add this story to the website. It will be publicly accessible. Please confirm you've used a name, and described the details in a way you're comfortable with being published.",
+					buttons: {
+						confirm: function () {
+							fullsubmits=[];
+							$.each(multiselects,function(mk,mv){
+								$.each(mv,function(k,v){
+									fullsubmits.push('entry.'+mk+'='+encodeURI(v));
+								});
+							});
+							$.each(otheroptions,function(k,v){
+								if(v!=''){
+									fullsubmits.push('entry.'+k+'.other_option_response='+encodeURI(v));
+								}
+							});
+							$('.control:not(.multiselection):not(#when) input,.control:not(.multiselection):not(#when) textarea,.control:not(.multiselection):not(#when) select,#longitude,#latitude').each(function(k,v){
+								if(v!=''){
+									fullsubmits.push('entry.'+$(this).data('fieldid')+'='+encodeURI($(this).val()));
+								}
+							});
+							var datetime='';
+							if($('#day').val() && $('#month').val() && $('#year').val() && $('#hour').val() && $('#minute').val()){
+								datetime=datetime+$('#month').val()+'-';
+								datetime=datetime+$('#day').val()+'-';
+								datetime=datetime+$('#year').val()+'+';
+								datetime=datetime+$('#hour').val()+' ';
+								datetime=datetime+$('#minute').val();
+								fullsubmits.push('entry.153573005='+encodeURI(datetime));
+							}
+							if($('#year').val()){
+								fullsubmits.push('entry.1239551970='+encodeURI($('#year').val()));
+							}
+							var submissionurl='https://docs.google.com/forms/d/e/' + formId + '/formResponse?'+fullsubmits.join('&')+'&entry.319884402=Yes&submit=Submit';
+							$('#storyform').html('<iframe id="formSubmission" src="https://docs.google.com/forms/d/e/' + formId + '/formResponse?entry.' + formActive + '=Yes&entry.' + formLat + '=' + lat + '&entry.' + formLng + '=' + lng + '&entry.'+ formType + '=' + obtype + '&entry.'+ formText + '=' + description + '&submit=Submit" seamless scrolling="no" style="overflow:hidden;height:375px;border:lightgray solid thin;"></iframe><p>Saving this submission!</p>').promise().done(function(){
+								location.reload();
+							});					
+						},
+						cancel: function () {
+							
+						}
+					}
+				});
+			});
+			$('.multiselection').each(function(k,v){
+				multiselects[$(this).data('fieldid')]=[];
+			});
+			$('button.multiselect').click(function(){
+				if(multiselects[$(this).data('fieldid')].includes($(this).data('value'))){
+					$(this).removeClass('is-success');
+					var thisindex = multiselects[$(this).data('fieldid')].indexOf($(this).data('value'));
+					if (thisindex > -1) {
+						multiselects[$(this).data('fieldid')].splice(thisindex, 1);
+						if($(this).data('value')=='__other_option__'){
+							otheroptions[$(this).data('fieldid')]='';
+							$('#'+$(this).data('otherid')).hide();
+							$('#'+$(this).data('otherid')).val('');
+						}
+					}
+				}else{
+					$(this).addClass('is-success');
+					multiselects[$(this).data('fieldid')].push($(this).data('value'));
+					if($(this).data('value')=='__other_option__'){
+						otheroptions[$(this).data('fieldid')]='';
+						$('#'+$(this).data('otherid')).show();
+						$('#'+$(this).data('otherid')).change(function(){
+							otheroptions[$(this).data('fieldid')]=$(this).val();
+						});
+					}
+				}
+			});
+			
+			function collectData(e) {
+				if(marker){
+					map.removeLayer(marker);
+					$('#longitude').val('');
+					$('#latitude').val('');
+				}
+				lat = e.latlng.lat;
+				lng = e.latlng.lng;
+		
+				marker = L.marker(e.latlng).addTo(map);
+				
+				//if you try and open the popup right away the location may not be ready, eventhough it's firing after locationfound
+				setTimeout(function() {
+					loc.stop();
+					var offset = map.getSize().y*0.2;
+					// Then move the map
+					map.panBy(new L.Point(0,-offset), {animate: false});
+				}, 100);
+				$('#longitude').val(lng);
+				$('#latitude').val(lat);
+			}
+		
+			map.on('locationfound', function(e) {
+				collectData(e);
+			});
+			
+			//Grab the google sheet data using tabletop - published to the web not just shared - and use geojson.min.js to convert into proper geojson format
+			var tabletop = Tabletop.init( {
+				key: sharedgsheet,
+				simpleSheet: true,
+				parseNumbers: true,
+				callback: function(data, tabletop) {
+				var activedata=[];
+				$.each(data,function(k,v){
+					if(v.Active=='Yes'){
+						activedata.push(v);
+					}
+				});
+				var gpsData = GeoJSON.parse(activedata, {Point: ['Latitude', 'Longitude']});
+				//add that data to the geojson layer created earlier
+				gps.addData(gpsData);
+				gps.addTo(map);
+				},
+			});
+
+			break;
+			case "story":
+				$('#addstory, #zoommap,.title,.subtitle').hide();
+				$('#mainmap #map,#mainmap .map').css({'min-height':'300px','height':'300px','max-height':'300px'});
+				var activedata=[];													
+				activedata.push(fullstory);
+				var gpsData = GeoJSON.parse(activedata, {Point: ['Latitude', 'Longitude']});
+				//add that data to the geojson layer created earlier
+				gps.addData(gpsData);
+				gps.addTo(map);
+				$('#blurb').html('<h4 id="story_who">'+fullstory['Tell us who you are']+'</h4><p id="story_description" class="is-size-5">'+fullstory['Description']+'</p>');
+				var dateinfo=[];
+				if(fullstory['Date']!==''){
+					dateinfo.push(fullstory['Date']);
+				}else{
+					dateinfo.push(fullstory['Time of Day']);
+					dateinfo.push(fullstory['Time of Year']);
+					dateinfo.push(fullstory['Year']);
+				}
+				$('#story_who').after('<h3 id="story_whenwhat">'+fullstory['You were']+' - '+dateinfo.join(' ')+'</h3>');
+				$('#story_description').after('<p><strong>Sidewalk Conditions:</strong> '+fullstory['Sidewalk Conditions']+'<br><strong>Weather Conditions:</strong> '+fullstory['Weather Conditions']+'<br><strong>Vehicles Involved:</strong> '+fullstory['Vehicles Involved']+' <br><strong>Impact of the Incident:</strong> '+fullstory['Impact of the Incident']+'</p><p><strong>Source:</strong> '+fullstory['Source']+'<br><strong>Link:</strong> <a href="'+fullstory['Link to News Article or Website']+'" target="_blank">'+fullstory['Link to News Article or Website']+'</a><br><strong>Added:</strong> '+fullstory['Timestamp']+'</p><p><a class="button is-primary" href="https://yyt-sidewalks.github.io/site/stories">Add your story</a></p>');
+				setTimeout(function() {
+					map._onResize();
+					map.setView([fullstory.Latitude,fullstory.Longitude], 18);
+				}, 1000);
+			break;
+			case "nostory":
+				$('#addstory, #zoommap').hide();
+				$('#blurb').html('<h5>No Story</h5><p>No story matches this id!</p>');
+
+			break;
+			}
+		}
+		</script>
+		<link rel="stylesheet" href="../css/leaflet.css">
+	</body>
+</html>

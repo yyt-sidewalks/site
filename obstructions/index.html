@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta property="og:url" content="https://yyt-sidewalks.github.io/site/" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Sidewalks in St John's, NL" />
+		<meta property="og:description" content="A site for tracking sidewalk and pedestrian safety and usage in St. John's, NL" />
+		<title>YYT Sidewalks - Stories</title>
+		<link rel="stylesheet" href="../css/main.css">
+		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+<!--leaflet-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+<!--Location Plugin-->
+<script src='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.min.js'></script>
+<link href='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.css' rel='stylesheet' />
+<!--Tabletop and GeoJson-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
+<script src="../lib/geojson.js"></script>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar">
+			<div class="container is-fluid">
+				<div class="navbar-brand">
+					<a class="navbar-item" href="https://yyt-sidewalks.github.io/site">
+						<img src="../images/icons/001-crossing.png" alt="Sidewalks in St. John's, NL" height="28">
+					</a>
+					<div class="navbar-burger burger" data-target="navbar">
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+				</div>
+				<div id="navbar" class="navbar-menu">
+					<div class="navbar-start">
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site">Home</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/about/">About</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/stories/">Stories</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/priorities/">Priorities</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/obstructions/">Obstructions</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/data/">Data</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/Resources/">Resources</a>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<section id="main" class="section">
+			<div class="container is-fluid">
+				<div class="content">
+					<div class="title is-size-2 is-size-4-touch">Obstructions</div>
+					<div class="subtitle is-size-6-touch">Items that are embedded within or obstruct easy movement within sidewalks.</div>
+					<div id="controls">
+						<button class="button is-primary" id="zoommap">Add to Map</button>
+						<button class="button is-primary" id="shrinkmap">Done</button>
+					</div>
+				</div>
+				<div class="content">
+					<div class="map">
+						<div id="map"></div>
+					</div>
+				</div>
+				<div class="content">
+					<div id="blurb">
+						<h3 class="is-size-3">About this page</h3>
+						<p>The data on this page is meant to help foster discussion about the impact built obstructions - such as poles, signs, and other infrastructure - has on the ability to clear sidewalks of snow, and allow proper movement for pedestrians as well as those using devices such as walkers, wheelchairs, etc.</p>
+						<p>Not every pole, sign, etc. encased in concrete should be marked. Rather, add obstructions that would prevent ease of movement or maintenance / clearing of snow, etc.</p>
+						<h4 class="is-size-4">How to use this page</h4>
+						<p>To add a point, click 'add to map', and find the location of the obstruction. Click on the map, and enter the information in the popup: select the type, and submit. You can add a description if you like. This will add data to a googlespreadsheet, and will reload the map showing your point. When you're done, click 'done' on the top left hand corner.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+	<footer class="footer has-text-centered">
+		<div class="container is-fluid">
+			<div class="columns">
+				<div class="column is-8-desktop is-offset-2-desktop">
+					<p>
+						<small>
+						Source code licensed <a href="http://opensource.org/licenses/mit-license.php">MIT</a>
+						</small>
+					</p>
+					<p style="margin-top: 1rem;">
+						<a href="http://bulma.io">
+						<img src="../made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
+						</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<div id="form" class="hidden">
+		<div id="formdiv">
+			<form role="form" id="projectform">
+				<div class="field">
+					<label for="type" class="requiredField">Obstruction Type</label>
+					<div class="control">
+						<div class="select">
+							<select id="type">
+								<option value="">Select a Type of Obstruction</option>
+								<option value="Fire Hydrant">Fire Hydrant</option>
+								<option value="Telephone or Power Pole (pole and wires)">Telephone or Power Pole (pole & wires)</option>
+								<option value="Street Light">Street Light</option>
+								<option value="Bridge with Narrow sidewalks">Bridge with Narrow sidewalks</option>
+								<option value="Street Sign (parking, stop sign, etc)">Street Sign (parking, stop sign, etc)</option>
+								<option value="Traffic Light">Traffic Light</option>
+								<option value="Other Obstruction">Other Obstruction</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="field">
+					<label for="description">Description</label>
+					<div class="control">
+						<textarea class="textarea" rows="3" id="description" placeholder="Enter a description (optional)"></textarea>
+					</div>
+				</div>
+				<div class="field">
+					<button type="submit" id="submit" class="button is-primary">Save</button>
+				</div>				
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript" src="../lib/main.js"></script>
+	<script>
+		collecting=true;
+		var map = L.map('map', {
+			zoom: 19,
+			zoomControl: false
+		}); //Initialize the map
+		
+		var formId = '1FAIpQLSe-QSvUtogBRyFaiLHxoOWoFVWYg-lE5SXpEduEjUUNQtrOkQ';
+		var formLat = '761396806';
+		var formLng = '376030242';
+		var formText = '298764423';
+		var formType = '1739376719';
+		var formActive ='1860786605';
+		var gsheet = '2PACX-1vQguHTF4WmXs4mMBPE6CgeYXNqI3S2GMgFW3nok9TmGqYIW_56kJGUBRO696CkLcOIhFqAPqB43rriA';
+		var sharedgsheet ='https://docs.google.com/spreadsheets/d/1IYgFUTsPCthLhbRR7NLhpckAJLL4RleXrZ3AAMX9HMA/edit?usp=sharing';
+	
+		//Add a basemap
+		var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		}).addTo(map);
+		//Add Location Options - override the plugin default popup and circle
+		var locOptions = {
+			drawCircle: false,
+			showPopup: false,
+			follow:true,
+			watch: true,
+			setView: true,
+			enableHighAccuracy: true,
+			position: 'bottomleft'
+		};
+		new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);
+	
+		//Add Location
+		var loc = L.control.locate(locOptions).addTo(map);
+	
+		//Endable Location at page load and do things once the location is found
+		loc.start();
+		
+		var marker, circle, lat, lng; //create variables used throughout the map
+		
+		//define icons
+		var obtypes=['hydrant','pole','light','bridge','sign','traffic','other'];
+		var typeicons={};
+		$.each(obtypes,function(k,v){
+			typeicons[v]= L.icon({
+				iconUrl: '../images/icons/icon-'+v+'.png',
+				iconSize: [40, 40], // size of the icon
+				iconAnchor: [20, 44], // point of the icon which will correspond to marker's location
+				popupAnchor:[-3, -76] // point from which the popup should open relative to the iconAnchor
+			});
+		});
+	
+		function collectData(e) {
+			//console.log(e);
+			lat = e.latlng.lat;
+			lng = e.latlng.lng;
+		// Calculate the offset
+	
+			var form = $('#form').html();
+	
+			marker = L.marker(e.latlng).addTo(map)
+			.bindPopup(form, {maxWidth:400});
+			
+			//if you try and open the popup right away the location may not be ready, eventhough it's firing after locationfound
+			setTimeout(function() {
+				marker.openPopup();
+				loc.stop();
+				var offset = map.getSize().y*0.2;
+				// Then move the map
+				map.panBy(new L.Point(0,-offset), {animate: false});
+			}, 100);
+			var removemarker=false;
+			marker.on('popupopen', function() {
+				$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
+				$('#projectform').submit(function(event) {
+					event.preventDefault();
+					var description = $('#description').val();
+					var obtype = $('#type').val();
+					if (obtype) {
+						$('#formdiv').html('<iframe id="formSubmission" src="https://docs.google.com/forms/d/e/' + formId + '/formResponse?entry.' + formActive + '=Yes&entry.' + formLat + '=' + lat + '&entry.' + formLng + '=' + lng + '&entry.'+ formType + '=' + obtype + '&entry.'+ formText + '=' + description + '&submit=Submit" seamless scrolling="no" style="overflow:hidden;height:375px;border:lightgray solid thin;"></iframe><p>Saving this submission!</p>').promise().done(function(){
+						if(marker){
+							removemarker=true;
+						}
+						var icontype=geticontype(obtype);
+						var newicon= new L.Marker(e.latlng, {icon: typeicons[icontype]}).addTo(map).bindPopup('<h6>This is new!</h6>');
+						});
+					} else {
+						$('#formHelp').html('<span style="color:red;">Please enter an obstruction type.</span>')
+					}
+				});
+			});
+			if(removemarker){
+				setTimeout(function() {
+					map.removeLayer(marker);
+				}, 1000);
+			}
+			if(marker){
+			marker.on('popupclose', function() {
+				map.removeLayer(marker);
+			});
+			}
+		}
+	
+		map.on('locationfound', function(e) {
+			collectData(e);
+		});
+		
+		setTimeout(function() {
+			if(lat) {
+				return false;
+			}else{
+				loc.stop();
+				map.setView([47.57,-52.71], 14);
+			}
+		}, 4000);
+	
+		function geticontype(t){
+			var it;
+			switch(t){
+				case "Fire Hydrant":
+					it="hydrant";
+				break;
+				case "Telephone or Power Pole (pole and wires)":
+					it="pole";
+				break;
+				case "Street Light":
+					it="light";
+				break;
+				case "Bridge with Narrow sidewalks":
+					it="bridge";
+				break;
+				case "Street Sign (parking, stop sign, etc)":
+					it="sign";
+				break;
+				case "Traffic Light":
+					it="traffic";
+				break;
+				case "Other Obstruction":
+					it="other";
+				break;
+			}
+			return it;
+		}
+		//Add form response points
+		//Add an empty geojson layer for the google sheet points and create the popup
+		var gps = new L.geoJson(null, {
+			pointToLayer: function(feature, latlng) {
+				var thistype=geticontype(feature.properties.Type);
+				return L.marker(latlng, {icon: typeicons[thistype]});
+			},
+			onEachFeature: function(feature, layer) {
+				var popupcontent='<h6>'+feature.properties.Identifier+'</h6>';
+				if(feature.properties.Description){
+					popupcontent=popupcontent+'<p>'+feature.properties.Description+'</p>';
+				}
+				layer.bindPopup(popupcontent);
+				$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
+			}
+		});
+	
+		//Grab the google sheet data using tabletop - published to the web not just shared - and use geojson.min.js to convert into proper geojson format
+		var tabletop = Tabletop.init( {
+			key: sharedgsheet,
+			simpleSheet: true,
+			parseNumbers: true,
+			callback: function(data, tabletop) {
+			var activedata=[];
+			$.each(data,function(k,v){
+				if(v.Active=='Yes'){
+					activedata.push(v);
+				}
+			});
+			var gpsData = GeoJSON.parse(activedata, {Point: ['Latitude', 'Longitude']});
+			//add that data to the geojson layer created earlier
+			gps.addData(gpsData);
+			gps.addTo(map);
+			},
+		});
+		</script>
+		<link rel="stylesheet" href="../css/leaflet.css">
+	</body>
+</html>
