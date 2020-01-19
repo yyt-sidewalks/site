@@ -78,6 +78,7 @@
 								<span class="spanlabel">More</span><span id="gradient"></span><span class="spanlabel">Less</span>
 							</span>
 							<button class="button is-primary" id="shrinkmap"><i class="fas fa-times"></i></button>
+							<a href="files/" class="button is-primary">Review Data Files</a>
 						</div>
 					</div>
 				</div>
@@ -88,6 +89,10 @@
 				</div>
 				<div class="content">
 					<div id="blurb">
+						<h4 class="is-size-4">Statistics</h4>
+						<ul id="stats">
+							
+						</ul>
 						<h3 class="is-size-3">About this page</h3>
 						<p>The data on this page is drawn from the 2016 Canadian Census, as available from <a href="http://www.censusmapper.ca" target="_blank">www.censusmapper.ca</a>. It's been processed slightly to obtain a few variables, based on income and population density.</p>
 						<h4 class="is-size-4">How to use this page</h4>
@@ -125,7 +130,7 @@
 		var censusdata;
 		var censusareas={};
 		var layertoggles={},centretoggle=false;
-		var gradient=["#168900","#2c7c00","#416f00","#576200","#6d5500","#834900","#993c00","#af2f00","#c42200","#da1500"];
+		var gradient=["#4be051","#3cc146","#2da43b","#208730","#347d20","#407310","#476900","#6c6b00","#996400","#cc5000","#ff0000"];
 		var alllayers={};
 		var map = L.map('map',{zoomControl: false}).setView([47.5670, -52.7292], 14); //Initialize the map
 		new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);
@@ -247,6 +252,12 @@
 			censusdata.min={};
 			censusdata.totals.afterTaxIncome=0;
 			censusdata.values.afterTaxIncome=[];
+			censusdata.values.percentagesWalkedAll=[];
+			censusdata.values.percentagesWalkedFemale=[];
+			censusdata.values.percentagesWalkedMale=[];
+			censusdata.values.percentagesTransitAll=[];
+			censusdata.values.percentagesTransitFemale=[];
+			censusdata.values.percentagesTransitMale=[];
 			censusdata.max.afterTaxIncome=0;
 			censusdata.min.afterTaxIncome=0;
 			censusdata.values.density=[];
@@ -266,36 +277,48 @@
 				censusdata[k].percentages.walked={};
 				if(parseInt(v.Data.v_CA16_5792.value)){
 					censusdata[k].percentages.walked.all=parseInt(v.Data.v_CA16_5804.value)/parseInt(v.Data.v_CA16_5792.value);
+					censusdata.values.percentagesWalkedAll.push(censusdata[k].percentages.walked.all);
 				}else{
 					censusdata[k].percentages.walked.all=0;
+					censusdata.values.percentagesWalkedAll.push(0);
 				}
 				if(parseInt(v.Data.v_CA16_5794.value)){
 					censusdata[k].percentages.walked.female=parseInt(v.Data.v_CA16_5806.value)/parseInt(v.Data.v_CA16_5794.value);
+					censusdata.values.percentagesWalkedFemale.push(censusdata[k].percentages.walked.female);
 				}else{
 					censusdata[k].percentages.walked.female=0;
+					censusdata.values.percentagesWalkedFemale.push(0);
 				}
 				if(parseInt(v.Data.v_CA16_5793.value)){
 					censusdata[k].percentages.walked.male=parseInt(v.Data.v_CA16_5805.value)/parseInt(v.Data.v_CA16_5793.value);
+					censusdata.values.percentagesWalkedMale.push(censusdata[k].percentages.walked.male);
 				}else{
 					censusdata[k].percentages.walked.male=0;
+					censusdata.values.percentagesWalkedMale.push(0);
 				}
 				censusdata[k].percentages.transit={};
 				if(parseInt(v.Data.v_CA16_5792.value)){
 					censusdata[k].percentages.transit.all=parseInt(v.Data.v_CA16_5801.value)/parseInt(v.Data.v_CA16_5792.value);
+					censusdata.values.percentagesTransitAll.push(censusdata[k].percentages.transit.all);
 				}else{
 					censusdata[k].percentages.transit.all=0;
+					censusdata.values.percentagesTransitAll.push(0);
 				}
 				if(parseInt(v.Data.v_CA16_5794.value)){
 					censusdata[k].percentages.transit.female=parseInt(v.Data.v_CA16_5803.value)/parseInt(v.Data.v_CA16_5794.value);
+					censusdata.values.percentagesTransitFemale.push(censusdata[k].percentages.transit.female);
 				}else{
 					censusdata[k].percentages.transit.female=0;
+					censusdata.values.percentagesTransitFemale.push(0);
 				}
 				if(parseInt(v.Data.v_CA16_5793.value)){
 					censusdata[k].percentages.transit.male=parseInt(v.Data.v_CA16_5802.value)/parseInt(v.Data.v_CA16_5793.value);
+					censusdata.values.percentagesTransitMale.push(censusdata[k].percentages.transit.male);
 				}else{
 					censusdata[k].percentages.transit.male=0;
+					censusdata.values.percentagesTransitMale.push(0);
 				}
-				if(parseInt(v.Data.v_CA16_4963.value)!==false){
+				if(parseInt(v.Data.v_CA16_4963.value)){
 					censusdata.totals.afterTaxIncome=censusdata.totals.afterTaxIncome+parseInt(v.Data.v_CA16_4963.value);
 					hasAfterTaxIncome++;
 					censusdata.values.afterTaxIncome.push(parseInt(v.Data.v_CA16_4963.value));
@@ -304,10 +327,22 @@
 			censusdata.averages.afterTaxIncome=Math.ceil(censusdata.totals.afterTaxIncome/hasAfterTaxIncome);
 			censusdata.max.afterTaxIncome=Math.max.apply(Math,censusdata.values.afterTaxIncome);
 			censusdata.min.afterTaxIncome=Math.min.apply(Math,censusdata.values.afterTaxIncome);
-			censusdata.tiers.afterTaxIncome=Math.ceil(censusdata.max.afterTaxIncome/gradient.length);
+			censusdata.max.percentagesWalkedAll=Math.max.apply(Math,censusdata.values.percentagesWalkedAll)*100;
+			censusdata.max.percentagesWalkedFemale=Math.max.apply(Math,censusdata.values.percentagesWalkedFemale)*100;
+			censusdata.max.percentagesWalkedMale=Math.max.apply(Math,censusdata.values.percentagesWalkedMale)*100;
+			censusdata.max.percentagesTransitAll=Math.max.apply(Math,censusdata.values.percentagesTransitAll)*100;
+			censusdata.max.percentagesTransitFemale=Math.max.apply(Math,censusdata.values.percentagesTransitFemale)*100;
+			censusdata.max.percentagesTransitMale=Math.max.apply(Math,censusdata.values.percentagesTransitMale)*100;
+			censusdata.min.percentagesWalkedAll=Math.min.apply(Math,censusdata.values.percentagesWalkedAll)*100;
+			censusdata.min.percentagesWalkedFemale=Math.min.apply(Math,censusdata.values.percentagesWalkedFemale)*100;
+			censusdata.min.percentagesWalkedMale=Math.min.apply(Math,censusdata.values.percentagesWalkedMale)*100;
+			censusdata.min.percentagesTransitAll=Math.min.apply(Math,censusdata.values.percentagesTransitAll)*100;
+			censusdata.min.percentagesTransitFemale=Math.min.apply(Math,censusdata.values.percentagesTransitFemale)*100;
+			censusdata.min.percentagesTransitMale=Math.min.apply(Math,censusdata.values.percentagesTransitMale)*100;
+			censusdata.tiers.afterTaxIncome=Math.ceil(censusdata.max.afterTaxIncome/(gradient.length-1));
 			censusdata.max.density=Math.max.apply(Math,censusdata.values.density);
 			censusdata.min.density=Math.min.apply(Math,censusdata.values.density);
-			censusdata.tiers.density=Math.ceil(censusdata.max.density/gradient.length);
+			censusdata.tiers.density=Math.ceil(censusdata.max.density/(gradient.length-1));
 			//calculate tiers for gradients
 			$.each(gradient,function(k,v){
 				if(k){
@@ -322,28 +357,44 @@
 			switch(e){
 				case "percentages.walked.all":
 					$.each(censusdata,function(k,v){
-						var rounded=Math.ceil(Math.round(v.percentages.walked.all*100)/10);
-						var opacity=(Math.round(v.percentages.walked.all*10)/10)*1.75;
-						censusareas[v.GeoUID].setStyle({fillColor:gradient[rounded],fillOpacity: opacity});
-					});
-				break;
-				case "percentages.transit.all":
-					$.each(censusdata,function(k,v){
-						var rounded=Math.ceil(Math.round(v.percentages.transit.all*100)/10);
-						var opacity=(Math.round(v.percentages.transit.all*10)/10)*1.75;
-						censusareas[v.GeoUID].setStyle({fillColor:gradient[rounded],fillOpacity: opacity});
-					});
-				break;
-				case "income.all":
-					$.each(censusdata,function(k,v){
-						var rounded=Math.round(v.Data.v_CA16_4963.value/censusdata.tiers.afterTaxIncome);
+						var rounded=Math.ceil(Math.round(v.percentages.walked.all*200)/(gradient.length-1));
 						var opacity=0.6;
 						censusareas[v.GeoUID].setStyle({fillColor:gradient[rounded],fillOpacity: opacity});
 					});
+					$('#stats').append('<li><strong>Max Percentage of Commuters who Walk: </strong> '+censusdata.max.percentagesWalkedAll+'</li>');
+					$('#stats').append('<li><strong>Max Percentage of Commuters who Walk (Women): </strong> '+censusdata.max.percentagesWalkedFemale+'</li>');
+					$('#stats').append('<li><strong>Max Percentage of Commuters who Walk (Men): </strong> '+censusdata.max.percentagesWalkedMale+'</li>');
+					$('#stats').append('<li><strong>Min Percentage of Commuters who Walk: </strong> '+censusdata.min.percentagesWalkedAll+'</li>');
+					$('#stats').append('<li><strong>Min Percentage of Commuters who Walk (Women): </strong> '+censusdata.min.percentagesWalkedFemale+'</li>');
+					$('#stats').append('<li><strong>Min Percentage of Commuters who Walk (Men): </strong> '+censusdata.min.percentagesWalkedMale+'</li>');
+				break;
+				case "percentages.transit.all":
+					$.each(censusdata,function(k,v){
+						var rounded=Math.ceil(Math.round(v.percentages.transit.all*200)/(gradient.length-1));
+						var opacity=0.6;
+						censusareas[v.GeoUID].setStyle({fillColor:gradient[rounded],fillOpacity: opacity});
+					});
+					$('#stats').append('<li><strong>Max Percentage of Commuters who use Public Transit: </strong> '+censusdata.max.percentagesTransitAll+'</li>');
+					$('#stats').append('<li><strong>Max Percentage of Commuters who use Public Transit (Women): </strong> '+censusdata.max.percentagesTransitFemale+'</li>');
+					$('#stats').append('<li><strong>Max Percentage of Commuters who use Public Transit (Men): </strong> '+censusdata.max.percentagesTransitMale+'</li>');
+					$('#stats').append('<li><strong>Min Percentage of Commuters who use Public Transit: </strong> '+censusdata.min.percentagesTransitAll+'</li>');
+					$('#stats').append('<li><strong>Min Percentage of Commuters who use Public Transit (Women): </strong> '+censusdata.min.percentagesTransitFemale+'</li>');
+					$('#stats').append('<li><strong>Min Percentage of Commuters who use Public Transit (Men): </strong> '+censusdata.min.percentagesTransitMale+'</li>');
+				break;
+				case "income.all":
+					$.each(censusdata,function(k,v){
+						var rounded=Math.ceil(Math.round(v.Data.v_CA16_4963.value/censusdata.tiers.afterTaxIncome));
+						var opacity=0.6;
+						censusareas[v.GeoUID].setStyle({fillColor:gradient[rounded],fillOpacity: opacity});
+					});
+					$('#stats').append('<li><strong>Overall After-Tax Income Average: </strong> $'+censusdata.averages.afterTaxIncome+'</li>');
+					$('#stats').append('<li><strong>Max Area After-Tax Income Average: </strong> $'+censusdata.max.afterTaxIncome+'</li>');
+					$('#stats').append('<li><strong>Min Area After-Tax Income Average: </strong> $'+censusdata.min.afterTaxIncome+'</li>');
+					$('#stats').append('<li><strong>Gradient Steps: </strong> $'+censusdata.tiers.afterTaxIncome+'</li>');
 				break;
 				case "population.density":
 					$.each(censusdata,function(k,v){
-						var rounded=Math.round(v.density/censusdata.tiers.density);
+						var rounded=Math.ceil(Math.round(v.density/censusdata.tiers.density));
 						var opacity=0.6;
 						censusareas[v.GeoUID].setStyle({fillColor:gradient[rounded],fillOpacity: opacity});
 					});
@@ -351,8 +402,9 @@
 			}
 		}
 		function resetareas(){
+			$('#stats').empty();
 			$.each(censusareas,function(k,v){
-				censusareas[k].setStyle({fillColor: 'transparent', color:'none', weight: '0', fillOpacity: 0.2});
+				censusareas[k].setStyle({fillColor: 'transparent', color:'#282828', weight: '1', fillOpacity: 0.2});
 			});
 		}
 		function togglelayers(l) {
