@@ -66,6 +66,10 @@
 				</div>
 				<div class="content">
 					<div id="blurb">
+						<h4 class="is-size-4">Statistics</h4>
+						<ul id="stats">
+							<li><strong>Total Obstructions Logged: </strong><span id="totalobstructions"></span></li>
+						</ul>
 						<h3 class="is-size-3">About this page</h3>
 						<p>The data on this page is meant to help foster discussion about the impact built obstructions - such as poles, signs, and other infrastructure - has on the ability to clear sidewalks of snow, and allow proper movement for pedestrians as well as those using devices such as walkers, wheelchairs, etc.</p>
 						<p>Not every pole, sign, etc. encased in concrete should be marked. Rather, add obstructions that would prevent ease of movement or maintenance / clearing of snow, etc.</p>
@@ -139,8 +143,8 @@
 		var formText = '298764423';
 		var formType = '1739376719';
 		var formActive ='1860786605';
-		var gsheet = '2PACX-1vQguHTF4WmXs4mMBPE6CgeYXNqI3S2GMgFW3nok9TmGqYIW_56kJGUBRO696CkLcOIhFqAPqB43rriA';
-		var sharedgsheet ='https://docs.google.com/spreadsheets/d/1IYgFUTsPCthLhbRR7NLhpckAJLL4RleXrZ3AAMX9HMA/edit?usp=sharing';
+		var gsheet = '2PACX-1vQQM2cMMx_lTpUIGplcNWYgNVxsDJ-ZjMQuFmvxB8BhhCuMpokje4nQEaCmvky4R7CQUxa0T9B8peqz';
+		var sharedgsheet ='https://docs.google.com/spreadsheets/d/1XODHn9MQ6Hy8IeC-LXLw_WGKmU4CuLccFiJEBeyDKaU/edit?usp=sharing';
 	
 		//Add a basemap
 		var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -281,25 +285,41 @@
 				$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
 			}
 		});
-	
+		var obstructiontotal=0;
+		var obstructiontypes=[];
+		var obstructiontypecount={};
 		//Grab the google sheet data using tabletop - published to the web not just shared - and use geojson.min.js to convert into proper geojson format
 		var tabletop = Tabletop.init( {
 			key: sharedgsheet,
 			simpleSheet: true,
 			parseNumbers: true,
 			callback: function(data, tabletop) {
-			var activedata=[];
-			$.each(data,function(k,v){
-				if(v.Active=='Yes'){
-					activedata.push(v);
-				}
-			});
-			var gpsData = GeoJSON.parse(activedata, {Point: ['Latitude', 'Longitude']});
-			//add that data to the geojson layer created earlier
-			gps.addData(gpsData);
-			gps.addTo(map);
+				var activedata=[];
+				$.each(data,function(k,v){
+					if(v.Active=='Yes'){
+						activedata.push(v);
+						obstructiontotal++;
+						if(!obstructiontypes.includes(v.Type)){
+							obstructiontypes.push(v.Type);
+							obstructiontypecount[v.Type]=1;
+						}else{
+							obstructiontypecount[v.Type]++;
+						}
+					}
+				});
+				var gpsData = GeoJSON.parse(activedata, {Point: ['Latitude', 'Longitude']});
+				//add that data to the geojson layer created earlier
+				gps.addData(gpsData);
+				gps.addTo(map);
+				obstructionstats();
 			},
 		});
+		function obstructionstats(){
+			$('#totalobstructions').text(obstructiontotal);
+			$.each(obstructiontypes,function(k,v){
+				$('#stats').append('<li><strong>'+v+': </strong>'+obstructiontypecount[v]+'</li>');
+			});
+		}
 		</script>
 		<link rel="stylesheet" href="../css/leaflet.css">
 	</body>
