@@ -427,9 +427,13 @@
 								fullsubmits.push('entry.1239551970='+encodeURI($('#year').val()));
 							}
 							var submissionurl='https://docs.google.com/forms/d/e/' + formId + '/formResponse?'+fullsubmits.join('&')+'&entry.319884402=Yes&submit=Submit';
-							$('#storyform').html('<iframe id="formSubmission" src="'+submissionurl+'" seamless scrolling="no" style="overflow:hidden;height:375px;border:lightgray solid thin;"></iframe><p>Saving this submission!</p>').promise().done(function(){
-								location.reload();
-							});					
+							$('#storyform').scrollTop(0);
+							$('#storyform').html('<iframe id="formSubmission" src="'+submissionurl+'" seamless scrolling="no" style="overflow:hidden;height:375px;border:lightgray solid thin;"></iframe><h6 id="savingmsg">Saving this submission!</h6>').promise().done(function(){
+								setTimeout(function(){
+									$('#savingmsg').text('Story saved!');
+									$('#storyform').append('<p><a href="https://yyt-sidewalks.github.io/site/stories/?do=addstory" class="button is-success">Add another Story</a><a href="https://yyt-sidewalks.github.io/site/stories/?do=addstory" class="button is-info">View Stories Map</a></p>');
+								},2000);
+							});
 						},
 						cancel: function () {
 							
