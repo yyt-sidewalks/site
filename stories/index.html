@@ -221,7 +221,7 @@
 							<p class="help">What kind of impact did this story have on your life? Were you injured, or otherwise?</p>
 							<div id="impact" class="control multiselection" data-fieldid="1273564528">
 								<button class="button multiselect" data-value="Injury" data-fieldid="1273564528">Injury</button>
-								<button class="button multiselect" data-value="Required Medical Leave, EI, or Time off Work over 3 months" data-fieldid="1273564528">Required Medical Leave, EI, or Time off Work over 3 months</button>
+								<button class="button multiselect" data-value="Required Medical Leave, EI, or Time off Work over 3 months" data-fieldid="1273564528">Required Medical Leave, EI, or Time off Work</button>
 								<button class="button multiselect" data-value="Lost Income" data-fieldid="1273564528">Lost Income</button>
 								<button class="button multiselect" data-value="__other_option__" data-otherid="impact_other" data-fieldid="1273564528">Other (Please Provide)</button>
 								<input type="text" class="input otheroption" id="impact_other" data-fieldid="1273564528">
@@ -427,7 +427,7 @@
 								fullsubmits.push('entry.1239551970='+encodeURI($('#year').val()));
 							}
 							var submissionurl='https://docs.google.com/forms/d/e/' + formId + '/formResponse?'+fullsubmits.join('&')+'&entry.319884402=Yes&submit=Submit';
-							$('#storyform').html('<iframe id="formSubmission" src="https://docs.google.com/forms/d/e/' + formId + '/formResponse?entry.' + formActive + '=Yes&entry.' + formLat + '=' + lat + '&entry.' + formLng + '=' + lng + '&entry.'+ formType + '=' + obtype + '&entry.'+ formText + '=' + description + '&submit=Submit" seamless scrolling="no" style="overflow:hidden;height:375px;border:lightgray solid thin;"></iframe><p>Saving this submission!</p>').promise().done(function(){
+							$('#storyform').html('<iframe id="formSubmission" src="'+submissionurl+'" seamless scrolling="no" style="overflow:hidden;height:375px;border:lightgray solid thin;"></iframe><p>Saving this submission!</p>').promise().done(function(){
 								location.reload();
 							});					
 						},
