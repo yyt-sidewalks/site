@@ -6993,7 +6993,10 @@ a.navbar-item {
 
 .map {
   min-height: 500px;
-  position: relative; }
+  position: relative;
+  border: solid 2px #dbdbdb;
+  border-radius: 4px;
+  box-sizing: content-box; }
   .map .maplegend {
     position: absolute;
     z-index: 40000;
@@ -7095,6 +7098,25 @@ a.navbar-item {
   padding: 0 0.5em;
   border-radius: 4px;
   display: none; }
+
+#storieslist {
+  margin-top: 2em; }
+  #storieslist:after {
+    content: " ";
+    display: block;
+    clear: both; }
+
+#stories {
+  list-style: none;
+  margin: 0;
+  width: 100%;
+  display: block;
+  clear: both; }
+  #stories li.storybox {
+    float: left;
+    display: inline-block;
+    margin: 0 0.5em 0.5em 0;
+    width: calc(33% - 0.5em); }
 
 .field label {
   width: 100%;

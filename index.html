@@ -100,11 +100,11 @@
 						</div>
 					</div>
 				</div>
-				<div class="content">
+				<div id="storieslist" class="content">
 					<h3 class="is-size-3">Sidewalk Stories</h3>
-					<div id="stories" class="columns">
+					<ul id="stories">
 						
-					</div>
+					</ul>
 				</div>
 				<div class="content">
 					<div id="blurb">
@@ -149,36 +149,10 @@
 							activestories.push(v);
 						}
 					});
-					makestories();
+					makestories(3);
 					storieslayer.addData(GeoJSON.parse(activestories, {Point: ['Latitude', 'Longitude']}));
 				}
 			});
-			function makestories(){
-				$('#stories').empty();
-				var randomkeys=[];
-				var i=0;
-				do{
-					var key=Math.floor(Math.random()*activestories.length);
-					if(!randomkeys.includes(key)){
-						randomkeys.push(key);
-						i++;
-					}
-				}
-				while(i<activestories.length);
-				$.each(randomkeys,function(k,v){
-					var thisstory=activestories[v];
-					var dateinfo=[];
-					if(thisstory['Date']!==''){
-						dateinfo.push(thisstory['Date']);
-					}else{
-						dateinfo.push(thisstory['Time of Day']);
-						dateinfo.push(thisstory['Time of Year']);
-						dateinfo.push(thisstory['Year']);
-					}
-					var description=thisstory['Description'].substring(0, 300);
-					$('#stories').append('<div class="column is-one-third-desktop is-full-mobile"><div class="message"><div class="message-body"><h5>'+thisstory['You were']+' - '+dateinfo.join(' ')+'</h5><h6>'+thisstory['Tell us who you are']+' &#183; '+thisstory['Timestamp']+'</h6><p>'+description+'</p><p><a href="https://yyt-sidewalks.github.io/site/stories/?story='+thisstory['Identifier']+'">Read More</a></p></div></div></div>');
-				});
-			}
 			var censusdata;
 			var censusareas={};
 			var prioritytoggle = false,layertoggles={},centretoggle=false;
@@ -524,10 +498,16 @@
 					return L.marker(latlng, {icon: thisicon});
 				},
 				onEachFeature: function(feature, layer) {
-					var popupcontent='<h6>'+feature.properties.Identifier+'</h6>';
-					if(feature.properties.Description){
-						popupcontent=popupcontent+'<p>'+feature.properties.Description+'</p>';
+					var dateinfo=[];
+					if(feature.properties['Date']!==''){
+						dateinfo.push(feature.properties['Date']);
+					}else{
+						dateinfo.push(feature.properties['Time of Day']);
+						dateinfo.push(feature.properties['Time of Year']);
+						dateinfo.push(feature.properties['Year']);
 					}
+					var description=feature.properties.Description.substring(0, 300);
+					var popupcontent='<h5>'+feature.properties['You were']+' - '+dateinfo.join(' ')+'</h5><p><strong>'+feature.properties['Tell us who you are']+' &#183; '+feature.properties['Timestamp']+'</strong><br>'+description+'</p><p><a class="button is-success" href="https://yyt-sidewalks.github.io/site/stories/?story='+feature.properties['Identifier']+'">Read More</a></p>';
 					storieslayer.bindPopup(popupcontent);
 					$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
 				}

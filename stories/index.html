@@ -111,6 +111,12 @@
 									<div id="map"></div>
 								</div>
 							</div>
+							<div id="storieslist" class="control">
+								<h3 class="is-size-3">Sidewalk Stories</h3>
+								<ul id="stories">
+									
+								</ul>
+							</div>
 						</div>
 						<div class="field">
 							<label for="story">Tell your story</label>
@@ -350,10 +356,16 @@
 					return L.marker(latlng, {icon: thisicon});
 				},
 				onEachFeature: function(feature, layer) {
-					var popupcontent='<h6>'+feature.properties.Identifier+'</h6>';
-					if(feature.properties.Description){
-						popupcontent=popupcontent+'<p>'+feature.properties.Description+'</p>';
+					var dateinfo=[];
+					if(feature.properties['Date']!==''){
+						dateinfo.push(feature.properties['Date']);
+					}else{
+						dateinfo.push(feature.properties['Time of Day']);
+						dateinfo.push(feature.properties['Time of Year']);
+						dateinfo.push(feature.properties['Year']);
 					}
+					var description=feature.properties.Description.substring(0, 300);
+					var popupcontent='<h5>'+feature.properties['You were']+' - '+dateinfo.join(' ')+'</h5><p><strong>'+feature.properties['Tell us who you are']+' &#183; '+feature.properties['Timestamp']+'</strong><br>'+description+'</p><p><a class="button is-success" href="https://yyt-sidewalks.github.io/site/stories/?story='+feature.properties['Identifier']+'">Read More</a></p>';
 					layer.bindPopup(popupcontent);
 					$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
 				}
@@ -364,111 +376,169 @@
 					case "all":
 				
 			
-			var multiselects={};
-			var otheroptions={};
-			var disclaimerignore=false;
-			$('#addstory').click(function(){
-				$('#shrinkmap').click();
-				$('#storyform .field,#cancelstory, #mainmap label,#mainmap .help,#disclaimer').show();
-				$('#mainmap #map,#mainmap .map').css({'min-height':'300px','height':'300px','max-height':'300px'});
-				map._onResize();
-				map.setZoom(17);
-				$('#addstory').hide();
-				if(disclaimerignore){
-					$('#disclaimer').hide();
-				}
-				map.on('click', collectData);
-			});
-			$('#cancelstory').click(function(){
-				$('#storyform .field,#cancelstory, #mainmap label,#mainmap .help,#disclaimer').hide();
-				$('#map,.map').attr('style','');
-				$('#mainmap,#addstory').show();
-				map._onResize();
-				map.setZoom(15);
-				map.off('click', collectData);
-			});
-			$('#hidedisclaimer').click(function(){
-				disclaimerignore=true;
-				$('#disclaimer').hide();
-			});
-			var fullsubmits=[];
-			$('#submit').click(function(){
-				$.confirm({
-					title: 'Confirm!',
-					content: "This will save and add this story to the website. It will be publicly accessible. Please confirm you've used a name, and described the details in a way you're comfortable with being published.",
-					buttons: {
-						confirm: function () {
-							fullsubmits=[];
-							$.each(multiselects,function(mk,mv){
-								$.each(mv,function(k,v){
-									fullsubmits.push('entry.'+mk+'='+encodeURI(v));
-								});
-							});
-							$.each(otheroptions,function(k,v){
-								if(v!=''){
-									fullsubmits.push('entry.'+k+'.other_option_response='+encodeURI(v));
-								}
-							});
-							$('.control:not(.multiselection):not(#when) input,.control:not(.multiselection):not(#when) textarea,.control:not(.multiselection):not(#when) select,#longitude,#latitude').each(function(k,v){
-								if(v!=''){
-									fullsubmits.push('entry.'+$(this).data('fieldid')+'='+encodeURI($(this).val()));
-								}
-							});
-							var datetime='';
-							if($('#day').val() && $('#month').val() && $('#year').val() && $('#hour').val() && $('#minute').val()){
-								datetime=datetime+$('#month').val()+'-';
-								datetime=datetime+$('#day').val()+'-';
-								datetime=datetime+$('#year').val()+'+';
-								datetime=datetime+$('#hour').val()+' ';
-								datetime=datetime+$('#minute').val();
-								fullsubmits.push('entry.153573005='+encodeURI(datetime));
+						var multiselects={};
+						var otheroptions={};
+						var disclaimerignore=false;
+						$('#addstory').click(function(){
+							$('#shrinkmap').click();
+							$('#storyform .field,#cancelstory, #mainmap label,#mainmap .help,#disclaimer').show();
+							$('#mainmap #map,#mainmap .map').css({'min-height':'300px','height':'300px','max-height':'300px'});
+							map._onResize();
+							map.setZoom(17);
+							$('#addstory').hide();
+							if(disclaimerignore){
+								$('#disclaimer').hide();
 							}
-							if($('#year').val()){
-								fullsubmits.push('entry.1239551970='+encodeURI($('#year').val()));
-							}
-							var submissionurl='https://docs.google.com/forms/d/e/' + formId + '/formResponse?'+fullsubmits.join('&')+'&entry.319884402=Yes&submit=Submit';
-							$('#storyform').scrollTop(0);
-							$('#storyform').html('<iframe id="formSubmission" src="'+submissionurl+'" seamless scrolling="no" style="overflow:hidden;height:375px;border:lightgray solid thin;"></iframe><h6 id="savingmsg">Saving this submission!</h6>').promise().done(function(){
-								setTimeout(function(){
-									$('#savingmsg').text('Story saved!');
-									$('#storyform').append('<p><a href="https://yyt-sidewalks.github.io/site/stories/?do=addstory" class="button is-success">Add another Story</a><a href="https://yyt-sidewalks.github.io/site/stories/?do=addstory" class="button is-info">View Stories Map</a></p>');
-								},2000);
-							});
-						},
-						cancel: function () {
-							
-						}
-					}
-				});
-			});
-			$('.multiselection').each(function(k,v){
-				multiselects[$(this).data('fieldid')]=[];
-			});
-			$('button.multiselect').click(function(){
-				if(multiselects[$(this).data('fieldid')].includes($(this).data('value'))){
-					$(this).removeClass('is-success');
-					var thisindex = multiselects[$(this).data('fieldid')].indexOf($(this).data('value'));
-					if (thisindex > -1) {
-						multiselects[$(this).data('fieldid')].splice(thisindex, 1);
-						if($(this).data('value')=='__other_option__'){
-							otheroptions[$(this).data('fieldid')]='';
-							$('#'+$(this).data('otherid')).hide();
-							$('#'+$(this).data('otherid')).val('');
-						}
-					}
-				}else{
-					$(this).addClass('is-success');
-					multiselects[$(this).data('fieldid')].push($(this).data('value'));
-					if($(this).data('value')=='__other_option__'){
-						otheroptions[$(this).data('fieldid')]='';
-						$('#'+$(this).data('otherid')).show();
-						$('#'+$(this).data('otherid')).change(function(){
-							otheroptions[$(this).data('fieldid')]=$(this).val();
+							map.on('click', collectData);
 						});
-					}
+						$('#cancelstory').click(function(){
+							$('#storyform .field,#cancelstory, #mainmap label,#mainmap .help,#disclaimer').hide();
+							$('#map,.map').attr('style','');
+							$('#mainmap,#addstory').show();
+							map._onResize();
+							map.setZoom(15);
+							map.off('click', collectData);
+						});
+						$('#hidedisclaimer').click(function(){
+							disclaimerignore=true;
+							$('#disclaimer').hide();
+						});
+						var fullsubmits=[];
+						$('#submit').click(function(){
+							$.confirm({
+								title: 'Confirm!',
+								content: "This will save and add this story to the website. It will be publicly accessible. Please confirm you've used a name, and described the details in a way you're comfortable with being published.",
+								buttons: {
+									confirm: function () {
+										fullsubmits=[];
+										$.each(multiselects,function(mk,mv){
+											$.each(mv,function(k,v){
+												fullsubmits.push('entry.'+mk+'='+encodeURI(v));
+											});
+										});
+										$.each(otheroptions,function(k,v){
+											if(v!=''){
+												fullsubmits.push('entry.'+k+'.other_option_response='+encodeURI(v));
+											}
+										});
+										$('.control:not(.multiselection):not(#when) input,.control:not(.multiselection):not(#when) textarea,.control:not(.multiselection):not(#when) select,#longitude,#latitude').each(function(k,v){
+											if(v!=''){
+												fullsubmits.push('entry.'+$(this).data('fieldid')+'='+encodeURI($(this).val()));
+											}
+										});
+										var datetime='';
+										if($('#day').val() && $('#month').val() && $('#year').val() && $('#hour').val() && $('#minute').val()){
+											datetime=datetime+$('#month').val()+'-';
+											datetime=datetime+$('#day').val()+'-';
+											datetime=datetime+$('#year').val()+'+';
+											datetime=datetime+$('#hour').val()+' ';
+											datetime=datetime+$('#minute').val();
+											fullsubmits.push('entry.153573005='+encodeURI(datetime));
+										}
+										if($('#year').val()){
+											fullsubmits.push('entry.1239551970='+encodeURI($('#year').val()));
+										}
+										var submissionurl='https://docs.google.com/forms/d/e/' + formId + '/formResponse?'+fullsubmits.join('&')+'&entry.319884402=Yes&submit=Submit';
+										$('#storyform').scrollTop(0);
+										$('#storyform').html('<iframe id="formSubmission" src="'+submissionurl+'" seamless scrolling="no" style="overflow:hidden;height:375px;border:lightgray solid thin;"></iframe><h6 id="savingmsg">Saving this submission!</h6>').promise().done(function(){
+											setTimeout(function(){
+												$('#savingmsg').text('Story saved!');
+												$('#storyform').append('<p><a href="https://yyt-sidewalks.github.io/site/stories/?do=addstory" class="button is-success">Add another Story</a><a href="https://yyt-sidewalks.github.io/site/stories/?do=addstory" class="button is-info">View Stories Map</a></p>');
+											},2000);
+										});
+									},
+									cancel: function () {
+										
+									}
+								}
+							});
+						});
+						$('.multiselection').each(function(k,v){
+							multiselects[$(this).data('fieldid')]=[];
+						});
+						$('button.multiselect').click(function(){
+							if(multiselects[$(this).data('fieldid')].includes($(this).data('value'))){
+								$(this).removeClass('is-success');
+								var thisindex = multiselects[$(this).data('fieldid')].indexOf($(this).data('value'));
+								if (thisindex > -1) {
+									multiselects[$(this).data('fieldid')].splice(thisindex, 1);
+									if($(this).data('value')=='__other_option__'){
+										otheroptions[$(this).data('fieldid')]='';
+										$('#'+$(this).data('otherid')).hide();
+										$('#'+$(this).data('otherid')).val('');
+									}
+								}
+							}else{
+								$(this).addClass('is-success');
+								multiselects[$(this).data('fieldid')].push($(this).data('value'));
+								if($(this).data('value')=='__other_option__'){
+									otheroptions[$(this).data('fieldid')]='';
+									$('#'+$(this).data('otherid')).show();
+									$('#'+$(this).data('otherid')).change(function(){
+										otheroptions[$(this).data('fieldid')]=$(this).val();
+									});
+								}
+							}
+						});
+					
+						map.on('locationfound', function(e) {
+							collectData(e);
+						});
+						
+						//Grab the google sheet data using tabletop - published to the web not just shared - and use geojson.min.js to convert into proper geojson format
+						var tabletop = Tabletop.init( {
+							key: sharedgsheet,
+							simpleSheet: true,
+							parseNumbers: true,
+							callback: function(data, tabletop) {
+								activestories=[];
+								$.each(data,function(k,v){
+									if(v.Active=='Yes'){
+										activestories.push(v);
+									}
+								});
+								var gpsData = GeoJSON.parse(activestories, {Point: ['Latitude', 'Longitude']});
+								//add that data to the geojson layer created earlier
+								gps.addData(gpsData);
+								gps.addTo(map);
+								makestories(12);
+							},
+						});
+
+					break;
+					case "story":
+						$('#addstory, #zoommap,.title,.subtitle').hide();
+						$('#mainmap #map,#mainmap .map').css({'min-height':'300px','height':'300px','max-height':'300px'});
+						activestories=[];													
+						activestories.push(fullstory);
+						var gpsData = GeoJSON.parse(activestories, {Point: ['Latitude', 'Longitude']});
+						//add that data to the geojson layer created earlier
+						gps.addData(gpsData);
+						gps.addTo(map);
+						loc.stop();
+						$('#blurb').html('<h4 id="story_who">'+fullstory['Tell us who you are']+'</h4><p id="story_description" class="is-size-5">'+fullstory['Description']+'</p>');
+						var dateinfo=[];
+						if(fullstory['Date']!==''){
+							dateinfo.push(fullstory['Date']);
+						}else{
+							dateinfo.push(fullstory['Time of Day']);
+							dateinfo.push(fullstory['Time of Year']);
+							dateinfo.push(fullstory['Year']);
+						}
+						$('#story_who').after('<h3 id="story_whenwhat">'+fullstory['You were']+' - '+dateinfo.join(' ')+'</h3>');
+						$('#story_description').after('<p><strong>Sidewalk Conditions:</strong> '+fullstory['Sidewalk Conditions']+'<br><strong>Weather Conditions:</strong> '+fullstory['Weather Conditions']+'<br><strong>Vehicles Involved:</strong> '+fullstory['Vehicles Involved']+' <br><strong>Impact of the Incident:</strong> '+fullstory['Impact of the Incident']+'</p><p><strong>Source:</strong> '+fullstory['Source']+'<br><strong>Link:</strong> <a href="'+fullstory['Link to News Article or Website']+'" target="_blank">'+fullstory['Link to News Article or Website']+'</a><br><strong>Added:</strong> '+fullstory['Timestamp']+'</p><p><a class="button is-success" href="https://yyt-sidewalks.github.io/site/stories/?do=addstory">Add a story</a></p>');
+						setTimeout(function() {
+							map._onResize();
+							map.setView([fullstory.Latitude,fullstory.Longitude], 18);
+						}, 1000);
+					break;
+					case "nostory":
+						$('#addstory, #zoommap').hide();
+						$('#blurb').html('<h5>No Story</h5><p>No story matches this id!</p>');
+
+					break;
 				}
-			});
-			
+			}
 			function collectData(e) {
 				if(marker){
 					map.removeLayer(marker);
@@ -490,63 +560,6 @@
 				$('#longitude').val(lng);
 				$('#latitude').val(lat);
 			}
-		
-			map.on('locationfound', function(e) {
-				collectData(e);
-			});
-			
-			//Grab the google sheet data using tabletop - published to the web not just shared - and use geojson.min.js to convert into proper geojson format
-			var tabletop = Tabletop.init( {
-				key: sharedgsheet,
-				simpleSheet: true,
-				parseNumbers: true,
-				callback: function(data, tabletop) {
-				var activedata=[];
-				$.each(data,function(k,v){
-					if(v.Active=='Yes'){
-						activedata.push(v);
-					}
-				});
-				var gpsData = GeoJSON.parse(activedata, {Point: ['Latitude', 'Longitude']});
-				//add that data to the geojson layer created earlier
-				gps.addData(gpsData);
-				gps.addTo(map);
-				},
-			});
-
-			break;
-			case "story":
-				$('#addstory, #zoommap,.title,.subtitle').hide();
-				$('#mainmap #map,#mainmap .map').css({'min-height':'300px','height':'300px','max-height':'300px'});
-				var activedata=[];													
-				activedata.push(fullstory);
-				var gpsData = GeoJSON.parse(activedata, {Point: ['Latitude', 'Longitude']});
-				//add that data to the geojson layer created earlier
-				gps.addData(gpsData);
-				gps.addTo(map);
-				$('#blurb').html('<h4 id="story_who">'+fullstory['Tell us who you are']+'</h4><p id="story_description" class="is-size-5">'+fullstory['Description']+'</p>');
-				var dateinfo=[];
-				if(fullstory['Date']!==''){
-					dateinfo.push(fullstory['Date']);
-				}else{
-					dateinfo.push(fullstory['Time of Day']);
-					dateinfo.push(fullstory['Time of Year']);
-					dateinfo.push(fullstory['Year']);
-				}
-				$('#story_who').after('<h3 id="story_whenwhat">'+fullstory['You were']+' - '+dateinfo.join(' ')+'</h3>');
-				$('#story_description').after('<p><strong>Sidewalk Conditions:</strong> '+fullstory['Sidewalk Conditions']+'<br><strong>Weather Conditions:</strong> '+fullstory['Weather Conditions']+'<br><strong>Vehicles Involved:</strong> '+fullstory['Vehicles Involved']+' <br><strong>Impact of the Incident:</strong> '+fullstory['Impact of the Incident']+'</p><p><strong>Source:</strong> '+fullstory['Source']+'<br><strong>Link:</strong> <a href="'+fullstory['Link to News Article or Website']+'" target="_blank">'+fullstory['Link to News Article or Website']+'</a><br><strong>Added:</strong> '+fullstory['Timestamp']+'</p><p><a class="button is-primary" href="https://yyt-sidewalks.github.io/site/stories">Add your story</a></p>');
-				setTimeout(function() {
-					map._onResize();
-					map.setView([fullstory.Latitude,fullstory.Longitude], 18);
-				}, 1000);
-			break;
-			case "nostory":
-				$('#addstory, #zoommap').hide();
-				$('#blurb').html('<h5>No Story</h5><p>No story matches this id!</p>');
-
-			break;
-			}
-		}
 		</script>
 		<link rel="stylesheet" href="../css/leaflet.css">
 	</body>
