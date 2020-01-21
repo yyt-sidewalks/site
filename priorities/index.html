@@ -55,7 +55,7 @@
 					<div class="title is-size-2 is-size-4-touch">Priorities</div>
 					<div class="subtitle is-size-6-touch">The current snow-clearing priorities for the City of St. John's.</div>
 					<div id="controls">
-						<button class="button is-primary" id="zoommap">Zoom</button>
+						<button class="button is-info" id="zoommap">Zoom</button>
 						<span id="zoomcontrols">
 							<button class="button is-primary datatoggle" id="showpriority_1" data-layer="priority_1">Priority 1</button>
 							<button class="button is-primary datatoggle" id="showpriority_2" data-layer="priority_2">Priority 2</button>
@@ -64,12 +64,23 @@
 							<button class="button is-primary datatoggle" id="showdoubleside" data-layer="doubleside">Both Sides</button>
 							<button class="button is-primary datatoggle" id="showsingleside" data-layer="singleside">Single Side</button>
 						</span>
-						<button class="button is-primary" id="shrinkmap"><i class="fas fa-times"></i></button>
+						<button class="button is-info" id="shrinkmap"><i class="fas fa-times"></i></button>
 					</div>
 				</div>
 				<div class="content">
 					<div class="map">
 						<div id="map"></div>
+						<div class="maplegend">
+							<h5>Legend</h5>
+							<ul class="legend_priorities">
+								<li><span class="area" data-area="priority_1">&nbsp;</span>Priority 1</li>
+								<li><span class="area" data-area="priority_2">&nbsp;</span>Priority 2</li>
+								<li><span class="area" data-area="priority_3">&nbsp;</span>Priority 3</li>
+								<li><span class="area" data-area="school_zones">&nbsp;</span>School Zones</li>
+								<li><span class="area" data-area="singleside">&nbsp;</span>Single Side</li>
+								<li><span class="area" data-area="doubleside">&nbsp;</span>Both Sides</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 				<div class="content">
@@ -103,17 +114,13 @@
 	<script type="text/javascript" src="../lib/main.js"></script>
 	<script>
 		var layertoggles={};
-		var gradient=["#168900","#2c7c00","#416f00","#576200","#6d5500","#834900","#993c00","#af2f00","#c42200","#da1500"];
 		var alllayers={};
 		var map = L.map('map',{zoomControl: false}).setView([47.5670, -52.7292], 14); //Initialize the map
 		new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);
 		//Add a basemap
 		var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-		}).addTo(map);
-
-		var priorities={"school_zones":{"colour":"#f2ff00","size":"24","opacity":"0.6","legend": "School Zones"},"singleside":{"colour":"#3c00ff","size":"14","opacity":"0.4","legend": "Single Side Cleared"},"doubleside":{"colour":"#ff8000","size":"14","opacity":"0.4","legend": "Both Sizes Cleared"},"priority_3":{"colour":"#42ff65","size":"4","opacity":"1","legend": "Priority 3"},"priority_2":{"colour":"#02e2f2","size":"4","opacity":"1","legend": "Priority 2"},"priority_1":{"colour":"#ff4545","size":"4","opacity":"1","legend": "Priority 1"}};
-		
+		}).addTo(map);		
 		$.each(priorities,function(k,v){
 			var thislayer = new L.geoJson(null,{
 				style: function(){

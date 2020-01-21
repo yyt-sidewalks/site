@@ -55,13 +55,28 @@
 					<div class="title is-size-2 is-size-4-touch">Obstructions</div>
 					<div class="subtitle is-size-6-touch">Items that are embedded within or obstruct easy movement within sidewalks.</div>
 					<div id="controls">
-						<button class="button is-primary" id="zoommap">Add to Map</button>
-						<button class="button is-primary" id="shrinkmap">Done</button>
+						<button class="button is-success" id="addobstruction">Add an Obstruction</button>
+						<span id="zoommsg">
+							<span class="spanlabel">To add, click a location on the map</span>
+						</span>
+						<button class="button is-info" id="shrinkmap"><i class="fas fa-times"></i></button>
 					</div>
 				</div>
 				<div class="content">
 					<div class="map">
 						<div id="map"></div>
+						<div class="maplegend">
+							<h5>Legend</h5>
+							<ul class="legend_obstructions">
+								<li><img src="../images/icons/icon-hydrant.png" class="icon">Fire Hydrant</li>
+								<li><img src="../images/icons/icon-pole.png" class="icon">Telephone Pole</li>
+								<li><img src="../images/icons/icon-light.png" class="icon">Street Light</li>
+								<li><img src="../images/icons/icon-bridge.png" class="icon">Narrow Bridge</li>
+								<li><img src="../images/icons/icon-sign.png" class="icon">Street Sign</li>
+								<li><img src="../images/icons/icon-traffic.png" class="icon">Traffic Light</li>
+								<li><img src="../images/icons/icon-other.png" class="icon">Other</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 				<div class="content">

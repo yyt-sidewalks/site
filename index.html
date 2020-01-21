@@ -56,21 +56,48 @@
 				</div>
 				<div class="content">
 					<div id="controls">
-						<button class="button is-primary" id="zoommap">Zoom</button>
+						<button class="button is-info" id="zoommap">Zoom</button>
 						<span id="zoomcontrols">
 							<button class="button is-primary datatoggle" id="showpriorities" data-layer="priorities"><span class="is-hidden-touch">City Snow&nbsp;</span>Priorities</button>
-							<button class="button is-primary datatoggle" id="showstories" data-layer="stories">Stories</button>
-							<button class="button is-primary datatoggle" id="showschools" data-layer="schools">Schools</button>
-							<button class="button is-primary datatoggle" id="showhospitals" data-layer="hospitals">Hospitals<span class="is-hidden-touch">&nbsp;& Clinics</span></button>
+							<button class="button is-primary datatoggle" id="showstories" data-layer="stories"><img src="images/icons/story.png" class="icon">Stories</button>
+							<button class="button is-primary datatoggle" id="showschools" data-layer="schools"><img src="images/icons/school.png" class="icon">Schools</button>
+							<button class="button is-primary datatoggle" id="showhospitals" data-layer="hospitals"><img src="images/icons/hospital.png" class="icon">Hospitals<span class="is-hidden-touch">&nbsp;& Clinics</span></button>
 							<button class="button is-primary datatoggle" id="showwalkers" data-layer="census">Walking<span class="is-hidden-touch">&nbsp;Commuters</span></button>
 							<button class="button is-primary datatoggle" id="showobstructions" data-layer="obstructions">Obstructions</button>
 						</span>
-						<button class="button is-primary" id="shrinkmap"><i class="fas fa-times"></i></button>
+						<button class="button is-info" id="shrinkmap"><i class="fas fa-times"></i></button>
+					</div>
+					<div id="addcontrols">
+						<a href="https://yyt-sidewalks.github.io/site/stories/?do=addstory" class="button is-success">Add a Story</a>
+						<a href="https://yyt-sidewalks.github.io/site/obstructions/?do=addobstruction" class="button is-success">Add an Obstruction</a>
 					</div>
 				</div>
 				<div class="content">
 					<div class="map">
 						<div id="map"></div>
+						<div class="maplegend">
+							<h5>Legend</h5>
+							<p class="gradientctl legend_census"><span class="spanlabel">More</span><span class="gradient"></span><span class="spanlabel">Less</span></p>
+							<p class="legend_priorities"><strong>Priorities</strong></p>
+							<ul class="legend_priorities">
+								<li><span class="area" data-area="priority_1">&nbsp;</span>Priority 1</li>
+								<li><span class="area" data-area="priority_2">&nbsp;</span>Priority 2</li>
+								<li><span class="area" data-area="priority_3">&nbsp;</span>Priority 3</li>
+								<li><span class="area" data-area="school_zones">&nbsp;</span>School Zones</li>
+								<li><span class="area" data-area="singleside">&nbsp;</span>Single Side</li>
+								<li><span class="area" data-area="doubleside">&nbsp;</span>Both Sides</li>
+							</ul>
+							<p class="legend_obstructions"><strong>Obstructions</strong></p>
+							<ul class="legend_obstructions">
+								<li><img src="images/icons/icon-hydrant.png" class="icon">Fire Hydrant</li>
+								<li><img src="images/icons/icon-pole.png" class="icon">Telephone Pole</li>
+								<li><img src="images/icons/icon-light.png" class="icon">Street Light</li>
+								<li><img src="images/icons/icon-bridge.png" class="icon">Narrow Bridge</li>
+								<li><img src="images/icons/icon-sign.png" class="icon">Street Sign</li>
+								<li><img src="images/icons/icon-traffic.png" class="icon">Traffic Light</li>
+								<li><img src="images/icons/icon-other.png" class="icon">Other</li>
+							</ul>
+						</div>
 					</div>
 				</div>
 				<div class="content">
@@ -155,7 +182,6 @@
 			var censusdata;
 			var censusareas={};
 			var prioritytoggle = false,layertoggles={},centretoggle=false;
-			var gradient=["#168900","#2c7c00","#416f00","#576200","#6d5500","#834900","#993c00","#af2f00","#c42200","#da1500"];
 			var alllayers={},prioritylayers={};
 
 			var map = L.map('map',{zoomControl: false}).setView([47.5670, -52.7292], 13); //Initialize the map
@@ -275,9 +301,7 @@
 						hospitallayer.addData(data);
 					});
 				}
-			});
-			var priorities={"school_zones":{"colour":"#f2ff00","size":"24","opacity":"0.6","legend": "School Zones"},"singleside":{"colour":"#3c00ff","size":"14","opacity":"0.4","legend": "Single Side Cleared"},"doubleside":{"colour":"#ff8000","size":"14","opacity":"0.4","legend": "Both Sizes Cleared"},"priority_3":{"colour":"#42ff65","size":"4","opacity":"1","legend": "Priority 3"},"priority_2":{"colour":"#02e2f2","size":"4","opacity":"1","legend": "Priority 2"},"priority_1":{"colour":"#ff4545","size":"4","opacity":"1","legend": "Priority 1"}};
-			
+			});			
 			$.each(priorities,function(k,v){
 				var thislayer = new L.geoJson(null,{
 					style: function(){
@@ -301,14 +325,16 @@
 			$(function() {
 				$('.datatoggle').click(function(){
 					togglelayers($(this).data('layer'));
+					$('.legend_'+$(this).data('layer')).toggle();
 				});
 				setTimeout(function() {
 					$.each(censusdata,function(k,v){
-						var rounded=Math.ceil(Math.round(v.percentages.walked.all*100)/10);
-						var opacity=(Math.round(v.percentages.walked.all*10)/10)*1.75;
+						var rounded=Math.ceil(Math.round(v.percentages.walked.all*200)/(gradient.length-1));
+						var opacity=0.6;
 						censusareas[v.GeoUID].setStyle({fillColor:gradient[rounded],fillOpacity: opacity});
 					});
-					$('#showobstructions,#showschools,#showhospitals,#showstories').click();
+					$('.datatoggle').click();
+					$('#showpriorities').click();
 				},1500);
 			});
 			function buildcensusdata(){

@@ -73,12 +73,12 @@
 							</div>
 						</div>
 						<div class="field">
-							<button class="button is-primary" id="zoommap">Zoom</button>
+							<button class="button is-info" id="zoommap">Zoom</button>
 							<span id="zoomcontrols">
-								<span class="spanlabel">More</span><span id="gradient"></span><span class="spanlabel">Less</span>
+								<span class="gradientctl"><span class="spanlabel">More</span><span class="gradient"></span><span class="spanlabel">Less</span></span>
 							</span>
-							<button class="button is-primary" id="shrinkmap"><i class="fas fa-times"></i></button>
-							<a href="files/" class="button is-primary">Review Data Files</a>
+							<button class="button is-info" id="shrinkmap"><i class="fas fa-times"></i></button>
+							<a href="files/" class="button is-success">Review Data Files</a>
 						</div>
 					</div>
 				</div>
@@ -130,7 +130,6 @@
 		var censusdata;
 		var censusareas={};
 		var layertoggles={},centretoggle=false;
-		var gradient=["#4be051","#3cc146","#2da43b","#208730","#347d20","#407310","#476900","#6c6b00","#996400","#cc5000","#ff0000"];
 		var alllayers={};
 		var map = L.map('map',{zoomControl: false}).setView([47.5670, -52.7292], 14); //Initialize the map
 		new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);
