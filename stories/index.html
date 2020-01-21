@@ -385,7 +385,7 @@
 							$('#mainmap #map,#mainmap .map').css({'min-height':'300px','height':'300px','max-height':'300px'});
 							map._onResize();
 							map.setZoom(17);
-							$('#addstory').hide();
+							$('#addstory,#storieslist').hide();
 							if(disclaimerignore){
 								$('#disclaimer').hide();
 							}
@@ -394,7 +394,7 @@
 						$('#cancelstory').click(function(){
 							$('#storyform .field,#cancelstory, #mainmap label,#mainmap .help,#disclaimer').hide();
 							$('#map,.map').attr('style','');
-							$('#mainmap,#addstory').show();
+							$('#mainmap,#addstory,#storieslist').show();
 							map._onResize();
 							map.setZoom(15);
 							map.off('click', collectData);
