@@ -206,11 +206,7 @@
 		// Calculate the offset
 	
 			var form = $('#form').html();
-			if(marker){
-				marker.on('popupclose', function() {
-					map.removeLayer(marker);
-				});
-			}
+			
 			marker = L.marker(e.latlng).addTo(map)
 			.bindPopup(form, {maxWidth:400});
 			
@@ -251,7 +247,11 @@
 					marker.closePopup();
 				}, 1000);
 			}
-			
+			if(marker){
+				marker.on('popupclose', function() {
+					map.removeLayer(marker);
+				});
+			}
 		}
 		
 		setTimeout(function() {
