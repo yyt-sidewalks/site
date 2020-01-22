@@ -178,11 +178,9 @@
 			new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);			
 			var marker, circle, lat, lng; //create variables used throughout the map
 			
-			//define icons
-			var obtypes=['hydrant','pole','light','bridge','sign','traffic','other'];
-			var typeicons={};
+			//define obstruction icons
 			$.each(obtypes,function(k,v){
-				typeicons[v]= L.icon({
+				obtypeicons[v]= L.icon({
 					iconUrl: 'images/icons/icon-'+v+'.png',
 					iconSize: [40, 40], // size of the icon
 					iconAnchor: [20, 44], // point of the icon which will correspond to marker's location
@@ -427,7 +425,7 @@
 			var obstructionslayer = new L.geoJson(null, {
 				pointToLayer: function(feature, latlng) {
 					var thistype=getobicontype(feature.properties.Type);
-					return L.marker(latlng, {icon: typeicons[thistype]});
+					return L.marker(latlng, {icon: obtypeicons[thistype]});
 				},
 				onEachFeature: function(feature, layer) {
 					var popupcontent='<h6>'+feature.properties.Identifier+'</h6>';

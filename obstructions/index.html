@@ -188,10 +188,8 @@
 		var marker, circle, lat, lng; //create variables used throughout the map
 		
 		//define icons
-		var obtypes=['hydrant','pole','light','bridge','sign','traffic','other'];
-		var typeicons={};
 		$.each(obtypes,function(k,v){
-			typeicons[v]= L.icon({
+			obtypeicons[v]= L.icon({
 				iconUrl: '../images/icons/icon-'+v+'.png',
 				iconSize: [40, 40], // size of the icon
 				iconAnchor: [20, 44], // point of the icon which will correspond to marker's location
@@ -234,7 +232,7 @@
 							}, 1000);
 						}
 						var icontype=getobicontype(obtype);
-						var newicon= new L.Marker(e.latlng, {icon: typeicons[icontype]}).addTo(map).bindPopup('<h6>This is new!</h6>');
+						var newicon= new L.Marker(e.latlng, {icon: obtypeicons[icontype]}).addTo(map).bindPopup('<h6>This is new!</h6>');
 						});
 					} else {
 						$('#formHelp').html('<span style="color:red;">Please enter an obstruction type.</span>')
@@ -267,7 +265,7 @@
 		var gps = new L.geoJson(null, {
 			pointToLayer: function(feature, latlng) {
 				var thistype=getobicontype(feature.properties.Type);
-				return L.marker(latlng, {icon: typeicons[thistype]});
+				return L.marker(latlng, {icon: obtypeicons[thistype]});
 			},
 			onEachFeature: function(feature, layer) {
 				var popupcontent='<h6>'+feature.properties.Identifier+'</h6>';
