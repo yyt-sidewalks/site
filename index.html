@@ -95,6 +95,7 @@
 								<li><img src="images/icons/icon-bridge.png" class="icon">Narrow Bridge</li>
 								<li><img src="images/icons/icon-sign.png" class="icon">Street Sign</li>
 								<li><img src="images/icons/icon-traffic.png" class="icon">Traffic Light</li>
+								<li><img src="images/icons/icon-parking.png" class="icon">Parking Metre</li>
 								<li><img src="images/icons/icon-other.png" class="icon">Other</li>
 							</ul>
 						</div>
@@ -421,39 +422,11 @@
 					layertoggles[l] = !layertoggles[l];
 				}
 			}
-		
-			function geticontype(t){
-				var it;
-				switch(t){
-					case "Fire Hydrant":
-						it="hydrant";
-					break;
-					case "Telephone or Power Pole (pole and wires)":
-						it="pole";
-					break;
-					case "Street Light":
-						it="light";
-					break;
-					case "Bridge with Narrow sidewalks":
-						it="bridge";
-					break;
-					case "Street Sign (parking, stop sign, etc)":
-						it="sign";
-					break;
-					case "Traffic Light":
-						it="traffic";
-					break;
-					case "Other Obstruction":
-						it="other";
-					break;
-				}
-				return it;
-			}
 			//Add form response points
 			//Add an empty geojson layer for the google sheet points and create the popup
 			var obstructionslayer = new L.geoJson(null, {
 				pointToLayer: function(feature, latlng) {
-					var thistype=geticontype(feature.properties.Type);
+					var thistype=getobicontype(feature.properties.Type);
 					return L.marker(latlng, {icon: typeicons[thistype]});
 				},
 				onEachFeature: function(feature, layer) {
