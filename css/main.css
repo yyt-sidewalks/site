@@ -6992,7 +6992,7 @@ a.navbar-item {
   background: linear-gradient(90deg, #da1500, #168900); }
 
 .map {
-  min-height: 500px;
+  min-height: 556px;
   position: relative;
   border: solid 2px #dbdbdb;
   border-radius: 4px;
@@ -7039,7 +7039,7 @@ a.navbar-item {
 
 #map {
   position: absolute;
-  min-height: 500px;
+  min-height: 556px;
   width: 100%; }
 
 .leaflet-popup-content {
