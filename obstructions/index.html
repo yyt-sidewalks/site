@@ -239,12 +239,13 @@
 			if(removemarker){
 				setTimeout(function() {
 					map.removeLayer(marker);
+					marker.closePopup();
 				}, 1000);
 			}
 			if(marker){
-			marker.on('popupclose', function() {
-				map.removeLayer(marker);
-			});
+				marker.on('popupclose', function() {
+					map.removeLayer(marker);
+				});
 			}
 		}
 		
