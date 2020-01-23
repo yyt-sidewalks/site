@@ -7011,6 +7011,14 @@ a.navbar-item {
       width: 1.3em;
       height: 1.3em;
       margin-right: 0.2em; }
+    .map .maplegend #legend {
+      display: none; }
+    .map .maplegend #legendctl {
+      float: right;
+      width: 1em;
+      height: 1em;
+      margin: 0;
+      cursor: pointer; }
     .map .maplegend ul {
       margin: 0 0 1em 0; }
       .map .maplegend ul li {
@@ -7027,6 +7035,7 @@ a.navbar-item {
       .map .maplegend ul:last-of-type {
         margin: 0 0 0 0; }
     .map .maplegend .gradientctl .spanlabel {
+      background: #fff;
       width: 40px;
       margin: 0 0.2em;
       height: 1em;
