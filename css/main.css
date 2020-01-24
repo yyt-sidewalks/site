@@ -6959,7 +6959,15 @@ label.panel-block {
 
 .navbar {
   background-color: #757763;
-  color: white; }
+  color: white;
+  position: fixed;
+  z-index: 30000;
+  width: 100%;
+  top: 0; }
+
+#main {
+  padding-top: 1em;
+  margin-top: 4em; }
 
 a.navbar-item {
   color: white;
@@ -7088,9 +7096,6 @@ a.navbar-item {
 .multiselection .button {
   margin-bottom: 0.25em; }
 
-#main {
-  padding-top: 1em; }
-
 .has-background-blue-lighter {
   background-color: #d0eafb; }
 
@@ -7180,7 +7185,8 @@ h3#story_whenwhat {
 
 @media screen and (min-width: 1024px) {
   #main {
-    padding-top: 2em; }
+    padding-top: 2em;
+    margin-top: 2em; }
   .content {
     padding: 0 0 1em 0; }
     .content figure .video {
