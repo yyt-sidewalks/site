@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta property="og:url" content="https://yyt-sidewalks.github.io/site/" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Sidewalks in St John's, NL" />
+		<meta property="og:description" content="A site for tracking sidewalk and pedestrian safety and usage in St. John's, NL" />
+		<title>YYT Sidewalks - City Priorities</title>
+		<link rel="stylesheet" href="../css/main.css">
+		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+<!--leaflet-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+<!--Location Plugin-->
+<script src='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.min.js'></script>
+<link href='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.css' rel='stylesheet' />
+<!--Tabletop and GeoJson-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
+<script src="../lib/geojson.js"></script>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar">
+			<div class="container is-fluid">
+				<div class="navbar-brand">
+					<a class="navbar-item" href="https://yyt-sidewalks.github.io/site">
+						<img src="../images/icons/pedestrian.png" alt="Sidewalks in St. John's, NL" height="28">
+					</a>
+					<div class="navbar-burger burger" data-target="navbar">
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+				</div>
+				<div id="navbar" class="navbar-menu">
+					<div class="navbar-start">
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site">Home</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/about/">About</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/stories/">Stories</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/obstructions/">Obstructions</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/city-priorities/">City Clearing Priorities</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/reports-media/">Reports & Media</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/open-data/">Open Data</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/resources/">Resources</a>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<section id="main" class="section">
+			<div class="container is-fluid">
+				<div class="content">
+					<div class="title is-size-2 is-size-4-touch">Priorities</div>
+					<div class="subtitle is-size-6-touch">The current snow-clearing priorities for the City of St. John's.</div>
+					<div id="controls">
+						<button class="button is-info" id="zoommap">Zoom</button>
+						<span id="zoomcontrols">
+							<button class="button is-primary datatoggle" id="showpriority_1" data-layer="priority_1">Priority 1</button>
+							<button class="button is-primary datatoggle" id="showpriority_2" data-layer="priority_2">Priority 2</button>
+							<button class="button is-primary datatoggle" id="showpriority_3" data-layer="priority_3">Priority 3</button>
+							<button class="button is-primary datatoggle" id="showschool_zones" data-layer="school_zones">School Zones</button>
+							<button class="button is-primary datatoggle" id="showdoubleside" data-layer="doubleside">Both Sides</button>
+							<button class="button is-primary datatoggle" id="showsingleside" data-layer="singleside">Single Side</button>
+						</span>
+						<button class="button is-info" id="shrinkmap"><i class="fas fa-times"></i></button>
+					</div>
+				</div>
+				<div class="content">
+					<div class="map">
+						<div id="map"></div>
+						<div class="maplegend">
+							<h5>Legend<img src="../images/icons/expand.png" class="icon" id="legendctl" title="Expand Legend"></h5>
+							<span id="legend">
+								<ul class="legend_priorities">
+									<li><span class="area" data-area="priority_1">&nbsp;</span>Priority 1</li>
+									<li><span class="area" data-area="priority_2">&nbsp;</span>Priority 2</li>
+									<li><span class="area" data-area="priority_3">&nbsp;</span>Priority 3</li>
+									<li><span class="area" data-area="school_zones">&nbsp;</span>School Zones</li>
+									<li><span class="area" data-area="singleside">&nbsp;</span>Single Side</li>
+									<li><span class="area" data-area="doubleside">&nbsp;</span>Both Sides</li>
+								</ul>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="content">
+					<div id="blurb">
+						<h3 class="is-size-3">About this page</h3>
+						<p>The data on this page is is drawn directly from the City of St. John's site at <a href="https://map.stjohns.ca/sidewalk/" target="_blank">Sidewalk Clearing Priorities - https://map.stjohns.ca/sidewalk/</a></p>
+						<h4 class="is-size-4">How to use this page</h4>
+						<p>You can view the 3 priority areas, school zones, and whether single or both sides are cleared on a particular route.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+	<footer class="footer has-text-centered">
+		<div class="container is-fluid">
+			<div class="columns">
+				<div class="column is-8-desktop is-offset-2-desktop">
+					<p>
+						<small>
+						Source code licensed <a href="http://opensource.org/licenses/mit-license.php">MIT</a>
+						</small>
+					</p>
+					<p style="margin-top: 1rem;">
+						<a href="http://bulma.io">
+						<img src="../made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
+						</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<script type="text/javascript" src="../lib/main.js"></script>
+	<script>
+		var layertoggles={};
+		var alllayers={};
+		var map = L.map('map',{zoomControl: false}).setView([47.5670, -52.7292], 14); //Initialize the map
+		new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);
+		//Add a basemap
+		var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		}).addTo(map);		
+		$.each(priorities,function(k,v){
+			var thislayer = new L.geoJson(null,{
+				style: function(){
+					return {color: v.colour, opacity: v.opacity, weight: v.size}
+				}
+			});
+			thislayer.addTo(map);
+			$.ajax({
+				dataType: "json",
+				url: "../data/"+k+".json",
+				success: function(data) {
+					$(data.features).each(function(key, data) {
+						thislayer.addData(data);
+					});
+				}
+			});
+			alllayers[k]=thislayer;
+			layertoggles[k]=false;
+			$('#show'+k).click(function(){
+				togglelayers(k);
+			});
+		});
+		function togglelayers(l) {
+			if(!layertoggles[l]){
+				map.removeLayer(alllayers[l]);
+				$('#show'+l).addClass('showndata');
+			} else {
+				map.addLayer(alllayers[l]);
+				$('#show'+l).removeClass('showndata');
+			}
+			layertoggles[l] = !layertoggles[l];
+		}
+	</script>
+	<link rel="stylesheet" href="../css/leaflet.css">
+	</body>
+</html>
