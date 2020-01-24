@@ -7042,17 +7042,17 @@ a.navbar-item {
           vertical-align: middle; }
       .map .maplegend ul:last-of-type {
         margin: 0 0 0 0; }
-    .map .maplegend .gradientctl .spanlabel {
-      background: #fff;
-      width: 40px;
-      margin: 0 0.2em;
-      height: 1em;
-      line-height: 1em; }
-      .map .maplegend .gradientctl .spanlabel:first-of-type {
-        margin-left: 0; }
-    .map .maplegend .gradientctl .gradient {
-      width: 30%;
-      height: 1em; }
+  .map .gradientctl .spanlabel {
+    background: #fff;
+    width: 40px;
+    margin: 0 0.2em;
+    height: 1em;
+    line-height: 1em; }
+    .map .gradientctl .spanlabel:first-of-type {
+      margin-left: 0; }
+  .map .gradientctl .gradient {
+    width: 30%;
+    height: 1em; }
 
 #map {
   position: absolute;
