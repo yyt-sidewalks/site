@@ -7189,8 +7189,10 @@ h3#story_whenwhat {
     margin-top: 2em; }
   .content {
     padding: 0 0 1em 0; }
-    .content figure .video {
-      max-width: 800px; }
+    .content figure .image.is-16by9 {
+      padding-top: 0;
+      width: 800px;
+      height: 471px; }
   .section {
     padding: 0; }
   .container {
