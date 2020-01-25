@@ -192,7 +192,7 @@
 			});
 			$.ajax({
 				dataType: "json",
-				url: "data/demographics.json",
+				url: "open-data/demographics.json",
 				success: function(data) {
 					censusdata=data;
 					buildcensusdata();
@@ -211,7 +211,7 @@
 			layertoggles['census']=false;
 			$.ajax({
 				dataType: "json",
-				url: "data/censuszones.json",
+				url: "open-data/censuszones.json",
 				success: function(data) {
 					$(data.features).each(function(key, data) {
 						censuslayer.addData(data);
@@ -241,7 +241,7 @@
 			layertoggles['schools']=false;
 			$.ajax({
 				dataType: "json",
-				url: "data/schools.json",
+				url: "open-data/schools.json",
 				success: function(data) {
 					$(data.features).each(function(key, data) {
 						schoollayer.addData(data);
@@ -271,7 +271,7 @@
 			layertoggles['hospitals']=false;
 			$.ajax({
 				dataType: "json",
-				url: "data/hospitals.json",
+				url: "open-data/hospitals.json",
 				success: function(data) {
 					$(data.features).each(function(key, data) {
 						hospitallayer.addData(data);
@@ -287,7 +287,7 @@
 				thislayer.addTo(map);
 				$.ajax({
 					dataType: "json",
-					url: "data/"+k+".json",
+					url: "open-data/"+k+".json",
 					success: function(data) {
 						$(data.features).each(function(key, data) {
 							thislayer.addData(data);
