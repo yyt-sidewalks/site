@@ -133,7 +133,7 @@
 			thislayer.addTo(map);
 			$.ajax({
 				dataType: "json",
-				url: "../data/"+k+".json",
+				url: "../open-data/"+k+".json",
 				success: function(data) {
 					$(data.features).each(function(key, data) {
 						thislayer.addData(data);
