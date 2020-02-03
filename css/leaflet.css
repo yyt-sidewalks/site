@@ -1,8 +1,11 @@
 .leaflet-popup-content-wrapper{
   border-radius:0;
-  }
+}
 .leaflet-popup-content{
   margin: 1em;
+}
+.leaflet-popup-content .button {
+  height: unset;
 }
 .leaflet-container a.leaflet-popup-close-button{
   padding: 8px 8px 0 0;

@@ -7177,6 +7177,19 @@ h3#story_whenwhat {
 #storyform #year {
   width: 60px; }
 
+.button + .button {
+  margin-left: 3px; }
+
+#blurb {
+  min-height: 200px; }
+
+.missing {
+  box-shadow: 0 6px 6px rgba(138, 21, 21, 0.6), 0 0 0 3px rgba(138, 21, 21, 0.7) !important;
+  border: #8a1515 !important; }
+
+.edithelp {
+  display: none; }
+
 @media screen and (max-width: 1023px) {
   .navbar-menu {
     padding: 0; }
@@ -7187,12 +7200,18 @@ h3#story_whenwhat {
   #main {
     padding-top: 2em;
     margin-top: 2em; }
+  #blurb {
+    min-height: 500px; }
   .content {
     padding: 0 0 1em 0; }
     .content figure.image.is-16by9 {
       padding-top: 0;
       width: 800px;
       height: 471px; }
+  .field .control:not(#when) input, .field .control:not(#when) textarea {
+    min-width: 40%;
+    width: 40%;
+    max-width: 40%; }
   .section {
     padding: 0; }
   .container {

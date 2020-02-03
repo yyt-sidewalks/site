@@ -18,10 +18,16 @@
 <script src='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.min.js'></script>
 <link href='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.css' rel='stylesheet' />
 <!--Tabletop and GeoJson-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
 <script src="../lib/geojson.js"></script>
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<style>
+			textarea#description{
+				width:100%!important;
+				min-width:100%!important;
+				max-width:100%!important;
+			}
+		</style>
 	</head>
 	<body>
 		<nav class="navbar">
@@ -125,16 +131,16 @@
 					<div class="control">
 						<div class="select">
 							<select id="type">
-								<option value="">Select a Type of Obstruction</option>
-								<option value="Fire Hydrant">Fire Hydrant</option>
-								<option value="Telephone or Power Pole (pole and wires)">Telephone or Power Pole (pole & wires)</option>
-								<option value="Street Light">Street Light</option>
-								<option value="Bridge with Narrow sidewalks">Bridge with Narrow sidewalks</option>
-								<option value="Street Sign (parking, stop sign, etc)">Street Sign (parking, stop sign, etc)</option>
-								<option value="Traffic Light">Traffic Light</option>
-								<option value="Parking Metre">Parking Metre</option>
-								<option value="Sidewalk Stairs">Sidewalk Stairs</option>
-								<option value="Other Obstruction">Other Obstruction</option>
+								<option value="0">Select a Type of Obstruction</option>
+								<option value="1">Fire Hydrant</option>
+								<option value="2">Telephone or Power Pole (pole & wires)</option>
+								<option value="3">Street Light</option>
+								<option value="4">Bridge with Narrow sidewalks</option>
+								<option value="5">Street Sign (parking, stop sign, etc)</option>
+								<option value="6">Traffic Light</option>
+								<option value="7">Parking Metre</option>
+								<option value="8">Sidewalk Stairs</option>
+								<option value="9">Other Obstruction</option>
 							</select>
 						</div>
 					</div>
@@ -158,15 +164,6 @@
 			zoom: 19,
 			zoomControl: false
 		}); //Initialize the map
-		
-		var formId = '1FAIpQLSe-QSvUtogBRyFaiLHxoOWoFVWYg-lE5SXpEduEjUUNQtrOkQ';
-		var formLat = '761396806';
-		var formLng = '376030242';
-		var formText = '298764423';
-		var formType = '1739376719';
-		var formActive ='1860786605';
-		var gsheet = '2PACX-1vQQM2cMMx_lTpUIGplcNWYgNVxsDJ-ZjMQuFmvxB8BhhCuMpokje4nQEaCmvky4R7CQUxa0T9B8peqz';
-		var sharedgsheet ='https://docs.google.com/spreadsheets/d/1XODHn9MQ6Hy8IeC-LXLw_WGKmU4CuLccFiJEBeyDKaU/edit?usp=sharing';
 	
 		//Add a basemap
 		var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -222,22 +219,38 @@
 				map.panBy(new L.Point(0,-offset), {animate: false});
 			}, 100);
 			var removemarker=false;
+			var fullsubmits={};
 			marker.on('popupopen', function() {
 				$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
 				$('#projectform').submit(function(event) {
 					event.preventDefault();
 					var description = $('#description').val();
 					var obtype = $('#type').val();
-					if (obtype) {
-						$('#formdiv').html('<iframe id="formSubmission" src="https://docs.google.com/forms/d/e/' + formId + '/formResponse?entry.' + formActive + '=Yes&entry.' + formLat + '=' + lat + '&entry.' + formLng + '=' + lng + '&entry.'+ formType + '=' + obtype + '&entry.'+ formText + '=' + description + '&submit=Submit" seamless scrolling="no" style="overflow:hidden;height:375px;border:lightgray solid thin;"></iframe><p>Saving this submission!</p>').promise().done(function(){
-						if(marker){
-							removemarker=true;
-							setTimeout(function() {
-								marker.closePopup();
-							}, 1000);
-						}
-						var icontype=getobicontype(obtype);
-						var newicon= new L.Marker(e.latlng, {icon: obtypeicons[icontype]}).addTo(map).bindPopup('<h6>This is new!</h6>');
+
+					if(obtype){
+						fullsubmits.type=obtype;
+						fullsubmits.description=description;
+						fullsubmits.latitude=lat;
+						fullsubmits.longitude=lng;
+						$.post('https://www.yytsidewalks.info/data.php?j=a&f=obstruction',fullsubmits,function(data){
+							if(data['status']=='ok'){
+								marker.setPopupContent('<h4>Saved!</h4>');
+								setTimeout(function() {
+									if(marker){
+										removemarker=true;
+										marker.closePopup();
+									}
+									var icontype=getobicontype(parseInt(obtype));
+									var popupcontent='<h6>'+data['id']+'</h6>';
+									if(!isEmpty(data['description'])){
+										popupcontent=popupcontent+'<p>'+data['description']+'</p>';
+									}
+									var newicon= new L.Marker(e.latlng, {icon: obtypeicons[icontype]}).addTo(map).bindPopup(popupcontent);
+								}, 1000);
+								
+							}else{
+								$.alert('There was a problem. Please try again.');
+							}
 						});
 					} else {
 						$('#formHelp').html('<span style="color:red;">Please enter an obstruction type.</span>')
@@ -264,18 +277,18 @@
 				loc.stop();
 				map.setView([47.57,-52.71], 14);
 			}
-		}, 4000);
+		}, 1000);
 		//Add form response points
 		//Add an empty geojson layer for the google sheet points and create the popup
 		var gps = new L.geoJson(null, {
 			pointToLayer: function(feature, latlng) {
-				var thistype=getobicontype(feature.properties.Type);
+				var thistype=getobicontype(feature.properties.type);
 				return L.marker(latlng, {icon: obtypeicons[thistype]});
 			},
 			onEachFeature: function(feature, layer) {
-				var popupcontent='<h6>'+feature.properties.Identifier+'</h6>';
-				if(feature.properties.Description){
-					popupcontent=popupcontent+'<p>'+feature.properties.Description+'</p>';
+				var popupcontent='<h6>'+feature.properties.identifier+'</h6>';
+				if(!isEmpty(feature.properties.description)){
+					popupcontent=popupcontent+'<p>'+feature.properties.description+'</p>';
 				}
 				layer.bindPopup(popupcontent);
 				$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
@@ -284,36 +297,28 @@
 		var obstructiontotal=0;
 		var obstructiontypes=[];
 		var obstructiontypecount={};
-		//Grab the google sheet data using tabletop - published to the web not just shared - and use geojson.min.js to convert into proper geojson format
-		var tabletop = Tabletop.init( {
-			key: sharedgsheet,
-			simpleSheet: true,
-			parseNumbers: true,
-			callback: function(data, tabletop) {
-				var activedata=[];
-				$.each(data,function(k,v){
-					if(v.Active=='Yes'){
-						activedata.push(v);
-						obstructiontotal++;
-						if(!obstructiontypes.includes(v.Type)){
-							obstructiontypes.push(v.Type);
-							obstructiontypecount[v.Type]=1;
-						}else{
-							obstructiontypecount[v.Type]++;
-						}
-					}
-				});
-				var gpsData = GeoJSON.parse(activedata, {Point: ['Latitude', 'Longitude']});
-				//add that data to the geojson layer created earlier
-				gps.addData(gpsData);
-				gps.addTo(map);
-				obstructionstats();
-			},
+		$.get('https://www.yytsidewalks.info/data.php?j=l&f=obstruction',function(data){
+			activedata=data;
+			var gpsData = GeoJSON.parse(activedata, {Point: ['latitude', 'longitude']});
+			//add that data to the geojson layer created earlier
+			gps.addData(gpsData);
+			gps.addTo(map);
+			obstructionstats(data);
 		});
-		function obstructionstats(){
+		function obstructionstats(data){
+			$.each(data,function(k,v){
+				obstructiontotal++;
+				if(!obstructiontypes.includes(v.type)){
+					obstructiontypes.push(v.type);
+					obstructiontypecount[v.type]=1;
+				}else{
+					obstructiontypecount[v.type]++;
+				}
+			});
 			$('#totalobstructions').text(obstructiontotal);
 			$.each(obstructiontypes,function(k,v){
-				$('#stats').append('<li><strong>'+v+': </strong>'+obstructiontypecount[v]+'</li>');
+				var thistype=$('option[value="'+String(v)+'"]','#type').text();
+				$('#stats').append('<li><strong>'+thistype+': </strong>'+obstructiontypecount[v]+'</li>');
 			});
 		}
 		</script>

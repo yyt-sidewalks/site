@@ -141,37 +141,12 @@
 		</footer>
 		<script type="text/javascript" src="lib/main.js"></script>
 		<script>
-			var storysharedgsheet ='https://docs.google.com/spreadsheets/d/1C9vcW_ystvMG-7l-2cJB4JQ2XBlCt7I3GSK9F3wp2-E/edit?usp=sharing';
-			var activestories=[];
-			var storydetails = Tabletop.init( {
-				key: storysharedgsheet,
-				simpleSheet: true,
-				parseNumbers: true,
-				callback: function(data, tabletop) {
-					$.each(data,function(k,v){
-						if(v.Active=='Yes'){
-							activestories.push(v);
-						}
-					});
-					makestories(3);
-					storieslayer.addData(GeoJSON.parse(activestories, {Point: ['Latitude', 'Longitude']}));
-				}
-			});
-			var censusdata;
+			var censusdata={};
 			var censusareas={};
 			var prioritytoggle = false,layertoggles={},centretoggle=false;
 			var alllayers={},prioritylayers={};
 
 			var map = L.map('map',{zoomControl: false}).setView([47.5670, -52.7292], 13); //Initialize the map
-			
-			var formId = '1FAIpQLSe-QSvUtogBRyFaiLHxoOWoFVWYg-lE5SXpEduEjUUNQtrOkQ';
-			var formLat = '761396806';
-			var formLng = '376030242';
-			var formText = '298764423';
-			var formType = '1739376719';
-			var formActive ='1860786605';
-			var gsheet = '2PACX-1vQguHTF4WmXs4mMBPE6CgeYXNqI3S2GMgFW3nok9TmGqYIW_56kJGUBRO696CkLcOIhFqAPqB43rriA';
-			var sharedgsheet ='https://docs.google.com/spreadsheets/d/1XODHn9MQ6Hy8IeC-LXLw_WGKmU4CuLccFiJEBeyDKaU/edit?usp=sharing';
 		
 			//Add a basemap
 			var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -180,7 +155,7 @@
 			//Add Location Options - override the plugin default popup and circle
 			new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);			
 			var marker, circle, lat, lng; //create variables used throughout the map
-			
+
 			//define obstruction icons
 			$.each(obtypes,function(k,v){
 				obtypeicons[v]= L.icon({
@@ -194,7 +169,7 @@
 				dataType: "json",
 				url: "open-data/demographics.json",
 				success: function(data) {
-					censusdata=data;
+					censusdata.data=data;
 					buildcensusdata();
 				}
 			});
@@ -303,15 +278,8 @@
 					togglelayers($(this).data('layer'));
 					$('.legend_'+$(this).data('layer')).toggle();
 				});
-				setTimeout(function() {
-					$.each(censusdata,function(k,v){
-						var rounded=Math.ceil(Math.round(v.percentages.walked.all*200)/(gradient.length-1));
-						var opacity=0.6;
-						censusareas[v.GeoUID].setStyle({fillColor:gradient[rounded],fillOpacity: opacity});
-					});
-					$('.datatoggle').click();
-					$('#showpriorities').click();
-				},1500);
+				$('.datatoggle').click();
+				$('#showpriorities').click();
 			});
 			function buildcensusdata(){
 				censusdata.averages={};
@@ -333,41 +301,41 @@
 				censusdata.tiers.afterTaxIncome=0;
 				censusdata.tiers.density=0;
 				var hasAfterTaxIncome=0;
-				$.each(censusdata,function(k,v){
-					censusdata[k].density=Math.ceil(parseInt(v.Population)*(1/parseFloat(v['Area (sq km)'])));
-					censusdata.values.density.push(censusdata[k].density);
-					censusdata[k].percentages={};
-					censusdata[k].percentages.walked={};
+				$.each(censusdata.data,function(k,v){
+					censusdata.data[k].density=Math.ceil(parseInt(v.Population)*(1/parseFloat(v['Area (sq km)'])));
+					censusdata.values.density.push(censusdata.data[k].density);
+					censusdata.data[k].percentages={};
+					censusdata.data[k].percentages.walked={};
 					if(parseInt(v.Data.v_CA16_5792.value)){
-						censusdata[k].percentages.walked.all=parseInt(v.Data.v_CA16_5804.value)/parseInt(v.Data.v_CA16_5792.value);
+						censusdata.data[k].percentages.walked.all=parseInt(v.Data.v_CA16_5804.value)/parseInt(v.Data.v_CA16_5792.value);
 					}else{
-						censusdata[k].percentages.walked.all=0;
+						censusdata.data[k].percentages.walked.all=0;
 					}
 					if(parseInt(v.Data.v_CA16_5794.value)){
-						censusdata[k].percentages.walked.female=parseInt(v.Data.v_CA16_5806.value)/parseInt(v.Data.v_CA16_5794.value);
+						censusdata.data[k].percentages.walked.female=parseInt(v.Data.v_CA16_5806.value)/parseInt(v.Data.v_CA16_5794.value);
 					}else{
-						censusdata[k].percentages.walked.female=0;
+						censusdata.data[k].percentages.walked.female=0;
 					}
 					if(parseInt(v.Data.v_CA16_5793.value)){
-						censusdata[k].percentages.walked.male=parseInt(v.Data.v_CA16_5805.value)/parseInt(v.Data.v_CA16_5793.value);
+						censusdata.data[k].percentages.walked.male=parseInt(v.Data.v_CA16_5805.value)/parseInt(v.Data.v_CA16_5793.value);
 					}else{
-						censusdata[k].percentages.walked.male=0;
+						censusdata.data[k].percentages.walked.male=0;
 					}
-					censusdata[k].percentages.transit={};
+					censusdata.data[k].percentages.transit={};
 					if(parseInt(v.Data.v_CA16_5792.value)){
-						censusdata[k].percentages.transit.all=parseInt(v.Data.v_CA16_5801.value)/parseInt(v.Data.v_CA16_5792.value);
+						censusdata.data[k].percentages.transit.all=parseInt(v.Data.v_CA16_5801.value)/parseInt(v.Data.v_CA16_5792.value);
 					}else{
-						censusdata[k].percentages.transit.all=0;
+						censusdata.data[k].percentages.transit.all=0;
 					}
 					if(parseInt(v.Data.v_CA16_5794.value)){
-						censusdata[k].percentages.transit.female=parseInt(v.Data.v_CA16_5803.value)/parseInt(v.Data.v_CA16_5794.value);
+						censusdata.data[k].percentages.transit.female=parseInt(v.Data.v_CA16_5803.value)/parseInt(v.Data.v_CA16_5794.value);
 					}else{
-						censusdata[k].percentages.transit.female=0;
+						censusdata.data[k].percentages.transit.female=0;
 					}
 					if(parseInt(v.Data.v_CA16_5793.value)){
-						censusdata[k].percentages.transit.male=parseInt(v.Data.v_CA16_5802.value)/parseInt(v.Data.v_CA16_5793.value);
+						censusdata.data[k].percentages.transit.male=parseInt(v.Data.v_CA16_5802.value)/parseInt(v.Data.v_CA16_5793.value);
 					}else{
-						censusdata[k].percentages.transit.male=0;
+						censusdata.data[k].percentages.transit.male=0;
 					}
 					if(parseInt(v.Data.v_CA16_4963.value)!==false){
 						censusdata.totals.afterTaxIncome=censusdata.totals.afterTaxIncome+parseInt(v.Data.v_CA16_4963.value);
@@ -390,6 +358,13 @@
 						censusdata.ranges.density.push(censusdata.tiers.density+censusdata.ranges.density[lastkey]);
 					}
 				});
+				setTimeout(function() {
+					$.each(censusdata.data,function(k,v){
+					var rounded=Math.ceil(Math.round(v.percentages.walked.all*200)/(gradient.length-1));
+					var opacity=0.6;
+					censusareas[v.GeoUID].setStyle({fillColor:gradient[rounded],fillOpacity: opacity});
+					})
+				},1500);
 			}
 			
 			function togglelayers(l) {
@@ -427,13 +402,13 @@
 			//Add an empty geojson layer for the google sheet points and create the popup
 			var obstructionslayer = new L.geoJson(null, {
 				pointToLayer: function(feature, latlng) {
-					var thistype=getobicontype(feature.properties.Type);
+					var thistype=getobicontype(feature.properties.type);
 					return L.marker(latlng, {icon: obtypeicons[thistype]});
 				},
 				onEachFeature: function(feature, layer) {
-					var popupcontent='<h6>'+feature.properties.Identifier+'</h6>';
-					if(feature.properties.Description){
-						popupcontent=popupcontent+'<p>'+feature.properties.Description+'</p>';
+					var popupcontent='<h6>'+feature.properties.identifier+'</h6>';
+					if(feature.properties.description!==''){
+						popupcontent=popupcontent+'<p>'+feature.properties.description+'</p>';
 					}
 					obstructionslayer.bindPopup(popupcontent);
 					$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
@@ -444,21 +419,10 @@
 			obstructionslayer.addTo(map);
 			alllayers['obstructions']=obstructionslayer;
 			layertoggles['obstructions']=false;
-			var tabletop = Tabletop.init( {
-				key: sharedgsheet,
-				simpleSheet: true,
-				parseNumbers: true,
-				callback: function(data, tabletop) {
-				var activedata=[];
-				$.each(data,function(k,v){
-					if(v.Active=='Yes'){
-						activedata.push(v);
-					}
-				});
-				var gpsData = GeoJSON.parse(activedata, {Point: ['Latitude', 'Longitude']});
-				//add that data to the geojson layer created earlier
-				obstructionslayer.addData(gpsData);
-				},
+			var activeobstructions=[];
+			$.get('https://www.yytsidewalks.info/data.php?j=l&f=obstruction',function(data){
+				activeobstructions=data;
+				obstructionslayer.addData(GeoJSON.parse(activeobstructions, {Point: ['latitude', 'longitude']}));
 			});
 
 			var storieslayer = new L.geoJson(null, {
@@ -472,16 +436,22 @@
 					return L.marker(latlng, {icon: thisicon});
 				},
 				onEachFeature: function(feature, layer) {
-					var dateinfo=[];
-					if(feature.properties['Date']!==''){
-						dateinfo.push(feature.properties['Date']);
+					var dateinfo=[],description='',popupcontent='';
+					if(feature.properties.date!=='0000-00-00'){
+						dateinfo.push(feature.properties.date);
 					}else{
-						dateinfo.push(feature.properties['Time of Day']);
-						dateinfo.push(feature.properties['Time of Year']);
-						dateinfo.push(feature.properties['Year']);
+						if(feature.properties.timeofday){
+							dateinfo.push(storyoptions.timeofday[feature.properties.timeofday]);
+						}
+						if(feature.properties.timeofyear){
+							dateinfo.push(storyoptions.timeofyear[feature.properties.timeofyear]);
+						}
+						dateinfo.push(feature.properties.year);
 					}
-					var description=feature.properties.Description.substring(0, 300);
-					var popupcontent='<h5>'+feature.properties['You were']+' - '+dateinfo.join(' ')+'</h5><p><strong>'+feature.properties['Tell us who you are']+' &#183; '+feature.properties['Timestamp']+'</strong><br>'+description+'</p><p><a class="button is-success" href="https://yyt-sidewalks.github.io/site/stories/?story='+feature.properties['Identifier']+'">Read More</a></p>';
+					if(feature.properties.description!==''){
+						description=feature.properties.description.substring(0, 300);
+					}
+					popupcontent='<h5>'+storyoptions.type[feature.properties.type]+' - '+dateinfo.join(' ')+'</h5><p><strong>'+feature.properties.who+' &#183; '+feature.properties.nicedate+'</strong><br>'+description+'</p><p><a class="button is-success" href="https://yyt-sidewalks.github.io/site/stories/?story='+feature.properties.identifier+'">Read More</a></p>';
 					storieslayer.bindPopup(popupcontent);
 					$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
 				}
@@ -492,7 +462,12 @@
 			alllayers['stories']=storieslayer;
 			layertoggles['stories']=false;
 			//add that data to the geojson layer created earlier
-			
+			var activestories=[];
+			$.get('https://www.yytsidewalks.info/data.php?j=l&f=story',function(data){
+				activestories=data;
+				storieslayer.addData(GeoJSON.parse(activestories, {Point: ['latitude', 'longitude']}));
+				makestories(3);
+			});
 		</script>
 		<link rel="stylesheet" href="css/leaflet.css">
 	</body>

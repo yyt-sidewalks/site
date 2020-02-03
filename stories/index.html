@@ -18,7 +18,6 @@
 <script src='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.min.js'></script>
 <link href='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.css' rel='stylesheet' />
 <!--Tabletop and GeoJson-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
 <script src="../lib/geojson.js"></script>
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -83,30 +82,23 @@
 							<label for="who">Who are you?</label>
 							<p class="help">Your name, first name, or an alias you're comfortable with being seen by the public</p>
 							<div class="control">
-								<input type="text" class="input requiredField" id="who" data-fieldid="1602612507" placeholder="">
+								<input type="text" class="input requiredField" id="who" data-fieldid="who" placeholder="">
 							</div>
 						</div>
 						<div class="field">
-							<label for="were">You were</label>
+							<label for="type">You were</label>
 							<p class="help">What were you doing while walking?</p>
 							<div class="control">
 								<div class="select">
-									<select id="were" class="requiredField" data-fieldid="781021393">
-										<option value="">Select what you were doing</option>
-										<option value="Walking on a sidewalk">Walking on a sidewalk</option>
-										<option value="Walking in the road">Walking in the road</option>
-										<option value="Using a crosswalk">Using a crosswalk</option>
-										<option value="At an intersection with lights">At an intersection with lights</option>
-										<option value="Intersection without lights">Intersection without lights</option>
-										<option value="Crossing the road">Crossing the road</option>
-										<option value="Other">Other</option>
+									<select id="type" class="buildoption requiredField" data-fieldid="">
+										
 									</select>
 								</div>
 							</div>
 						</div>
 						<div class="field" id="mainmap">
 							<label for="location">Location</label>
-							<p class="help">Where were walking? Click to drop a pin</p>
+							<p class="help">Where were you walking? Click to drop a pin<span class="edithelp"> - to edit drop a new pin for this story</span></p>
 							<div class="control">
 								<div id="location" class="map">
 									<div id="map"></div>
@@ -120,87 +112,71 @@
 							</div>
 						</div>
 						<div class="field">
-							<label for="story">Tell your story</label>
+							<label for="description">Tell your story</label>
 							<p class="help">Write out your story. HTML tags will be retained: &lt;p&gt;&lt;br&gt;. Links, and other tags, will be removed. No photos can be added here. But you can provide a link below, if you wish.</p>
 							<div class="control">
-								<textarea class="textarea" rows="7" id="story" data-fieldid="704003002"></textarea>
+								<textarea class="textarea requiredField" rows="7" id="description" data-fieldid="description"></textarea>
 							</div>
 						</div>
 						<div class="field">
 							<label for="when">When: Exact</label>
-							<p class="help">If you know the exact date and time, you can provide it here</p>
+							<p class="help">If you know the exact date and time, you can provide it here. You can also just provide the year, if you wish.</p>
 							<div class="control is-grouped is-grouped-multiline" id="when">
-								<input type="text" class="input" id="day" data-fieldid="1239551970" placeholder="DD" title="Day">
-								<input type="text" class="input" id="month" data-fieldid="1239551970" placeholder="MM" title="Month">
-								<input type="text" class="input" id="year" data-fieldid="1239551970" placeholder="YYYY" title="Year">
-								<input type="text" class="input" id="hour" data-fieldid="1239551970" placeholder="HH" title="Hour">
-								<input type="text" class="input" id="minute" data-fieldid="1239551970" placeholder="MM" title="Minutes">
-								<div class="select">
-									<select id="ampm" data-fieldid="1239551970">
-										<option value="AM">AM</option>
-										<option value="PM">PM</option>
-									</select>
-								</div>
+								<input type="text" class="input" id="day" placeholder="DD" title="Day">
+								<input type="text" class="input" id="month" placeholder="MM" title="Month">
+								<input type="text" class="input" id="year" placeholder="YYYY" title="Year">
 							</div>
 							<label for="timeofyear">When: Approximate</label>
 							<p class="help">If you can't recall the exact date or time, indicate a time of year and day</p>
 							<div class="control is-grouped">
 								<div class="select">
-									<select id="timeofyear" data-fieldid="696106486">
-										<option value="">Select a Time of Year</option>
-										<option value="Winter">Winter</option>
-										<option value="Spring">Spring</option>
-										<option value="Fall">Fall</option>
-										<option value="Summer">Summer</option>
+									<select id="timeofyear" class="buildoption" data-fieldid="">
+										
 									</select>
 								</div>
 								<div class="select">
-									<select id="timeofday" data-fieldid="804270683">
-										<option value="">Select a Time of Day</option>
-										<option value="Morning">Morning</option>
-										<option value="Afternoon">Afternoon</option>
-										<option value="Evening">Evening</option>
-										<option value="Late Night">Late Night</option>
+									<select id="timeofday" class="buildoption" data-fieldid="">
+										
 									</select>
 								</div>
 							</div>
 						</div>
 						<div class="field is-grouped is-grouped-multiline">
-							<label for="sidewalk">Sidewalk Conditions</label>
+							<label for="sidewalks">Sidewalk Conditions</label>
 							<p class="help">What was the condition of the sidewalk? Click all that apply</p>
-							<div id="sidewalk" class="control multiselection" data-fieldid="1906426664">
-								<button class="button multiselect" data-value="Uncleared due to Storm" data-fieldid="1906426664">Uncleared due to Storm</button>
-								<button class="button multiselect" data-value="Passable, but covered in Ice" data-fieldid="1906426664">Passable, but covered in Ice</button>
-								<button class="button multiselect" data-value="Passable, but covered in Snow" data-fieldid="1906426664">Passable, but covered in Snow</button>
-								<button class="button multiselect" data-value="Covered over by clearing of road (city or private)" data-fieldid="1906426664">Covered over by clearing of road (city or private)</button>
-								<button class="button multiselect" data-value="Uneven due to potholes, cracks etc." data-fieldid="1906426664">Uneven due to potholes, cracks etc.</button>
-								<button class="button multiselect" data-value="No Street Lights" data-fieldid="1906426664">No Street Lights</button>
-								<button class="button multiselect" data-value="__other_option__" data-otherid="sidewalk_other" data-fieldid="1906426664">Other (Please Provide)</button>
-								<input type="text" class="input otheroption" id="sidewalk_other" data-fieldid="1906426664">
+							<div id="sidewalks" class="control multiselection" data-fieldid="sidewalks">
+								<button class="button multiselect" data-value="Uncleared due to Storm" data-fieldid="sidewalks">Uncleared due to Storm</button>
+								<button class="button multiselect" data-value="Passable, but covered in Ice" data-fieldid="sidewalks">Passable, but covered in Ice</button>
+								<button class="button multiselect" data-value="Passable, but covered in Snow" data-fieldid="sidewalks">Passable, but covered in Snow</button>
+								<button class="button multiselect" data-value="Covered over by clearing of road (city or private)" data-fieldid="sidewalks">Covered over by clearing of road (city or private)</button>
+								<button class="button multiselect" data-value="Uneven due to potholes, cracks etc." data-fieldid="sidewalks">Uneven due to potholes, cracks etc.</button>
+								<button class="button multiselect" data-value="No Street Lights" data-fieldid="sidewalks">No Street Lights</button>
+								<button class="button multiselect otheroption" data-value="Other" data-otherid="sidewalks_other">Other (Please Provide)</button>
+								<input type="text" class="input otheroption" id="sidewalks_other" data-fieldid="sidewalks">
 							</div>
 						</div>
 						<div class="field is-grouped is-grouped-multiline">
 							<label for="weather">Weather Conditions</label>
 							<p class="help">What was the weather like? Click all that apply</p>
-							<div id="weather" class="control multiselection" data-fieldid="1873397874">
-								<button class="button multiselect" data-value="Rain" data-fieldid="1873397874">Rain</button>
-								<button class="button multiselect" data-value="Snow" data-fieldid="1873397874">Snow</button>
-								<button class="button multiselect" data-value="Windy" data-fieldid="1873397874">Windy</button>
-								<button class="button multiselect" data-value="__other_option__" data-otherid="weather_other" data-fieldid="1873397874">Other (Please Provide)</button>
-								<input type="text" class="input otheroption" id="weather_other" data-fieldid="1873397874">
+							<div id="weather" class="control multiselection" data-fieldid="weather">
+								<button class="button multiselect" data-value="Rain" data-fieldid="weather">Rain</button>
+								<button class="button multiselect" data-value="Snow" data-fieldid="weather">Snow</button>
+								<button class="button multiselect" data-value="Windy" data-fieldid="weather">Windy</button>
+								<button class="button multiselect otheroption" data-value="Other" data-otherid="weather_other">Other (Please Provide)</button>
+								<input type="text" class="input otheroption" id="weather_other" data-fieldid="weather">
 							</div>
 						</div>
 						<div class="field is-grouped is-grouped-multiline">
-							<label for="involved">Vehicles Involved</label>
+							<label for="vehicles">Vehicles Involved</label>
 							<p class="help">Was a vehicle involved in your story? Click all that apply</p>
-							<div id="involved" class="control multiselection" data-fieldid="391043660">
-								<button class="button multiselect" data-value="Car" data-fieldid="391043660">Car</button>
-								<button class="button multiselect" data-value="Motorbike" data-fieldid="391043660">Motorbike</button>
-								<button class="button multiselect" data-value="Heavy Truck" data-fieldid="391043660">Heavy Truck</button>
-								<button class="button multiselect" data-value="Construction Vehicle" data-fieldid="391043660">Construction Vehicle</button>
-								<button class="button multiselect" data-value="Bike" data-fieldid="391043660">Bike</button>
-								<button class="button multiselect" data-value="__other_option__" data-otherid="involved_other" data-fieldid="391043660">Other (Please Provide)</button>
-								<input type="text" class="input otheroption" id="involved_other" data-fieldid="391043660">
+							<div id="vehicles" class="control multiselection" data-fieldid="vehicles">
+								<button class="button multiselect" data-value="Car" data-fieldid="vehicles">Car</button>
+								<button class="button multiselect" data-value="Motorbike" data-fieldid="vehicles">Motorbike</button>
+								<button class="button multiselect" data-value="Heavy Truck" data-fieldid="vehicles">Heavy Truck</button>
+								<button class="button multiselect" data-value="Construction Vehicle" data-fieldid="vehicles">Construction Vehicle</button>
+								<button class="button multiselect" data-value="Bike" data-fieldid="vehicles">Bike</button>
+								<button class="button multiselect otheroption" data-value="Other" data-otherid="vehicles_other">Other (Please Provide)</button>
+								<input type="text" class="input otheroption" id="vehicles_other" data-fieldid="vehicles">
 							</div>
 						</div>
 						<div class="field">
@@ -208,10 +184,8 @@
 							<p class="help">Where does this story come from? Please indicate whether it's your's, or from somewhere else</p>
 							<div class="control">
 								<div class="select">
-									<select id="source" data-fieldid="1960531732">
-										<option value="Self-Report">Self-Report</option>
-										<option value="Reporting about someone else">Reporting about someone else</option>
-										<option value="News Article or Website">News Article or Website</option>
+									<select id="source" class="buildoption" data-fieldid="">
+										
 									</select>
 								</div>
 							</div>
@@ -220,25 +194,33 @@
 							<label for="link">Link to News Article or Website</label>
 							<p class="help">If this story is mentioned in a news article, or somewhere online, and is publicly accessible, please provide the link</p>
 							<div class="control">
-								<textarea class="textarea" rows="2" id="link" placeholder="Enter a url" data-fieldid="1209409642"></textarea>
+								<textarea class="textarea" rows="2" id="link" placeholder="Enter a url" data-fieldid="link"></textarea>
 							</div>
 						</div>
 						<div class="field is-grouped is-grouped-multiline">
 							<label for="impact">Impact</label>
 							<p class="help">What kind of impact did this story have on your life? Were you injured, or otherwise?</p>
-							<div id="impact" class="control multiselection" data-fieldid="1273564528">
-								<button class="button multiselect" data-value="Injury" data-fieldid="1273564528">Injury</button>
-								<button class="button multiselect" data-value="Required Medical Leave, EI, or Time off Work over 3 months" data-fieldid="1273564528">Required Medical Leave, EI, or Time off Work</button>
-								<button class="button multiselect" data-value="Lost Income" data-fieldid="1273564528">Lost Income</button>
-								<button class="button multiselect" data-value="__other_option__" data-otherid="impact_other" data-fieldid="1273564528">Other (Please Provide)</button>
-								<input type="text" class="input otheroption" id="impact_other" data-fieldid="1273564528">
+							<div id="impact" class="control multiselection" data-fieldid="impact">
+								<button class="button multiselect" data-value="Injury" data-fieldid="impact">Injury</button>
+								<button class="button multiselect" data-value="Required Medical Leave, EI, or Time off Work over 3 months" data-fieldid="impact">Required Medical Leave, EI, or Time off Work</button>
+								<button class="button multiselect" data-value="Lost Income" data-fieldid="impact">Lost Income</button>
+								<button class="button multiselect" data-value="Death" data-fieldid="impact">Death</button>
+								<button class="button multiselect otheroption" data-value="Other" data-otherid="impact_other">Other (Please Provide)</button>
+								<input type="text" class="input otheroption" id="impact_other" data-fieldid="impact">
+							</div>
+						</div>
+						<div class="field">
+							<label for="key">Editing Key</label>
+							<p class="help">We have users for the data, but if you want to edit this story later on, add a key phrase - it's like a password - to allow you access.</p>
+							<div class="control">
+								<input type="text" class="input" id="key" data-fieldid="key">
 							</div>
 						</div>
 						<div class="field">
 							<button id="submit" class="button is-primary">Save</button>
 						</div>
-						<input type="hidden" id="longitude" data-fieldid="1768929940">
-						<input type="hidden" id="latitude" data-fieldid="165837975">
+						<input type="hidden" class="requiredField" id="longitude" data-fieldid="longitude">
+						<input type="hidden" class="requiredField" id="latitude" data-fieldid="latitude">
 					</span>
 				</div>
 				<div class="content">
@@ -271,39 +253,15 @@
 		</footer>
 		<script type="text/javascript" src="../lib/main.js"></script>
 		<script>
-			var thisstory=getUrlParameter('story');
-			var formId = '1FAIpQLSerphvNjHwCoKz5sxr8ZsMPuFEFqCoO_yKdoALAfFYpttGprQ';
-			var gsheet = '2PACX-1vSa_6CHPls4Qkb7_WgmQXS5XR6jlNNOiqQube0BCY7lObB0YghyMoV2b04gngLntl5IteT_p_uDlAln';
-			var sharedgsheet ='https://docs.google.com/spreadsheets/d/1C9vcW_ystvMG-7l-2cJB4JQ2XBlCt7I3GSK9F3wp2-E/edit?usp=sharing';
-			if(thisstory!=''){
-				var fullstory='';
-				var isstory=false;
-				var storydetails = Tabletop.init( {
-					key: sharedgsheet,
-					simpleSheet: true,
-					parseNumbers: true,
-					callback: function(data, tabletop) {
-						$.each(data,function(k,v){
-							if(v.Identifier==thisstory && v.Active=='Yes'){
-								isstory=true;
-								fullstory=v;
-							}
-						});
-						if(isstory){
-							setTimeout(function() {
-								render('story');
-							}, 1000);
-						}else{
-							render('nostory');
-						}
-					}
+			$('.buildoption').each(function(){
+				var thisoption=$(this).attr('id');
+				$(this).data('fieldid',thisoption);
+				var theseoptions=storyoptions[thisoption];
+				$.each(theseoptions,function(k,v){
+					$('#'+thisoption).append('<option value="'+k+'">'+v+'</option>');
 				});
-			}else{
-				setTimeout(function() {
-					render('all');
-				}, 1000);
-			}
-			$('.otheroption,#storyform .field,#cancelstory, #mainmap label,#mainmap .help,#disclaimer').hide();
+			});
+			$('input.otheroption,#storyform .field,#cancelstory, #mainmap label,#mainmap .help,#disclaimer').hide();
 			$('#mainmap').show();
 			var map = L.map('map', {
 				zoom: 19,
@@ -314,6 +272,7 @@
 			var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 				attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 			}).addTo(map);
+			new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);
 			//Add Location Options - override the plugin default popup and circle
 			var locOptions = {
 				drawCircle: false,
@@ -324,28 +283,12 @@
 				enableHighAccuracy: true,
 				position: 'bottomleft'
 			};
-			new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);
-		
+			
 			//Add Location
 			var loc = L.control.locate(locOptions).addTo(map);
-		
-			//Endable Location at page load and do things once the location is found
-			loc.start();
 			
 			var marker, circle, lat, lng; //create variables used throughout the map
 			marker=false;
-
-			setTimeout(function() {
-				if(lat) {
-					return false;
-				}else{
-					loc.stop();
-					map.setView([47.57,-52.71], 14);
-				}
-			}, 2000);
-		
-			//Add form response points
-			//Add an empty geojson layer for the google sheet points and create the popup
 			var gps = new L.geoJson(null, {
 				pointToLayer: function(feature, latlng) {
 					var thisicon=L.icon({
@@ -357,30 +300,140 @@
 					return L.marker(latlng, {icon: thisicon});
 				},
 				onEachFeature: function(feature, layer) {
-					var dateinfo=[];
-					if(feature.properties['Date']!==''){
-						dateinfo.push(feature.properties['Date']);
+					var dateinfo=[],description='',popupcontent='';
+					if(feature.properties.date!=='0000-00-00'){
+						dateinfo.push(feature.properties.date);
 					}else{
-						dateinfo.push(feature.properties['Time of Day']);
-						dateinfo.push(feature.properties['Time of Year']);
-						dateinfo.push(feature.properties['Year']);
+						if(feature.properties.timeofday){
+							dateinfo.push(storyoptions.timeofday[feature.properties.timeofday]);
+						}
+						if(feature.properties.timeofyear){
+							dateinfo.push(storyoptions.timeofyear[feature.properties.timeofyear]);
+						}
+						dateinfo.push(feature.properties.year);
 					}
-					var description=feature.properties.Description.substring(0, 300);
-					var popupcontent='<h5>'+feature.properties['You were']+' - '+dateinfo.join(' ')+'</h5><p><strong>'+feature.properties['Tell us who you are']+' &#183; '+feature.properties['Timestamp']+'</strong><br>'+description+'</p><p><a class="button is-success" href="https://yyt-sidewalks.github.io/site/stories/?story='+feature.properties['Identifier']+'">Read More</a></p>';
+					if(feature.properties.description!==''){
+						description=feature.properties.description.substring(0, 300);
+					}
+					popupcontent='<h5>'+storyoptions.type[feature.properties.type]+' - '+dateinfo.join(' ')+'</h5><p><strong>'+feature.properties.who+' &#183; '+feature.properties.nicedate+'</strong><br>'+description+'</p><p><a class="button is-success" href="https://yyt-sidewalks.github.io/site/stories/?story='+feature.properties.identifier+'">Read More</a></p>';
 					layer.bindPopup(popupcontent);
 					$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
 				}
 			});
 
+			var thisstory=getUrlParameter('story');
+			var passkey=getUrlParameter('key');
+			var isstory=false;
+			if(thisstory===''){
+				location.href="https://yyt-sidewalks.github.io/site/stories/";
+			}else if(thisstory!='' && passkey!==false && passkey!==''){
+				$.post('https://www.yytsidewalks.info/data.php?j=k',{'f':'story','fid':thisstory,'key':passkey},function(data){
+						if(data['status']=='verified'){
+							$.get('https://www.yytsidewalks.info/data.php?j=s&f=story&fid='+thisstory+'&k='+passkey,function(data){
+								switch(data['status']){
+									case "missing":
+									case "nomatch":
+										render('noedit');
+									break;
+									case "ok":
+										isstory=true;
+										fullstory=data;
+										activestories=[];
+										activestories.push(fullstory);
+										render('edit');
+									break;
+								}
+							});
+						}else{
+							render('noedit');
+						}
+					});
+			}else if(thisstory!='' && passkey===''){
+				$.get('https://www.yytsidewalks.info/data.php?j=s&f=story&fid='+thisstory,function(data){
+					switch(data['status']){
+						case "missing":
+						case "nomatch":
+							render('nostory');
+						break;
+						case "ok":
+							fullstory=data;
+							render('key');
+						break;
+					}
+				});
+			}else if(thisstory!='' && passkey===false){
+				$.get('https://www.yytsidewalks.info/data.php?j=s&f=story&fid='+thisstory,function(data){
+					switch(data['status']){
+						case "missing":
+						case "nomatch":
+							render('nostory');
+						break;
+						case "ok":
+							isstory=true;
+							fullstory=data;
+							activestories=[];
+							activestories.push(fullstory);
+							render('story');
+						break;
+					}
+				});
+			}else{
+				$.get('https://www.yytsidewalks.info/data.php?j=l&f=story',function(data){
+					activestories=data;
+					render('all');
+				});
+			}
+			var fullsubmits={};
 			function render(e){
 				switch(e){
+					case "key":
+						$('#addstory,#zoommap,#storyform').hide();
+						var dateinfo=[];
+						if(fullstory.date!=='0000-00-00' && !isEmpty(fullstory.date)){
+							dateinfo.push(fullstory.date);
+						}else{
+							if(fullstory.timeofday){
+								dateinfo.push(storyoptions.timeofday[fullstory.timeofday]);
+							}
+							if(fullstory.timeofyear){
+								dateinfo.push(storyoptions.timeofyear[fullstory.timeofyear]);
+							}
+							dateinfo.push(fullstory.year);
+						}
+						$.each(fullstory,function(k,v){
+							if(v==null){
+								fullstory[k]='';
+							}
+						});
+						$('#blurb').html('<h4 id="story_who">'+fullstory['who']+'</h4><h3 id="story_whenwhat">'+storyoptions.type[fullstory.type]+' - '+dateinfo.join(' ')+'</h3><p id="story_description" class="is-size-5">'+fullstory['description']+'</p><h5>Key Required</h5><p id="verifymsg">Before you can edit this story, you need to supply its key.</p><p><input id="verifykey" class="input"></p><p id="verifycontrols"><button class="button is-primary" id="checkkey">Verify</button></p>');
+						$('#checkkey').click(function(){
+							$.post('https://www.yytsidewalks.info/data.php?j=k',{'f':'story','fid':thisstory,'key':$('#verifykey').val()},function(data){
+								if(data['status']=='verified'){
+									$('#verifymsg').text('The key matches! You can edit this story.');
+									$('#verifycontrols').html('<a href="?story='+thisstory+'&key='+$('#verifykey').val()+'" class="button is-primary">Edit</a>');
+								}else{
+									$('#verifymsg').text('This key doesn\'t match. Please try again.');
+								}
+							});
+						});
+					break;
 					case "all":
-				
-			
-						var multiselects={};
-						var otheroptions={};
+						loc.start();
+						//setTimeout(function() {
+						if(lat) {
+							return false;
+						}else{
+							loc.stop();
+							map.setView([47.57,-52.71], 14);
+						}
+						//}, 2000);
+					
+						//Add form response points
+						//Add an empty geojson layer for the google sheet points and create the popup
+						
 						var disclaimerignore=false;
 						$('#addstory').click(function(){
+							$('#storyform').show();
 							$('#shrinkmap').click();
 							$('#storyform .field,#cancelstory, #mainmap label,#mainmap .help,#disclaimer').show();
 							$('#mainmap #map,#mainmap .map').css({'min-height':'300px','height':'300px','max-height':'300px'});
@@ -404,80 +457,115 @@
 							disclaimerignore=true;
 							$('#disclaimer').hide();
 						});
-						var fullsubmits=[];
 						$('#submit').click(function(){
-							$.confirm({
-								title: 'Confirm!',
-								content: "This will save and add this story to the website. It will be publicly accessible. Please confirm you've used a name, and described the details in a way you're comfortable with being published.",
-								buttons: {
-									confirm: function () {
-										fullsubmits=[];
-										$.each(multiselects,function(mk,mv){
-											$.each(mv,function(k,v){
-												fullsubmits.push('entry.'+mk+'='+encodeURI(v));
-											});
-										});
-										$.each(otheroptions,function(k,v){
-											if(v!=''){
-												fullsubmits.push('entry.'+k+'.other_option_response='+encodeURI(v));
-											}
-										});
-										$('.control:not(.multiselection):not(#when) input,.control:not(.multiselection):not(#when) textarea,.control:not(.multiselection):not(#when) select,#longitude,#latitude').each(function(k,v){
-											if(v!=''){
-												fullsubmits.push('entry.'+$(this).data('fieldid')+'='+encodeURI($(this).val()));
-											}
-										});
-										var datetime='';
-										if($('#day').val() && $('#month').val() && $('#year').val() && $('#hour').val() && $('#minute').val()){
-											datetime=datetime+$('#month').val()+'-';
-											datetime=datetime+$('#day').val()+'-';
-											datetime=datetime+$('#year').val()+'+';
-											datetime=datetime+$('#hour').val()+' ';
-											datetime=datetime+$('#minute').val();
-											fullsubmits.push('entry.153573005='+encodeURI(datetime));
-										}
-										if($('#year').val()){
-											fullsubmits.push('entry.1239551970='+encodeURI($('#year').val()));
-										}
-										var submissionurl='https://docs.google.com/forms/d/e/' + formId + '/formResponse?'+fullsubmits.join('&')+'&entry.319884402=Yes&submit=Submit';
-										$('#storyform').scrollTop(0);
-										$('#storyform').html('<iframe id="formSubmission" src="'+submissionurl+'" seamless scrolling="no" style="overflow:hidden;height:375px;border:lightgray solid thin;"></iframe><h6 id="savingmsg">Saving this submission!</h6>').promise().done(function(){
-											setTimeout(function(){
-												$('#savingmsg').text('Story saved!');
-												$('#storyform').append('<p><a href="https://yyt-sidewalks.github.io/site/stories/?do=addstory" class="button is-success">Add another Story</a><a href="https://yyt-sidewalks.github.io/site/stories/?do=addstory" class="button is-info">View Stories Map</a></p>');
-											},2000);
-										});
-									},
-									cancel: function () {
-										
+							$('#saving').remove();
+							var requiredvalid=true,firstmissing='';
+							$('.requiredField,#map').removeClass('missing');
+							$('.requiredField').each(function(){
+								if(isEmpty($(this).val())){
+									requiredvalid=false;
+									firstmissing=$(this).attr('id');
+									$(this).addClass('missing');
+									if(firstmissing=='latitude' || firstmissing=='longitude'){
+										$('#map').addClass('missing');
 									}
 								}
 							});
-						});
-						$('.multiselection').each(function(k,v){
-							multiselects[$(this).data('fieldid')]=[];
+							if(requiredvalid){
+								$.confirm({
+									title: 'Confirm!',
+									content: "This will save and add this story to the website. It will be publicly accessible. Please confirm you've used a name, and described the details in a way you're comfortable with being published.",
+									buttons: {
+										confirm: function(){
+											$('#storyform').hide().before('<div id="saving"><h5 id="savingmsg">Saving this submission!</h5></div>').scrollTop(0);
+											fullsubmits={};
+											$('.control.multiselection').each(function(mk,mv){
+												var thisvalues=[];
+												$(this).children('.multiselect.is-success:not(.otheroption)').each(function(k,v){
+													thisvalues.push($(this).data('value'));
+												});
+												$(this).children('.multiselect.is-success.otheroption').each(function(k,v){
+													thisvalues.push($(this).data('value')+' - '+$('#'+$(this).data('otherid')).val());
+												});
+												fullsubmits[$(this).data('fieldid')]=thisvalues.join('; ');
+											});
+											$('.control:not(.multiselection):not(#when) input,.control:not(.multiselection):not(#when) textarea,.control:not(.multiselection):not(#when) select,#longitude,#latitude').each(function(k,v){
+												fullsubmits[$(this).data('fieldid')]=$(this).val();
+											});
+											var date='',fixdate=false;
+											fullsubmits.date='';
+											date=date+$('#year').val()+'-';
+											date=date+$('#month').val()+'-';
+											date=date+$('#day').val();
+											if(date!='--'){
+												if(date.length==10){
+													if(parseInt($('#month').val())>12){
+														fixdate=true;
+													}
+													if(parseInt($('#day').val())>31){
+														fixdate=true;
+													}
+													if(parseInt($('#year').val())>2020){
+														fixdate=true;
+													}
+													fullsubmits.date=date;
+												}else{
+													if($('#year').val()!='' && $('#day').val()!='' || $('#year').val()!='' && $('#month').val()!=''){
+														fixdate=true;
+													}else{
+														fullsubmits.date='';
+													}
+												}
+												if(fixdate){
+													$('#storyform').show();
+													$('#savingmsg').text('Please check your dates!');
+													$.alert('You are missing part of the date! Please check and try again.');
+													$('#when').scrollTop(0);
+													return false;
+												}
+											}
+											fullsubmits.year='';
+											if($('#year').val()){
+												fullsubmits.year=$('#year').val();
+											}
+											$.post('https://www.yytsidewalks.info/data.php?j=a&f=story',fullsubmits,function(data){
+												if(data['status']=='ok'){
+													$('#cancelstory, #zoommap').hide();
+													$('#savingmsg').text('Story saved!');
+													$('#saving').append('<p><a class="button is-primary" href="https://yyt-sidewalks.github.io/site/stories/">View all Stories</a><a class="button is-primary" href="https://yyt-sidewalks.github.io/site/stories/?story='+data['id']+'">View new Story</a><button class="button resetform is-primary">Add another story</button></p>').promise().done(function(){
+														$('.resetform').click(function(){
+															resetform();
+														});
+													});
+												}else{
+													$('#saving').html('<h5 id="savingmsg">There was a problem. Please check over your data, and try again.</h5>');
+													$('#storyform').show();
+												}
+											});
+										},
+										cancel: function () {
+											
+										}
+									}
+								});
+							}else{
+								$('#storyform').show();
+								$('#savingmsg').text('You are missing some required information. Please check over your submission, and try again.');
+								$.alert('Something is missing! Please check and try again.');
+								return false;
+							}
 						});
 						$('button.multiselect').click(function(){
-							if(multiselects[$(this).data('fieldid')].includes($(this).data('value'))){
+							if($(this).hasClass('is-success')){
 								$(this).removeClass('is-success');
-								var thisindex = multiselects[$(this).data('fieldid')].indexOf($(this).data('value'));
-								if (thisindex > -1) {
-									multiselects[$(this).data('fieldid')].splice(thisindex, 1);
-									if($(this).data('value')=='__other_option__'){
-										otheroptions[$(this).data('fieldid')]='';
-										$('#'+$(this).data('otherid')).hide();
-										$('#'+$(this).data('otherid')).val('');
-									}
+								if($(this).hasClass('otheroption')){
+									$('#'+$(this).data('otherid')).hide();
+									$('#'+$(this).data('otherid')).val('');
 								}
 							}else{
 								$(this).addClass('is-success');
-								multiselects[$(this).data('fieldid')].push($(this).data('value'));
-								if($(this).data('value')=='__other_option__'){
-									otheroptions[$(this).data('fieldid')]='';
+								if($(this).hasClass('otheroption')){
 									$('#'+$(this).data('otherid')).show();
-									$('#'+$(this).data('otherid')).change(function(){
-										otheroptions[$(this).data('fieldid')]=$(this).val();
-									});
 								}
 							}
 						});
@@ -487,58 +575,228 @@
 						});
 						
 						//Grab the google sheet data using tabletop - published to the web not just shared - and use geojson.min.js to convert into proper geojson format
-						var tabletop = Tabletop.init( {
-							key: sharedgsheet,
-							simpleSheet: true,
-							parseNumbers: true,
-							callback: function(data, tabletop) {
-								activestories=[];
-								$.each(data,function(k,v){
-									if(v.Active=='Yes'){
-										activestories.push(v);
-									}
-								});
-								var gpsData = GeoJSON.parse(activestories, {Point: ['Latitude', 'Longitude']});
-								//add that data to the geojson layer created earlier
-								gps.addData(gpsData);
-								gps.addTo(map);
-								makestories(12);
-							},
-						});
-
-					break;
-					case "story":
-						$('#addstory, #zoommap,.title,.subtitle').hide();
-						$('#mainmap #map,#mainmap .map').css({'min-height':'300px','height':'300px','max-height':'300px'});
-						activestories=[];													
-						activestories.push(fullstory);
-						var gpsData = GeoJSON.parse(activestories, {Point: ['Latitude', 'Longitude']});
+						var gpsData = GeoJSON.parse(activestories, {Point: ['latitude', 'longitude']});
 						//add that data to the geojson layer created earlier
 						gps.addData(gpsData);
 						gps.addTo(map);
 						loc.stop();
-						$('#blurb').html('<h4 id="story_who">'+fullstory['Tell us who you are']+'</h4><p id="story_description" class="is-size-5">'+fullstory['Description']+'</p>');
-						var dateinfo=[];
-						if(fullstory['Date']!==''){
-							dateinfo.push(fullstory['Date']);
-						}else{
-							dateinfo.push(fullstory['Time of Day']);
-							dateinfo.push(fullstory['Time of Year']);
-							dateinfo.push(fullstory['Year']);
-						}
-						$('#story_who').after('<h3 id="story_whenwhat">'+fullstory['You were']+' - '+dateinfo.join(' ')+'</h3>');
-						$('#story_description').after('<p><strong>Sidewalk Conditions:</strong> '+fullstory['Sidewalk Conditions']+'<br><strong>Weather Conditions:</strong> '+fullstory['Weather Conditions']+'<br><strong>Vehicles Involved:</strong> '+fullstory['Vehicles Involved']+' <br><strong>Impact of the Incident:</strong> '+fullstory['Impact of the Incident']+'</p><p><strong>Source:</strong> '+fullstory['Source']+'<br><strong>Link:</strong> <a href="'+fullstory['Link to News Article or Website']+'" target="_blank">'+fullstory['Link to News Article or Website']+'</a><br><strong>Added:</strong> '+fullstory['Timestamp']+'</p><p><a class="button is-success" href="https://yyt-sidewalks.github.io/site/stories/?do=addstory">Add a story</a></p>');
-						setTimeout(function() {
-							map._onResize();
-							map.setView([fullstory.Latitude,fullstory.Longitude], 18);
-						}, 1000);
-					break;
-					case "nostory":
-						$('#addstory, #zoommap').hide();
-						$('#blurb').html('<h5>No Story</h5><p>No story matches this id!</p>');
+						makestories(12);
 
 					break;
+					case "edit":
+						$('#storyform').before('<h3>Editing Story '+fullstory.identifier+'</h3>');
+						$('#blurb').remove();
+						$('#storyform,.edithelp').show();
+						$('#shrinkmap').click();
+						$('#storyform .field,#cancelstory, #mainmap label,#mainmap .help,#disclaimer').show();
+						$('#mainmap #map,#mainmap .map').css({'min-height':'300px','height':'300px','max-height':'300px'});
+						
+						$('#addstory,#storieslist,#cancelstory,#zoommap,#disclaimer').hide();
+						$('#submit').click(function(){
+							$('#saving').remove();
+							var requiredvalid=true,firstmissing='';
+							$('.requiredField,#map').removeClass('missing');
+							$('.requiredField').each(function(){
+								if(isEmpty($(this).val())){
+									requiredvalid=false;
+									firstmissing=$(this).attr('id');
+									$(this).addClass('missing');
+									if(firstmissing=='latitude' || firstmissing=='longitude'){
+										$('#map').addClass('missing');
+									}
+								}
+							});
+							if(requiredvalid){
+								$.confirm({
+									title: 'Confirm!',
+									content: "This will save and add this story to the website. It will be publicly accessible. Please confirm you've used a name, and described the details in a way you're comfortable with being published.",
+									buttons: {
+										confirm: function(){
+											$('#storyform').hide().before('<div id="saving"><h5 id="savingmsg">Saving this submission!</h5></div>').scrollTop(0);
+											fullsubmits={};
+											$('.control.multiselection').each(function(mk,mv){
+												var thisvalues=[];
+												$(this).children('.multiselect.is-success:not(.otheroption)').each(function(k,v){
+													thisvalues.push($(this).data('value'));
+												});
+												$(this).children('.multiselect.is-success.otheroption').each(function(k,v){
+													thisvalues.push($(this).data('value')+' - '+$('#'+$(this).data('otherid')).val());
+												});
+												fullsubmits[$(this).data('fieldid')]=thisvalues.join('; ');
+											});
+											$('.control:not(.multiselection):not(#when) input,.control:not(.multiselection):not(#when) textarea,.control:not(.multiselection):not(#when) select,#longitude,#latitude').each(function(k,v){
+												fullsubmits[$(this).data('fieldid')]=$(this).val();
+											});
+											var date='',fixdate=false;
+											fullsubmits.date='';
+											date=date+$('#year').val()+'-';
+											date=date+$('#month').val()+'-';
+											date=date+$('#day').val();
+											if(date!='--'){
+												if(date.length==10){
+													if(parseInt($('#month').val())>12){
+														fixdate=true;
+													}
+													if(parseInt($('#day').val())>31){
+														fixdate=true;
+													}
+													if(parseInt($('#year').val())>2020){
+														fixdate=true;
+													}
+													fullsubmits.date=date;
+												}else{
+													if($('#year').val()!='' && $('#day').val()!='' || $('#year').val()!='' && $('#month').val()!=''){
+														fixdate=true;
+													}else{
+														fullsubmits.date='';
+													}
+												}
+												if(fixdate){
+													$('#storyform').show();
+													$('#savingmsg').text('Please check your dates!');
+													$.alert('You are missing part of the date! Please check and try again.');
+													$('#when').scrollTop(0);
+													return false;
+												}
+											}
+											fullsubmits.year='';
+											if($('#year').val()){
+												fullsubmits.year=$('#year').val();
+											}
+											fullsubmits.storyid=fullstory.storyid;
+											$.post('https://www.yytsidewalks.info/data.php?j=e&f=story',fullsubmits,function(data){
+												if(data['status']=='ok'){
+													$('#cancelstory, #zoommap').hide();
+													$('#savingmsg').text('Story saved!');
+													$('#saving').append('<p><a class="button is-primary" href="https://yyt-sidewalks.github.io/site/stories/">View all Stories</a><a class="button is-primary" href="https://yyt-sidewalks.github.io/site/stories/?story='+data['id']+'">View new Story</a><button class="button resetform is-primary">Add another story</button></p>').promise().done(function(){
+														$('.resetform').click(function(){
+															resetform();
+														});
+													});
+												}else{
+													$('#saving').html('<h5 id="savingmsg">There was a problem. Please check over your data, and try again.</h5>');
+													$('#storyform').show();
+												}
+											});
+										},
+										cancel: function () {
+											
+										}
+									}
+								});
+							}else{
+								$('#storyform').show();
+								$('#savingmsg').text('You are missing some required information. Please check over your submission, and try again.');
+								$.alert('Something is missing! Please check and try again.');
+								return false;
+							}
+						});
+						$('button.multiselect').click(function(){
+							if($(this).hasClass('is-success')){
+								$(this).removeClass('is-success');
+								if($(this).hasClass('otheroption')){
+									$('#'+$(this).data('otherid')).hide();
+									$('#'+$(this).data('otherid')).val('');
+								}
+							}else{
+								$(this).addClass('is-success');
+								if($(this).hasClass('otheroption')){
+									$('#'+$(this).data('otherid')).show();
+								}
+							}
+						});
+						var gpsData = GeoJSON.parse(activestories, {Point: ['latitude', 'longitude']});
+						$.each(fullstory,function(k,v){
+							if(k=='sidewalks' || k=='weather' || k=='vehicles' || k=='impact'){
+								if(!isEmpty(v)){
+									var theseoptions=v.split('; ');
+									var thisselect=k;
+									$.each(theseoptions,function(k,v){
+										if(v.search("Other - ")!=-1){
+											$('button.multiselect[data-value="Other"]','#'+thisselect).click();
+											$('#'+thisselect+'_other').val(v.slice(8));
+										}else{
+											$('button.multiselect[data-value="'+v+'"]','#'+thisselect).click();
+										}
+									});
+									
+								}
+								//storyoptions[k]
+							}else if(k=='date'){
+
+							}else{
+								$('#'+k).val(v);
+							}
+							$('#key').val(passkey);
+						});
+						//add that data to the geojson layer created earlier
+						gps.addData(gpsData);
+						gps.addTo(map);
+						map._onResize();
+						map.setView([fullstory.latitude,fullstory.longitude], 17);
+						map.on('click', collectData);
+
+						map.on('locationfound', function(e) {
+							collectData(e);
+						});
+					break;
+					case "story":
+						$('#addstory, #zoommap,.title,.subtitle').hide();
+						$('#mainmap #map,#mainmap .map').css({'min-height':'300px','height':'300px','max-height':'300px'});
+						var gpsData = GeoJSON.parse(activestories, {Point: ['latitude', 'longitude']});
+						//add that data to the geojson layer created earlier
+						gps.addData(gpsData);
+						gps.addTo(map);
+						
+						
+						var dateinfo=[];
+						if(fullstory.date!=='0000-00-00' && !isEmpty(fullstory.date)){
+							dateinfo.push(fullstory.date);
+						}else{
+							if(fullstory.timeofday){
+								dateinfo.push(storyoptions.timeofday[fullstory.timeofday]);
+							}
+							if(fullstory.timeofyear){
+								dateinfo.push(storyoptions.timeofyear[fullstory.timeofyear]);
+							}
+							dateinfo.push(fullstory.year);
+						}
+						$.each(fullstory,function(k,v){
+							if(v==null){
+								fullstory[k]='';
+							}
+						});
+						$('#blurb').html('<h4 id="story_who">'+fullstory['who']+'</h4><h3 id="story_whenwhat">'+storyoptions.type[fullstory.type]+' - '+dateinfo.join(' ')+'</h3><p id="story_description" class="is-size-5">'+fullstory['description']+'</p><p><strong>Sidewalk Conditions:</strong> '+fullstory.sidewalks+'<br><strong>Weather Conditions:</strong> '+fullstory.weather+'<br><strong>Vehicles Involved:</strong> '+fullstory.vehicles+' <br><strong>Impact of the Incident:</strong> '+fullstory.impact+'</p><p><strong>Source:</strong> '+storyoptions.source[fullstory.source]+'<br><strong>Link:</strong> <a href="'+fullstory.link+'" target="_blank">'+fullstory.link+'</a><br><strong>Added:</strong> '+fullstory['modified']+'</p><p><a class="button is-success" href="https://yyt-sidewalks.github.io/site/stories/?do=addstory">Add a story</a><a class="button is-success" href="?story='+thisstory+'&key=">Edit this story</a></p>');
+						map._onResize();
+						map.setView([fullstory.latitude,fullstory.longitude], 18);
+					break;
+					case "nostory":
+						$('#addstory,#storyform,#storieslist,#cancelstory,#zoommap,#disclaimer').hide();
+						$('#storyform').before('<h3>Story '+getUrlParameter('story')+'</h3>');
+						$('#blurb').html('<h5>Incorrect ID</h5><p>No story matches this id!</p>');
+					break;
+					case "noedit":
+						$('#addstory,#storyform,#storieslist,#cancelstory,#zoommap,#disclaimer').hide();
+						$('#storyform').before('<h3>Editing Story '+getUrlParameter('story')+'</h3>');
+						$('#blurb').html('<h5>Editing Denied</h5><p>You do not have the correct passkey, or it is missing. You cannot edit this story.</p>');
+					break;
 				}
+			}
+			function resetform(){
+				$('input,textarea','#storyform').val('');
+				$('select','#storyform').val('0');
+				$('.otheroption:not(.button)').hide();
+				$('button','#storyform').removeClass('is-success');
+				if(marker){
+					map.removeLayer(marker);
+					$('#longitude').val('');
+					$('#latitude').val('');
+				}
+				$('#saving').remove();
+				$('#storyform,#zoommap,.button.otheroption').show();
+				$('#addstory').click();
+				map._onResize();
+				map.setZoom(15);
 			}
 			function collectData(e) {
 				if(marker){
