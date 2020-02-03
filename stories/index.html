@@ -191,8 +191,8 @@
 							</div>
 						</div>
 						<div class="field">
-							<label for="link">Link to News Article or Website</label>
-							<p class="help">If this story is mentioned in a news article, or somewhere online, and is publicly accessible, please provide the link. If you want to add multiple links put a pipe character | in between two links.</p>
+							<label for="link">Links to News Article or Website</label>
+							<p class="help">If this story is mentioned in a news article, or somewhere online, and is publicly accessible, please provide the links. To add multiple links, put a pipe character | in between each URL / web address.</p>
 							<div class="control">
 								<textarea class="textarea" rows="2" id="link" placeholder="Enter a url" data-fieldid="link"></textarea>
 							</div>
@@ -723,7 +723,12 @@
 								}
 								//storyoptions[k]
 							}else if(k=='date'){
-
+								if(!isEmpty(v) && v!='0000-00-00'){
+									var thisdate=v.split('-');
+									$('#day').val(thisdate[2]);
+									$('#month').val(thisdate[1]);
+									$('#year').val(thisdate[0]);
+								}
 							}else{
 								$('#'+k).val(v);
 							}

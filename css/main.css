@@ -7194,6 +7194,9 @@ h3#story_whenwhat {
   word-break: break-all;
   word-wrap: break-word; }
 
+textarea#link {
+  height: 200px; }
+
 @media screen and (max-width: 1023px) {
   .navbar-menu {
     padding: 0; }
@@ -7201,6 +7204,8 @@ h3#story_whenwhat {
     margin-bottom: 1rem; } }
 
 @media screen and (min-width: 1024px) {
+  textarea#link {
+    height: 100px; }
   #main {
     padding-top: 2em;
     margin-top: 2em; }
