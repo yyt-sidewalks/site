@@ -270,7 +270,7 @@
 			censusdata.tiers.afterTaxIncome=0;
 			censusdata.tiers.density=0;
 			var hasAfterTaxIncome=0;
-			$.each(censusdata,function(k,v){
+			$.each(censusdata.data,function(k,v){
 				censusdata.data[k].density=Math.ceil(parseInt(v.Population)*(1/parseFloat(v['Area (sq km)'])));
 				censusdata.values.density.push(censusdata.data[k].density);
 				censusdata.data[k].percentages={};
@@ -356,7 +356,7 @@
 			resetareas();
 			switch(e){
 				case "percentages.walked.all":
-					$.each(censusdata,function(k,v){
+					$.each(censusdata.data,function(k,v){
 						var rounded=Math.ceil(Math.round(v.percentages.walked.all*200)/(gradient.length-1));
 						var opacity=0.6;
 						censusareas[v.GeoUID].setStyle({fillColor:gradient[rounded],fillOpacity: opacity});
@@ -369,7 +369,7 @@
 					$('#stats').append('<li><strong>Min Percentage of Commuters who Walk (Men): </strong> '+censusdata.min.percentagesWalkedMale+'</li>');
 				break;
 				case "percentages.transit.all":
-					$.each(censusdata,function(k,v){
+					$.each(censusdata.data,function(k,v){
 						var rounded=Math.ceil(Math.round(v.percentages.transit.all*200)/(gradient.length-1));
 						var opacity=0.6;
 						censusareas[v.GeoUID].setStyle({fillColor:gradient[rounded],fillOpacity: opacity});
@@ -382,7 +382,7 @@
 					$('#stats').append('<li><strong>Min Percentage of Commuters who use Public Transit (Men): </strong> '+censusdata.min.percentagesTransitMale+'</li>');
 				break;
 				case "income.all":
-					$.each(censusdata,function(k,v){
+					$.each(censusdata.data,function(k,v){
 						var rounded=Math.ceil(Math.round(v.Data.v_CA16_4963.value/censusdata.tiers.afterTaxIncome));
 						var opacity=0.6;
 						censusareas[v.GeoUID].setStyle({fillColor:gradient[rounded],fillOpacity: opacity});
@@ -393,7 +393,7 @@
 					$('#stats').append('<li><strong>Gradient Steps: </strong> $'+censusdata.tiers.afterTaxIncome+'</li>');
 				break;
 				case "population.density":
-					$.each(censusdata,function(k,v){
+					$.each(censusdata.data,function(k,v){
 						var rounded=Math.ceil(Math.round(v.density/censusdata.tiers.density));
 						var opacity=0.6;
 						censusareas[v.GeoUID].setStyle({fillColor:gradient[rounded],fillOpacity: opacity});
