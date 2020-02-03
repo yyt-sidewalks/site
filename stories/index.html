@@ -754,9 +754,11 @@
 						gps.addTo(map);
 						
 						var linkinfo=[];
-						$.each(fullstory.link.split('|'),function(k,v){
-							linkinfo.push('<a href="'+v.trim()+'" target="_blank">'+v.trim()+'</a>');
-						});
+						if(!isEmpty(fullstory.link) && fullstory.link!=''){
+							$.each(fullstory.link.split('|'),function(k,v){
+								linkinfo.push('<a href="'+v.trim()+'" target="_blank">'+v.trim()+'</a>');
+							});
+						}
 						var dateinfo=[];
 						if(fullstory.date!=='0000-00-00' && !isEmpty(fullstory.date)){
 							dateinfo.push(fullstory.date);
