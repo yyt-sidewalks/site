@@ -7190,6 +7190,10 @@ h3#story_whenwhat {
 .edithelp {
   display: none; }
 
+#storylinks {
+  word-break: break-all;
+  word-wrap: break-word; }
+
 @media screen and (max-width: 1023px) {
   .navbar-menu {
     padding: 0; }
