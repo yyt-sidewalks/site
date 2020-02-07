@@ -7124,17 +7124,11 @@ a.navbar-item {
     display: block;
     clear: both; }
 
-#stories {
-  list-style: none;
-  margin: 0;
-  width: 100%;
-  display: block;
-  clear: both; }
-  #stories li.storybox {
-    float: left;
-    display: inline-block;
-    margin: 0 0.5em 0.5em 0;
-    width: 100%; }
+.storybox {
+  float: left;
+  display: inline-block;
+  margin: 0 0.5em 0.5em 0;
+  width: 100%; }
 
 .field label {
   width: 100%;
@@ -7164,12 +7158,15 @@ h4#story_who {
 h3#story_whenwhat {
   margin-top: 0.2em; }
 
-#stories h5 {
+.storybox h5 {
   margin-bottom: 0.2em; }
 
-#stories .message-body {
+.storybox .message-body {
   border-width: 2px;
   padding: 1em; }
+
+.storybox:last-child {
+  margin-bottom: 1.5rem; }
 
 #storyform #day, #storyform #month, #storyform #hour, #storyform #minute {
   width: 45px; }
@@ -7228,6 +7225,4 @@ textarea#link {
     margin-bottom: 1em; }
   .navbar > .container {
     margin-top: 0;
-    margin-bottom: 0; }
-  #stories li.storybox {
-    width: calc(33% - 0.5em); } }
+    margin-bottom: 0; } }

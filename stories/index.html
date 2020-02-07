@@ -106,9 +106,14 @@
 							</div>
 							<div id="storieslist" class="control">
 								<h3 class="is-size-3">Sidewalk Stories</h3>
-								<ul id="stories">
-									
-								</ul>
+								<div class="columns">
+									<div class="column is-4-desktop" id="stories_1">
+									</div>
+									<div class="column is-4-desktop" id="stories_2">
+									</div>
+									<div class="column is-4-desktop" id="stories_3">
+									</div>
+								</div>
 							</div>
 						</div>
 						<div class="field">
@@ -405,12 +410,12 @@
 								fullstory[k]='';
 							}
 						});
-						$('#blurb').html('<h4 id="story_who">'+fullstory['who']+'</h4><h3 id="story_whenwhat">'+storyoptions.type[fullstory.type]+' - '+dateinfo.join(' ')+'</h3><p id="story_description" class="is-size-5">'+fullstory['description']+'</p><h5>Key Required</h5><p id="verifymsg">Before you can edit this story, you need to supply its key.</p><p><input id="verifykey" class="input"></p><p id="verifycontrols"><button class="button is-primary" id="checkkey">Verify</button></p>');
+						$('#blurb').html('<h4 id="story_who">'+fullstory['who']+'</h4><h3 id="story_whenwhat">'+storyoptions.type[fullstory.type]+' - '+dateinfo.join(' ')+'</h3><p id="story_description" class="is-size-5">'+fullstory['description']+'</p><h5>Key Required</h5><p id="verifymsg">Before you can edit this story, you need to supply its key.</p><p><input id="verifykey" class="input"></p><p id="verifycontrols"><button class="button is-warning" id="checkkey">Verify</button></p>');
 						$('#checkkey').click(function(){
 							$.post('https://www.yytsidewalks.info/data.php?j=k',{'f':'story','fid':thisstory,'key':$('#verifykey').val()},function(data){
 								if(data['status']=='verified'){
 									$('#verifymsg').text('The key matches! You can edit this story.');
-									$('#verifycontrols').html('<a href="?story='+thisstory+'&key='+$('#verifykey').val()+'" class="button is-primary">Edit</a>');
+									$('#verifycontrols').html('<a href="?story='+thisstory+'&key='+$('#verifykey').val()+'" class="button is-success">Edit</a>');
 								}else{
 									$('#verifymsg').text('This key doesn\'t match. Please try again.');
 								}
