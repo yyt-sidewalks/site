@@ -106,12 +106,12 @@
 							</div>
 							<div id="storieslist" class="control">
 								<h3 class="is-size-3">Sidewalk Stories</h3>
-								<div class="columns">
-									<div class="column is-4-desktop" id="stories_1">
+								<div class="columns is-tablet">
+									<div class="column is-4-desktop is-6-tablet" id="stories_1">
 									</div>
-									<div class="column is-4-desktop" id="stories_2">
+									<div class="column is-4-desktop is-6-tablet" id="stories_2">
 									</div>
-									<div class="column is-4-desktop" id="stories_3">
+									<div class="column is-4-desktop is-6-tablet" id="stories_3">
 									</div>
 								</div>
 							</div>
@@ -585,8 +585,7 @@
 						gps.addData(gpsData);
 						gps.addTo(map);
 						loc.stop();
-						makestories(12);
-
+						makestories(15);
 					break;
 					case "edit":
 						$('#storyform').before('<h3>Editing Story '+fullstory.identifier+'</h3>');
