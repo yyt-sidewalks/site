@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta property="og:url" content="https://yyt-sidewalks.github.io/site/" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Sidewalks in St John's, NL" />
+		<meta property="og:description" content="A site for tracking sidewalk and pedestrian safety and usage in St. John's, NL" />
+		<title>YYT Sidewalks - City Wards</title>
+		<link rel="stylesheet" href="../css/main.css">
+		<script src="../lib/load.js"></script>
+		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+<!--leaflet-->
+<script src="https://unpkg.com/leaflet@1.5.0/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.0/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet-responsive-popup@0.6.4/leaflet.responsive.popup.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet-responsive-popup@0.6.4/leaflet.responsive.popup.css" />
+<!--Location Plugin-->
+<script src='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.min.js'></script>
+<link href='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.css' rel='stylesheet' />
+<!--Tabletop and GeoJson-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
+<script src="../lib/geojson.js"></script>
+<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar">
+			<div class="container is-fluid">
+				<div class="navbar-brand">
+					<a class="navbar-item" href="https://yyt-sidewalks.github.io/site">
+						<img src="../images/icons/pedestrian.png" alt="Sidewalks in St. John's, NL" height="28">
+					</a>
+					<div class="navbar-burger burger" data-target="navbar">
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+				</div>
+				<div id="navbar" class="navbar-menu">
+					<div class="navbar-start">
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site">Home</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/about/">About</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/stories/">Stories</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/obstructions/">Obstructions</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/city-priorities/">City Clearing Priorities</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/wards/">City Wards</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/reports-media/">Reports & Media</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/open-data/">Open Data</a>
+						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/resources/">Resources</a>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<section id="main" class="section">
+			<div class="container is-fluid">
+				<div class="content">
+					<div class="title is-size-2 is-size-4-touch">City Wards</div>
+					<div class="subtitle is-size-6-touch">Information by Ward in City of St. John's.</div>
+					<div id="controls">
+						<button class="button is-info" id="zoommap">Zoom</button>
+						<span id="zoomcontrols">
+							<button class="button is-primary datatoggle" id="showward_1" data-layer="ward_1">Ward 1</button>
+							<button class="button is-primary datatoggle" id="showward_2" data-layer="ward_2">Ward 2</button>
+							<button class="button is-primary datatoggle" id="showward_3" data-layer="ward_3">Ward 3</button>
+							<button class="button is-primary datatoggle" id="showward_4" data-layer="ward_3">Ward 4</button>
+							<button class="button is-primary datatoggle" id="showward_5" data-layer="ward_5">Ward 5</button>
+						</span>
+						<button class="button is-info" id="shrinkmap"><i class="fas fa-times"></i></button>
+					</div>
+				</div>
+				<div class="content">
+					<div class="map">
+						<div id="map"></div>
+						<div class="maplegend">
+							<h5>Legend<img src="../images/icons/expand.png" class="icon" id="legendctl" title="Expand Legend"></h5>
+							<span id="legend">
+								<ul class="legend_priorities">
+									<li><span class="wardarea area" data-area="ward_1">&nbsp;</span>Ward 1</li>
+									<li><span class="wardarea area" data-area="ward_2">&nbsp;</span>Ward 2</li>
+									<li><span class="wardarea area" data-area="ward_3">&nbsp;</span>Ward 3</li>
+									<li><span class="wardarea area" data-area="ward_4">&nbsp;</span>Ward 4</li>
+									<li><span class="wardarea area" data-area="ward_5">&nbsp;</span>Ward 5</li>
+								</ul>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="content">
+					<div id="wardinfo" class="columns">
+						<div class="column is-12-touch" id="ward_1_info"></div>
+						<div class="column is-12-touch" id="ward_2_info"></div>
+						<div class="column is-12-touch" id="ward_3_info"></div>
+						<div class="column is-12-touch" id="ward_4_info"></div>
+						<div class="column is-12-touch" id="ward_5_info"></div>
+					</div>
+					<div id="blurb">
+						<h3 class="is-size-3">About this page</h3>
+						<p>The data on this page is is drawn directly from the City of St. John's site at <a href="https://map.stjohns.ca/sidewalk/" target="_blank">Sidewalk Clearing Priorities - https://map.stjohns.ca/sidewalk/</a></p>
+						<h4 class="is-size-4">How to use this page</h4>
+						<p>You can view the 3 ward areas, school zones, and whether single or both sides are cleared on a particular route.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+	<footer class="footer has-text-centered">
+		<div class="container is-fluid">
+			<div class="columns">
+				<div class="column is-8-desktop is-offset-2-desktop">
+					<p>
+						<small>
+						Source code licensed <a href="http://opensource.org/licenses/mit-license.php">MIT</a>
+						</small>
+					</p>
+					<p style="margin-top: 1rem;">
+						<a href="http://bulma.io">
+						<img src="../made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
+						</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<script type="text/javascript" src="../lib/main.js"></script>
+	<script>
+		var layertoggles={};
+		var alllayers={},censusareas={};
+		var map = L.map('map',{zoomControl: false}).setView([47.5670, -52.7292], 14); //Initialize the map
+		new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);
+		//Add a basemap
+		var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+		}).addTo(map);
+		var wardzones={};
+		$.each(wards,function(k,v){
+			var thislayer = new L.geoJson(null,{
+				style: function(){
+					return {color: v.colour, opacity: v.opacity, weight: v.size}
+				},
+				onEachFeature: function(feature, layer){
+					$('#'+feature.properties.id+'_info').html('<h5>'+feature.properties.id+'</h5><p>Area sq m: '+feature.properties.area+'</p>');
+				}
+			});
+			thislayer.addTo(map);
+			$.ajax({
+				dataType: "json",
+				url: "../open-data/"+k+".json",
+				success: function(data) {
+					$(data.features).each(function(key, data) {
+						data.properties.area=turf.area(data);
+						data.properties.id=k;
+						wardzones[k]=data.geometry;
+						thislayer.addData(data);
+					});
+				}
+			});
+			alllayers[k]=thislayer;
+			layertoggles[k]=false;
+			$('#show'+k).click(function(){
+				togglelayers(k);
+			});
+		});
+		var censuslayer = new L.geoJson(null,{
+			style: function(geoJsonFeature){
+				return {fillColor: 'transparent', color:'none', weight: '0', fillOpacity: 0.2}
+			},
+			onEachFeature: function(feature, layer){
+				censusareas[feature.properties.id] = layer;
+				var popupcontent='<h5>'+feature.properties.id+'</h5><p>Area sq m: '+feature.properties.area+'</p>';
+				layer.bindPopup(popupcontent);
+				$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
+			}
+		});
+		var intersectionareas={};
+		var intersectionlayer = new L.geoJson(null,{
+			style: function(geoJsonFeature){
+				return {fillColor: '#ff0000', color:'#ff0000', weight: '1', fillOpacity: 0.4}
+			},
+			onEachFeature: function(feature, layer){
+				var popupcontent='<h5>'+feature.properties.id+'</h5><p>Total Area: '+feature.properties.totalcensusarea+' sq m<br><br>Area Within '+feature.properties.ward+': '+feature.properties.areaward+' sq m<br>Area: '+Math.round(feature.properties.percentageareaward*100)+'%</p>';
+				layer.bindPopup(popupcontent);
+				$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
+			}
+		});
+		intersectionlayer.addTo(map);
+		alllayers['overlaps']=intersectionlayer;
+		layertoggles['overlaps']=false;
+		var overlaps={'10010813':['ward_1','ward_4'],'10010243':['ward_4'],'10010244':['ward_4'],'10010249':['ward_4'],'10010246':['ward_4'],'10010247':['ward_4'],'10010242':['ward_4'],'10010248':['ward_4'],'10010240':['ward_4'],'10010241':['ward_4'],'10010239':['ward_4'],'10010237':['ward_4'],'10010236':['ward_4'],'10010235':['ward_4'],'10010238':['ward_4'],'10010233':['ward_4'],'10010250':['ward_4'],'10010251':['ward_4'],'10010253':['ward_4'],'10010310':['ward_4'],'10010252':['ward_4'],'10010255':['ward_4'],'10010257':['ward_4'],'10010254':['ward_4'],'10010337':['ward_4'],'10010797':['ward_4'],'10010775':['ward_1'],'10010282':['ward_2'],'10010486':['ward_2'],'10010294':['ward_2'],'10010301':['ward_2'],'10010191':['ward_5'],'10010678':['ward_5'],'10010681':['ward_5'],'10010688':['ward_5'],'10010825':['ward_5'],'10010644':['ward_5'],'10010824':['ward_5'],'10010245':['ward_4'],'10010348':['ward_1'],'10010774':['ward_1'],'10010271':['ward_1'],'10010273':['ward_1'],'10010272':['ward_1'],'10010269':['ward_1'],'10010270':['ward_1'],'10010268':['ward_1'],'10010267':['ward_1'],'10010273':['ward_1'],'10010266':['ward_1'],'10010265':['ward_1'],'10010264':['ward_1'],'10010263':['ward_1'],'10010340':['ward_1'],'10010346':['ward_1'],'10010485':['ward_1'],'10010262':['ward_1'],'10010260':['ward_1'],'10010261':['ward_1'],'10010342':['ward_1'],'10010343':['ward_1'],'10010344':['ward_1'],'10010345':['ward_1'],'10010281':['ward_2'],'10010276':['ward_2'],'10010277':['ward_2'],'10010278':['ward_2'],'10010279':['ward_2'],'10010280':['ward_2'],'10010283':['ward_2'],'10010286':['ward_2'],'10010285':['ward_2'],'10010284':['ward_2'],'10010290':['ward_2'],'10010295':['ward_2'],'10010296':['ward_2'],'10010298':['ward_2'],'10010299':['ward_2'],'10010308':['ward_2'],'10010230':['ward_2'],'10010229':['ward_2'],'10010228':['ward_2'],'10010300':['ward_2'],'10010227':['ward_2'],'10010302':['ward_2'],'10010225':['ward_2'],'10010226':['ward_2'],'10010224':['ward_2'],'10010307':['ward_2'],'10010305':['ward_2'],'10010306':['ward_2'],'10010216':['ward_2'],'10010214':['ward_2'],'10010304':['ward_2'],'10010217':['ward_2'],'10010303':['ward_2'],'10010196':['ward_3'],'10010213':['ward_3'],'10010212':['ward_3'],'10010199':['ward_3'],'10010198':['ward_3'],'10010211':['ward_3'],'10010200':['ward_3'],'10010210':['ward_3'],'10010207':['ward_3'],'10010206':['ward_3'],'10010203':['ward_3'],'10010202':['ward_3'],'10010201':['ward_3'],'10010488':['ward_3'],'10010489':['ward_3'],'10010490':['ward_3'],'10010204':['ward_3'],'10010176':['ward_3'],'10010173':['ward_3'],'10010175':['ward_3'],'10010484':['ward_3'],'10010172':['ward_3'],'10010174':['ward_3'],'10010461':['ward_3'],'10010459':['ward_3'],'10010458':['ward_3'],'10010457':['ward_3'],'10010171':['ward_3'],'10010170':['ward_3'],'10010169':['ward_3'],'10010167':['ward_3'],'10010168':['ward_3'],'10010165':['ward_3'],'10010670':['ward_5'],'10010166':['ward_3'],'10010193':['ward_5'],'10010192':['ward_5'],'10010194':['ward_5'],'10010821':['ward_5'],'10010187':['ward_5'],'10010493':['ward_5'],'10010822':['ward_5'],'10010492':['ward_5'],'10010494':['ward_5'],'10010495':['ward_5'],'10010491':['ward_5'],'10010823':['ward_5'],'10010181':['ward_5'],'10010182':['ward_5'],'10010669':['ward_5'],'10010826':['ward_5'],'10010827':['ward_5'],'10010671':['ward_5'],'10010672':['ward_5'],'10010673':['ward_5'],'10010674':['ward_5'],'10010675':['ward_5'],'10010676':['ward_5'],'10010677':['ward_5'],'10010180':['ward_3','ward_5'],'10010195':['ward_3','ward_5'],'10010208':['ward_3','ward_4'],'10010209':['ward_3','ward_4'],'10010215':['ward_2','ward_3'],'10010218':['ward_2','ward_3'],'10010219':['ward_2','ward_3'],'10010220':['ward_3','ward_4'],'10010221':['ward_2','ward_3'],'10010223':['ward_2','ward_4'],'10010231':['ward_2','ward_4'],'10010232':['ward_2','ward_4'],'10010234':['ward_2','ward_4'],'10010256':['ward_1','ward_4'],'10010258':['ward_2','ward_4'],'10010297':['ward_2','ward_4'],'10010309':['ward_2','ward_4'],'10010334':['ward_3','ward_4'],'10010338':['ward_1','ward_4'],'10010339':['ward_1','ward_4'],'10010341':['ward_1','ward_4'],'10010356':['ward_1','ward_4'],'10010357':['ward_1','ward_4'],'10010773':['ward_1','ward_4'],'10010812':['ward_1','ward_4'],'10010814':['ward_1','ward_4'],'10010460':['ward_3','ward_5'],'10010482':['ward_2','ward_4'],'10010815':['ward_1','ward_4'],'10010222':['ward_2','ward_3','ward_4'],'10010259':['ward_1','ward_2','ward_4']};
+		censuslayer.addTo(map);
+		var censuszones={};
+		alllayers['census']=censuslayer;
+		layertoggles['census']=false;
+		$.ajax({
+			dataType: "json",
+			url: "../open-data/censuszones.json",
+			success: function(data) {
+				$(data.features).each(function(key, data) {
+					censuszones[data.properties.id]=data.geometry;
+					censuslayer.addData(data);
+				});
+				$.each(censusareas,function(k,v){
+					censusareas[k].setStyle({fillColor: 'transparent', color:'#282828', weight: '1', fillOpacity: 0.2});
+				});
+			}
+		});
+		var differences={ward_1:{},ward_2:{},ward_3:{},ward_4:{},ward_5:{}};
+		var peripheries=['10010273','10010797','10010271','10010775','10010282','10010486','10010294','10010301','10010191','10010678','10010681','10010688','10010825','10010644','10010824'];
+		function dointersections(){
+			$.each(overlaps,function(k,v){
+				var totalcensusarea=turf.area(censuszones[k]);
+				$.each(v,function(ok,ov){
+					var thisoutsidedifference = turf.difference(censuszones[k],wardzones[ov]);
+					var thisdifference;
+					if(thisoutsidedifference!=null){
+						if(peripheries.includes(k)){
+							thisdifference=censuszones[k];
+							thisdifference.properties={};
+						}else{
+							thisdifference=turf.difference(censuszones[k],thisoutsidedifference);
+						}
+					}else{
+						thisdifference=censuszones[k];
+						thisdifference.properties={};
+					}
+					thisarea=turf.area(thisdifference);
+					thisdifference.properties.id=k;
+					thisdifference.properties.ward=ov;
+					thisdifference.properties.areaward=thisarea;
+					thisdifference.properties.totalcensusarea=totalcensusarea;
+					thisdifference.properties.percentageareaward=thisarea/totalcensusarea;
+					differences[ov][k]=thisdifference.properties;
+					intersectionlayer.addData(thisdifference);
+				});
+			});
+			download('wardcensus.json',JSON.stringify(differences));
+		}
+		function download(filename, text) {
+			var element = document.createElement('a');
+			element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+			element.setAttribute('download', filename);
+
+			element.style.display = 'none';
+			document.body.appendChild(element);
+
+			element.click();
+
+			document.body.removeChild(element);
+		}
+		function makecityboundary(){
+			var city=turf.union(turf.polygon(wardzones['ward_1'].coordinates),turf.polygon(wardzones['ward_2'].coordinates));
+			city=turf.union(city,turf.polygon(wardzones['ward_3'].coordinates));
+			city=turf.union(city,turf.polygon(wardzones['ward_4'].coordinates));
+			city=turf.union(city,turf.polygon(wardzones['ward_5'].coordinates));
+			intersectionlayer.addData(city);
+			download('cityboundary.json',JSON.stringify(city));
+		}
+		function togglelayers(l) {
+			if(!layertoggles[l]){
+				map.removeLayer(alllayers[l]);
+				$('#show'+l).addClass('showndata');
+			} else {
+				map.addLayer(alllayers[l]);
+				$('#show'+l).removeClass('showndata');
+			}
+			layertoggles[l] = !layertoggles[l];
+		}
+	</script>
+	<link rel="stylesheet" href="../css/leaflet.css">
+	</body>
+</html>

@@ -10,10 +10,13 @@
 		<meta property="og:description" content="A site for tracking sidewalk and pedestrian safety and usage in St. John's, NL" />
 		<title>YYT Sidewalks - City Clearing Priorities</title>
 		<link rel="stylesheet" href="../css/main.css">
+		<script src="../lib/load.js"></script>
 		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 <!--leaflet-->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet@1.5.0/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.0/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet-responsive-popup@0.6.4/leaflet.responsive.popup.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet-responsive-popup@0.6.4/leaflet.responsive.popup.css" />
 <!--Location Plugin-->
 <script src='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.min.js'></script>
 <link href='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.css' rel='stylesheet' />
@@ -75,12 +78,12 @@
 							<h5>Legend<img src="../images/icons/expand.png" class="icon" id="legendctl" title="Expand Legend"></h5>
 							<span id="legend">
 								<ul class="legend_priorities">
-									<li><span class="area" data-area="priority_1">&nbsp;</span>Priority 1</li>
-									<li><span class="area" data-area="priority_2">&nbsp;</span>Priority 2</li>
-									<li><span class="area" data-area="priority_3">&nbsp;</span>Priority 3</li>
-									<li><span class="area" data-area="school_zones">&nbsp;</span>School Zones</li>
-									<li><span class="area" data-area="singleside">&nbsp;</span>Single Side</li>
-									<li><span class="area" data-area="doubleside">&nbsp;</span>Both Sides</li>
+									<li><span class="priorityarea area" data-area="priority_1">&nbsp;</span>Priority 1</li>
+									<li><span class="priorityarea area" data-area="priority_2">&nbsp;</span>Priority 2</li>
+									<li><span class="priorityarea area" data-area="priority_3">&nbsp;</span>Priority 3</li>
+									<li><span class="priorityarea area" data-area="school_zones">&nbsp;</span>School Zones</li>
+									<li><span class="priorityarea area" data-area="singleside">&nbsp;</span>Single Side</li>
+									<li><span class="priorityarea area" data-area="doubleside">&nbsp;</span>Both Sides</li>
 								</ul>
 							</span>
 						</div>

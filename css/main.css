@@ -7194,6 +7194,9 @@ h3#story_whenwhat {
 textarea#link {
   height: 200px; }
 
+.field .control:not(#when) {
+  max-width: 100%; }
+
 @media screen and (max-width: 1023px) {
   .navbar-menu {
     padding: 0; }

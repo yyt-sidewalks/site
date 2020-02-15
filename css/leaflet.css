@@ -7,6 +7,19 @@
 .leaflet-popup-content .button {
   height: unset;
 }
+.datapopup ul, .datapopup p{
+  font-size:0.8em;
+}
+.datapopup .leaflet-popup-content ul {
+  margin: 0;
+  list-style: none;
+}
+.datapopup .leaflet-popup-content ul li {
+  margin: 0;
+}
+.datapopup .leaflet-popup-content h6 {
+  margin-bottom: 0.25em;
+}
 .leaflet-container a.leaflet-popup-close-button{
   padding: 8px 8px 0 0;
   color:#282828;
@@ -17,4 +30,9 @@
 }
 .leaflet-container{
   font: unset;
+}
+@media screen and (min-width: 1024px) {
+  .datapopup ul, .datapopup p{
+    font-size:0.9em;
+  }
 }
