@@ -234,6 +234,7 @@
 			});
 		}
 		zoombg=true;
+		var thisview=getUrlParameter('view');
 		$(function() {
 			$('#censusdata').change(function(){
 				updateareas($(this).val());
@@ -246,10 +247,23 @@
 				togglelayers($(this).data('layer'));
 			});
 			togglelayers('centres');
-			setTimeout(function() {
-				updateareas('percentages.walked.all');
-				$('#censusdata').val('percentages.walked.all');
-			}, 1500);
+			
+			if(thisview===''){
+				location.href="https://yyt-sidewalks.github.io/site/open-data/";
+			}else if(thisview!=''){
+				var views=thisview.split(',');
+				setTimeout(function() {
+					$.each(views,function(k,v){
+						updateareas(v);
+						$('#censusdata').val(v);
+					});
+				}, 1500);
+			}else{
+				setTimeout(function() {
+					updateareas('percentages.walked.all');
+					$('#censusdata').val('percentages.walked.all');
+				}, 1500);
+			}
 		});
 		var subs=['all','male','female'];
 		var dataareas=['metro','city','region'];

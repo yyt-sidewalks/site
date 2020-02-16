@@ -61,12 +61,15 @@
 					<div id="controls">
 						<button class="button is-info" id="zoommap">Zoom</button>
 						<span id="zoomcontrols">
-							<button class="button is-primary datatoggle" id="showpriority_1" data-layer="priority_1">Priority 1</button>
-							<button class="button is-primary datatoggle" id="showpriority_2" data-layer="priority_2">Priority 2</button>
-							<button class="button is-primary datatoggle" id="showpriority_3" data-layer="priority_3">Priority 3</button>
-							<button class="button is-primary datatoggle" id="showschool_zones" data-layer="school_zones">School Zones</button>
-							<button class="button is-primary datatoggle" id="showdoubleside" data-layer="doubleside">Both Sides</button>
-							<button class="button is-primary datatoggle" id="showsingleside" data-layer="singleside">Single Side</button>
+							<button class="button is-primary datatoggle prioritybtn" id="showpriority_1" data-layer="priority_1">Priority 1</button>
+							<button class="button is-primary datatoggle prioritybtn" id="showpriority_2" data-layer="priority_2">Priority 2</button>
+							<button class="button is-primary datatoggle prioritybtn" id="showpriority_3" data-layer="priority_3">Priority 3</button>
+							<button class="button is-primary datatoggle prioritybtn" id="showschool_zones" data-layer="school_zones">School Zones</button>
+							<button class="button is-primary datatoggle prioritybtn" id="showdoubleside" data-layer="doubleside">Both Sides</button>
+							<button class="button is-primary datatoggle prioritybtn" id="showsingleside" data-layer="singleside">Single Side</button>
+							<button class="button is-primary datatoggle" id="showschools" data-layer="schools"><img src="../images/icons/school.png" class="icon">Schools</button>
+							<button class="button is-primary datatoggle" id="showhospitals" data-layer="hospitals"><img src="../images/icons/hospital.png" class="icon">Hospitals<span class="is-hidden-touch">&nbsp;& Clinics</span></button>
+							<button class="button is-primary datatoggle prioritybtn" id="showwalktoschool" data-layer="walktoschool">1.6km Walk to School Area</button>
 						</span>
 						<button class="button is-info" id="shrinkmap"><i class="fas fa-times"></i></button>
 					</div>
@@ -126,7 +129,93 @@
 		//Add a basemap
 		var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-		}).addTo(map);		
+		}).addTo(map);
+		var walktoschoollayer = new L.geoJson(null,{
+			style: function(){
+				return {color: '#1D215B', opacity: 0.6, weight: 0}
+			}
+		});
+		walktoschoollayer.addTo(map);
+		$.ajax({
+			dataType: "json",
+			url: "../open-data/walktoschool.json",
+			success: function(data) {
+				$(data.features).each(function(key, data) {
+					walktoschoollayer.addData(data);
+				});
+			}
+		});
+		alllayers['walktoschool']=walktoschoollayer;
+		layertoggles['walktoschool']=false;
+		$('#showwalktoschool').click(function(){
+			togglelayers('walktoschool');
+		});
+		var schoolicon = new L.Icon({
+			iconSize: [27, 27],
+			iconAnchor: [13, 27],
+			popupAnchor:  [1, -24],
+			iconUrl: '../images/icons/school.png'
+		});
+		var schoollayer = new L.geoJson(null,{
+			style: function(feature){
+				if(feature.geometry.type === 'Polygon') {
+					return {fillColor: '#cc9a10', color:'none', weight: '0', fillOpacity: 0.3}
+				}
+			},
+			pointToLayer: function(feature, latlng) {
+				if(feature.geometry.type === 'Point') {
+					return L.marker(latlng, {icon: schoolicon});
+				}
+			}
+		});
+		schoollayer.addTo(map);
+		alllayers['schools']=schoollayer;
+		layertoggles['schools']=false;
+		$('#showschools').click(function(){
+			togglelayers('schools');
+		});
+		$.ajax({
+			dataType: "json",
+			url: "../open-data/schools.json",
+			success: function(data) {
+				$(data.features).each(function(key, data) {
+					schoollayer.addData(data);
+				});
+			}
+		});
+		var hospitalicon = new L.Icon({
+			iconSize: [27, 27],
+			iconAnchor: [13, 27],
+			popupAnchor:  [1, -24],
+			iconUrl: '../images/icons/hospital.png'
+		});
+		var hospitallayer = new L.geoJson(null,{
+			style: function(feature){
+				if(feature.geometry.type === 'Polygon') {
+					return {fillColor: '#0a7ed1', color:'none', weight: '0', fillOpacity: 0.3}
+				}
+			},
+			pointToLayer: function(feature, latlng) {
+				if(feature.geometry.type === 'Point') {
+					return L.marker(latlng, {icon: hospitalicon});
+				}
+			}
+		});
+		hospitallayer.addTo(map);
+		alllayers['hospitals']=hospitallayer;
+		layertoggles['hospitals']=false;
+		$('#showhospitals').click(function(){
+			togglelayers('hospitals');
+		});
+		$.ajax({
+			dataType: "json",
+			url: "../open-data/hospitals.json",
+			success: function(data) {
+				$(data.features).each(function(key, data) {
+					hospitallayer.addData(data);
+				});
+			}
+		});
 		$.each(priorities,function(k,v){
 			var thislayer = new L.geoJson(null,{
 				style: function(){
@@ -148,6 +237,20 @@
 			$('#show'+k).click(function(){
 				togglelayers(k);
 			});
+		});
+		var thisview=getUrlParameter('view');
+		$(function(){
+			$('.datatoggle').click();
+			if(thisview===''){
+				location.href="https://yyt-sidewalks.github.io/site/city-priorities/";
+			}else if(thisview!=''){
+				var views=thisview.split(',');
+				$.each(views,function(k,v){
+					$('#show'+v).click();
+				});
+			}else{
+				$('.prioritybtn').click();
+			}
 		});
 		function togglelayers(l) {
 			if(!layertoggles[l]){

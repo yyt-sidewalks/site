@@ -260,7 +260,7 @@
 						hospitallayer.addData(data);
 					});
 				}
-			});			
+			});
 			$.each(priorities,function(k,v){
 				var thislayer = new L.geoJson(null,{
 					style: function(){
@@ -281,13 +281,22 @@
 				prioritylayers[k]=thislayer;
 				layertoggles[k]=false;
 			});
+			var thisview=getUrlParameter('view');
 			$(function() {
 				$('.datatoggle').click(function(){
 					togglelayers($(this).data('layer'));
 					$('.legend_'+$(this).data('layer')).toggle();
 				});
-				$('.datatoggle').click();
-				$('#showpriorities').click();
+				if(thisview===''){
+					location.href="https://yyt-sidewalks.github.io/site/";
+				}else if(thisview!=''){
+					var views=thisview.split(',');
+					$.each(views,function(k,v){
+						$('#show'+v).click();
+					});
+				}else{
+					$('#showpriorities').click();
+				}
 			});
 			function buildcensusdata(){
 				censusdata.averages={};
