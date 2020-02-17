@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 	<html>
 	<head>
+		<script>
+			if(location.href.includes('https://yyt-sidewalks.github.io/site')){
+				location.href="https://www.yytsidewalks.info/stories/";
+			}
+		</script>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta property="og:url" content="https://yyt-sidewalks.github.io/site/" />
+		<meta property="og:url" content="https://www.yytsidewalks.info" />
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content="Sidewalks in St John's, NL" />
 		<meta property="og:description" content="A site for tracking sidewalk and pedestrian safety and usage in St. John's, NL" />
@@ -29,7 +34,7 @@
 		<nav class="navbar">
 			<div class="container is-fluid">
 				<div class="navbar-brand">
-					<a class="navbar-item" href="https://yyt-sidewalks.github.io/site">
+					<a class="navbar-item" href="/">
 						<img src="../images/icons/pedestrian.png" alt="Sidewalks in St. John's, NL" height="28">
 					</a>
 					<div class="navbar-burger burger" data-target="navbar">
@@ -40,14 +45,14 @@
 				</div>
 				<div id="navbar" class="navbar-menu">
 					<div class="navbar-start">
-						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site">Home</a>
-						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/about/">About</a>
-						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/stories/">Stories</a>
-						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/obstructions/">Obstructions</a>
-						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/city-priorities/">City Clearing Priorities</a>
-						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/reports-media/">Reports & Media</a>
-						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/open-data/">Open Data</a>
-						<a class="navbar-item" href="https://yyt-sidewalks.github.io/site/resources/">Resources</a>
+						<a class="navbar-item" href="/">Home</a>
+						<a class="navbar-item" href="/about/">About</a>
+						<a class="navbar-item" href="/stories/">Stories</a>
+						<a class="navbar-item" href="/obstructions/">Obstructions</a>
+						<a class="navbar-item" href="/city-priorities/">City Clearing Priorities</a>
+						<a class="navbar-item" href="/reports-media/">Reports & Media</a>
+						<a class="navbar-item" href="/open-data/">Open Data</a>
+						<a class="navbar-item" href="/resources/">Resources</a>
 					</div>
 				</div>
 			</div>
@@ -321,7 +326,7 @@
 					if(feature.properties.description!==''){
 						description=feature.properties.description.substring(0, 300);
 					}
-					popupcontent='<h5>'+storyoptions.type[feature.properties.type]+' - '+dateinfo.join(' ')+'</h5><p><strong>'+feature.properties.who+' &#183; '+feature.properties.nicedate+'</strong><br>'+description+'</p><p><a class="button is-success" href="https://yyt-sidewalks.github.io/site/stories/?story='+feature.properties.identifier+'">Read More</a></p>';
+					popupcontent='<h5>'+storyoptions.type[feature.properties.type]+' - '+dateinfo.join(' ')+'</h5><p><strong>'+feature.properties.who+' &#183; '+feature.properties.nicedate+'</strong><br>'+description+'</p><p><a class="button is-success" href="/stories/?story='+feature.properties.identifier+'">Read More</a></p>';
 					layer.bindPopup(popupcontent);
 					$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
 				}
@@ -331,7 +336,8 @@
 			var passkey=getUrlParameter('key');
 			var isstory=false;
 			if(thisstory===''){
-				location.href="https://yyt-sidewalks.github.io/site/stories/";
+				var thispage=location.href.split('?');
+				location.href=thispage[0];
 			}else if(thisstory!='' && passkey!==false && passkey!==''){
 				$.post('https://www.yytsidewalks.info/data.php?j=k',{'f':'story','fid':thisstory,'key':passkey},function(data){
 						if(data['status']=='verified'){
@@ -538,7 +544,7 @@
 												if(data['status']=='ok'){
 													$('#cancelstory, #zoommap').hide();
 													$('#savingmsg').text('Story saved!');
-													$('#saving').append('<p><a class="button is-primary" href="https://yyt-sidewalks.github.io/site/stories/">View all Stories</a><a class="button is-primary" href="https://yyt-sidewalks.github.io/site/stories/?story='+data['id']+'">View new Story</a><button class="button resetform is-primary">Add another story</button></p>').promise().done(function(){
+													$('#saving').append('<p><a class="button is-primary" href="/stories/">View all Stories</a><a class="button is-primary" href="/stories/?story='+data['id']+'">View new Story</a><button class="button resetform is-primary">Add another story</button></p>').promise().done(function(){
 														$('.resetform').click(function(){
 															resetform();
 														});
@@ -673,7 +679,7 @@
 												if(data['status']=='ok'){
 													$('#cancelstory, #zoommap').hide();
 													$('#savingmsg').text('Story saved!');
-													$('#saving').append('<p><a class="button is-primary" href="https://yyt-sidewalks.github.io/site/stories/">View all Stories</a><a class="button is-primary" href="https://yyt-sidewalks.github.io/site/stories/?story='+data['id']+'">View new Story</a><button class="button resetform is-primary">Add another story</button></p>').promise().done(function(){
+													$('#saving').append('<p><a class="button is-primary" href="/stories/">View all Stories</a><a class="button is-primary" href="/stories/?story='+data['id']+'">View new Story</a><button class="button resetform is-primary">Add another story</button></p>').promise().done(function(){
 														$('.resetform').click(function(){
 															resetform();
 														});
@@ -781,7 +787,7 @@
 								fullstory[k]='';
 							}
 						});
-						$('#blurb').html('<h4 id="story_who">'+fullstory['who']+'</h4><h3 id="story_whenwhat">'+storyoptions.type[fullstory.type]+' - '+dateinfo.join(' ')+'</h3><p id="story_description" class="is-size-5">'+fullstory['description']+'</p><p><strong>Sidewalk Conditions:</strong> '+fullstory.sidewalks+'<br><strong>Weather Conditions:</strong> '+fullstory.weather+'<br><strong>Vehicles Involved:</strong> '+fullstory.vehicles+' <br><strong>Impact of the Incident:</strong> '+fullstory.impact+'</p><p><strong>Source:</strong> '+storyoptions.source[fullstory.source]+'<br><strong>Link:</strong> <span id="storylinks">'+linkinfo.join('<br>')+'</span><br><strong>Added:</strong> '+fullstory['modified']+'</p><p><a class="button is-success" href="https://yyt-sidewalks.github.io/site/stories/?do=addstory">Add a story</a><a class="button is-success" href="?story='+thisstory+'&key=">Edit this story</a></p>');
+						$('#blurb').html('<h4 id="story_who">'+fullstory['who']+'</h4><h3 id="story_whenwhat">'+storyoptions.type[fullstory.type]+' - '+dateinfo.join(' ')+'</h3><p id="story_description" class="is-size-5">'+fullstory['description']+'</p><p><strong>Sidewalk Conditions:</strong> '+fullstory.sidewalks+'<br><strong>Weather Conditions:</strong> '+fullstory.weather+'<br><strong>Vehicles Involved:</strong> '+fullstory.vehicles+' <br><strong>Impact of the Incident:</strong> '+fullstory.impact+'</p><p><strong>Source:</strong> '+storyoptions.source[fullstory.source]+'<br><strong>Link:</strong> <span id="storylinks">'+linkinfo.join('<br>')+'</span><br><strong>Added:</strong> '+fullstory['modified']+'</p><p><a class="button is-success" href="/stories/?do=addstory">Add a story</a><a class="button is-success" href="?story='+thisstory+'&key=">Edit this story</a></p>');
 
 						map._onResize();
 						map.setView([fullstory.latitude,fullstory.longitude], 18);
