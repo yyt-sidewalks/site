@@ -3,7 +3,7 @@
 	<head>
 		<script>
 			if(location.href.includes('https://yyt-sidewalks.github.io/site')){
-				location.href="https://www.yytsidewalks.info/city-priorities/";
+				location.href="https://www.yytsidewalks.info/city-priorities/2020/";
 			}
 		</script>
 		<meta charset="utf-8">
@@ -14,9 +14,9 @@
 		<meta property="og:title" content="Sidewalks in St John's, NL" />
 		<meta property="og:description" content="A site for tracking sidewalk and pedestrian safety and usage in St. John's, NL" />
 		<meta property="og:image" content="https://www.yytsidewalks.info/images/site-preview.jpg" class="meta_image">
-		<title>YYT Sidewalks - City Clearing Priorities</title>
-		<link rel="stylesheet" href="../css/main.css">
-		<script src="../lib/load.js"></script>
+		<title>YYT Sidewalks - 2020 City Clearing Priorities</title>
+		<link rel="stylesheet" href="../../css/main.css">
+		<script src="../../lib/load.js"></script>
 		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 <!--leaflet-->
 <script src="https://unpkg.com/leaflet@1.5.0/dist/leaflet.js"></script>
@@ -28,8 +28,7 @@
 <link href='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.css' rel='stylesheet' />
 <!--Tabletop and GeoJson-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
-<script src="../lib/geojson.js"></script>
-
+<script src="../../lib/geojson.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	</head>
 	<body>
@@ -37,7 +36,7 @@
 			<div class="container is-fluid">
 				<div class="navbar-brand">
 					<a class="navbar-item" href="/">
-						<img src="../images/icons/pedestrian.png" alt="Sidewalks in St. John's, NL" height="28">
+						<img src="../../images/icons/pedestrian.png" alt="Sidewalks in St. John's, NL" height="28">
 					</a>
 					<div class="navbar-burger burger" data-target="navbar">
 						<span></span>
@@ -85,17 +84,18 @@
 			<div class="container is-fluid">
 				<div class="content">
 					<div class="title is-size-2 is-size-4-touch">City Clearing Priorities</div>
-					<div class="subtitle is-size-6-touch">The current snow-clearing priorities for the City of St. John's.</div>
+					<div class="subtitle is-size-6-touch">The 2020 snow-clearing priorities for the City of St. John's.</div>
 					<div id="controls">
 						<button class="button is-info" id="zoommap">Zoom</button>
 						<span id="zoomcontrols">
-							<button class="button is-primary datatoggle prioritybtn" id="showpriority_1a" data-layer="priority_1a">Priority 1a</button>
 							<button class="button is-primary datatoggle prioritybtn" id="showpriority_1" data-layer="priority_1">Priority 1</button>
 							<button class="button is-primary datatoggle prioritybtn" id="showpriority_2" data-layer="priority_2">Priority 2</button>
 							<button class="button is-primary datatoggle prioritybtn" id="showpriority_3" data-layer="priority_3">Priority 3</button>
-							<button class="button is-primary datatoggle prioritybtn" id="showpriority_4" data-layer="priority_4">Priority 4</button>
-							<button class="button is-primary datatoggle" id="showschools" data-layer="schools"><img src="../images/icons/school.png" class="icon">Schools</button>
-							<button class="button is-primary datatoggle" id="showhospitals" data-layer="hospitals"><img src="../images/icons/hospital.png" class="icon">Hospitals<span class="is-hidden-touch">&nbsp;& Clinics</span></button>
+							<button class="button is-primary datatoggle prioritybtn" id="showschool_zones" data-layer="school_zones">School Zones</button>
+							<button class="button is-primary datatoggle prioritybtn" id="showdoubleside" data-layer="doubleside">Both Sides</button>
+							<button class="button is-primary datatoggle prioritybtn" id="showsingleside" data-layer="singleside">Single Side</button>
+							<button class="button is-primary datatoggle" id="showschools" data-layer="schools"><img src="../../images/icons/school.png" class="icon">Schools</button>
+							<button class="button is-primary datatoggle" id="showhospitals" data-layer="hospitals"><img src="../../images/icons/hospital.png" class="icon">Hospitals<span class="is-hidden-touch">&nbsp;& Clinics</span></button>
 							<button class="button is-primary datatoggle prioritybtn" id="showwalktoschool" data-layer="walktoschool">1.6km Walk to School Area</button>
 						</span>
 						<button class="button is-info" id="shrinkmap"><i class="fas fa-times"></i></button>
@@ -105,14 +105,15 @@
 					<div class="map">
 						<div id="map"></div>
 						<div class="maplegend">
-							<h5>Legend<img src="../images/icons/expand.png" class="icon" id="legendctl" title="Expand Legend"></h5>
+							<h5>Legend<img src="../../images/icons/expand.png" class="icon" id="legendctl" title="Expand Legend"></h5>
 							<span id="legend">
 								<ul class="legend_priorities">
-									<li><span class="priorityarea area" data-area="priority_1a">&nbsp;</span>Priority 1a</li>
 									<li><span class="priorityarea area" data-area="priority_1">&nbsp;</span>Priority 1</li>
 									<li><span class="priorityarea area" data-area="priority_2">&nbsp;</span>Priority 2</li>
 									<li><span class="priorityarea area" data-area="priority_3">&nbsp;</span>Priority 3</li>
-									<li><span class="priorityarea area" data-area="priority_4">&nbsp;</span>Priority 4</li>
+									<li><span class="priorityarea area" data-area="school_zones">&nbsp;</span>School Zones</li>
+									<li><span class="priorityarea area" data-area="singleside">&nbsp;</span>Single Side</li>
+									<li><span class="priorityarea area" data-area="doubleside">&nbsp;</span>Both Sides</li>
 								</ul>
 							</span>
 						</div>
@@ -121,9 +122,9 @@
 				<div class="content">
 					<div id="blurb">
 						<h3 class="is-size-3">About this page</h3>
-						<p>The data on this page is is drawn directly from the City of St. John's site at <a href="https://map.stjohns.ca/sidewalk/" target="_blank">Sidewalk Clearing Priorities - https://map.stjohns.ca/sidewalk/</a>. It is current to Jan 4, 2021.</p>
+						<p>The data on this page is is drawn directly from the City of St. John's site at <a href="https://map.stjohns.ca/sidewalk/" target="_blank">Sidewalk Clearing Priorities - https://map.stjohns.ca/sidewalk/</a></p>
 						<h4 class="is-size-4">How to use this page</h4>
-						<p>You can view the 5 priority areas and whether single or both sides are cleared on a particular route.</p>
+						<p>You can view the 3 priority areas, school zones, and whether single or both sides are cleared on a particular route.</p>
 					</div>
 				</div>
 			</div>
@@ -139,15 +140,18 @@
 					</p>
 					<p style="margin-top: 1rem;">
 						<a href="http://bulma.io">
-						<img src="../made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
+						<img src="../../made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
 						</a>
 					</p>
 				</div>
 			</div>
 		</div>
 	</footer>
-	<script type="text/javascript" src="../lib/main.js"></script>
+	<script type="text/javascript" src="../../lib/main.js"></script>
 	<script>
+		//2020 priorities definition:
+		priorities = { "school_zones": { "colour": "#f2ff00", "size": "24", "opacity": "0.6", "legend": "School Zones" }, "singleside": { "colour": "#3c00ff", "size": "14", "opacity": "0.4", "legend": "Single Side Cleared" }, "doubleside": { "colour": "#ff8000", "size": "14", "opacity": "0.4", "legend": "Both Sides Cleared" }, "priority_3": { "colour": "#42ff65", "size": "4", "opacity": "1", "legend": "Priority 3" }, "priority_2": { "colour": "#02e2f2", "size": "4", "opacity": "1", "legend": "Priority 2" }, "priority_1": { "colour": "#ff4545", "size": "4", "opacity": "1", "legend": "Priority 1" } };
+
 		var layertoggles={};
 		var alllayers={};
 		var map = L.map('map',{zoomControl: false}).setView([47.5670, -52.7292], 14); //Initialize the map
@@ -164,7 +168,7 @@
 		walktoschoollayer.addTo(map);
 		$.ajax({
 			dataType: "json",
-			url: "../open-data/walktoschool.json",
+			url: "../../open-data/walktoschool.json",
 			success: function(data) {
 				$(data.features).each(function(key, data) {
 					walktoschoollayer.addData(data);
@@ -180,7 +184,7 @@
 			iconSize: [27, 27],
 			iconAnchor: [13, 27],
 			popupAnchor:  [1, -24],
-			iconUrl: '../images/icons/school.png'
+			iconUrl: '../../images/icons/school.png'
 		});
 		var schoollayer = new L.geoJson(null,{
 			style: function(feature){
@@ -202,7 +206,7 @@
 		});
 		$.ajax({
 			dataType: "json",
-			url: "../open-data/schools.json",
+			url: "../../open-data/schools.json",
 			success: function(data) {
 				$(data.features).each(function(key, data) {
 					schoollayer.addData(data);
@@ -213,7 +217,7 @@
 			iconSize: [27, 27],
 			iconAnchor: [13, 27],
 			popupAnchor:  [1, -24],
-			iconUrl: '../images/icons/hospital.png'
+			iconUrl: '../../images/icons/hospital.png'
 		});
 		var hospitallayer = new L.geoJson(null,{
 			style: function(feature){
@@ -235,7 +239,7 @@
 		});
 		$.ajax({
 			dataType: "json",
-			url: "../open-data/hospitals.json",
+			url: "../../open-data/hospitals.json",
 			success: function(data) {
 				$(data.features).each(function(key, data) {
 					hospitallayer.addData(data);
@@ -251,7 +255,7 @@
 			thislayer.addTo(map);
 			$.ajax({
 				dataType: "json",
-				url: "../open-data/"+k+".json",
+				url: "../../open-data/2020/"+k+".json",
 				success: function(data) {
 					$(data.features).each(function(key, data) {
 						thislayer.addData(data);
@@ -290,6 +294,6 @@
 			layertoggles[l] = !layertoggles[l];
 		}
 	</script>
-	<link rel="stylesheet" href="../css/leaflet.css">
+	<link rel="stylesheet" href="../../css/leaflet.css">
 	</body>
 </html>

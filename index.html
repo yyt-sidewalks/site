@@ -13,9 +13,10 @@
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content="Sidewalks in St John's, NL" />
 		<meta property="og:description" content="A site for tracking sidewalk and pedestrian safety and usage in St. John's, NL" />
+		<meta property="og:image" content="https://www.yytsidewalks.info/images/site-preview.jpg" class="meta_image">
 		<title>YYT Sidewalks</title>
 		<link rel="stylesheet" href="css/main.css">
-		<script src="../lib/load.js"></script>
+		<script src="lib/load.js"></script>
 		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 		<!--leaflet-->
 <script src="https://unpkg.com/leaflet@1.5.0/dist/leaflet.js"></script>
@@ -46,10 +47,33 @@
 				<div id="navbar" class="navbar-menu">
 					<div class="navbar-start">
 						<a class="navbar-item" href="/">Home</a>
-						<a class="navbar-item" href="/about/">About</a>
-						<a class="navbar-item" href="/stories/">Stories</a>
-						<a class="navbar-item" href="/city-priorities/">City Clearing Priorities</a>
-						<a class="navbar-item" href="/obstructions/">Obstructions</a>
+						<div class="navbar-item has-dropdown is-hoverable">
+							<a class="navbar-link" href="/about/">About</a>
+							<div class="navbar-dropdown">
+								<a class="navbar-item" href="/about/updates/">Updates</a>
+							</div>
+						</div>
+						<div class="navbar-item has-dropdown is-hoverable">
+							<a class="navbar-link" href="/stories/">Stories</a>
+							<div class="navbar-dropdown">
+
+								<a class="navbar-item" href="/stories/2021/">2021</a>
+								<a class="navbar-item" href="/stories/2020/">2020</a>
+							</div>
+						</div>
+						<div class="navbar-item has-dropdown is-hoverable">
+							<a class="navbar-link" href="/city-priorities/">City Clearing Priorities</a>
+							<div class="navbar-dropdown">
+								<a class="navbar-item" href="/city-priorities/2020/">2020</a>
+							</div>
+						</div>
+						<a class="navbar-item" href="/city-snow-removal/">City Snow Removal</a>
+						<div class="navbar-item has-dropdown is-hoverable">
+							<a class="navbar-link" href="/obstructions/">Obstructions</a>
+							<div class="navbar-dropdown">
+								<a class="navbar-item" href="/obstructions/2020/">2020</a>
+							</div>
+						</div>
 						<a class="navbar-item" href="/open-data/">Open Data</a>
 						<a class="navbar-item" href="/resources/">Resources</a>
 					</div>
@@ -67,7 +91,7 @@
 						<button class="button is-info" id="zoommap">Zoom</button>
 						<span id="zoomcontrols">
 							<button class="button is-primary datatoggle" id="showpriorities" data-layer="priorities"><span class="is-hidden-touch">City Snow&nbsp;</span>Priorities</button>
-							<button class="button is-primary datatoggle" id="showstories" data-layer="stories"><img src="images/icons/story.png" class="icon">Stories</button>
+							<button class="button is-primary datatoggle" id="showstories" data-layer="stories"><img src="images/icons/story.png" class="icon">All Stories</button>
 							<button class="button is-primary datatoggle" id="showschools" data-layer="schools"><img src="images/icons/school.png" class="icon">Schools</button>
 							<button class="button is-primary datatoggle" id="showhospitals" data-layer="hospitals"><img src="images/icons/hospital.png" class="icon">Hospitals<span class="is-hidden-touch">&nbsp;& Clinics</span></button>
 							<button class="button is-primary datatoggle" id="showwalkers" data-layer="census">Walking<span class="is-hidden-touch">&nbsp;Commuters</span></button>
@@ -89,12 +113,11 @@
 								<p class="gradientctl legend_census"><span class="spanlabel">More</span><span class="gradient"></span><span class="spanlabel">Less</span></p>
 								<p class="legend_priorities"><strong>Priorities</strong></p>
 								<ul class="legend_priorities">
+									<li><span class="priorityarea area" data-area="priority_1a">&nbsp;</span>Priority 1a</li>
 									<li><span class="priorityarea area" data-area="priority_1">&nbsp;</span>Priority 1</li>
 									<li><span class="priorityarea area" data-area="priority_2">&nbsp;</span>Priority 2</li>
 									<li><span class="priorityarea area" data-area="priority_3">&nbsp;</span>Priority 3</li>
-									<li><span class="priorityarea area" data-area="school_zones">&nbsp;</span>School Zones</li>
-									<li><span class="priorityarea area" data-area="singleside">&nbsp;</span>Single Side</li>
-									<li><span class="priorityarea area" data-area="doubleside">&nbsp;</span>Both Sides</li>
+									<li><span class="priorityarea area" data-area="priority_4">&nbsp;</span>Priority 4</li>
 								</ul>
 								<p class="legend_obstructions"><strong>Obstructions</strong></p>
 								<ul class="legend_obstructions">
@@ -113,7 +136,10 @@
 					</div>
 				</div>
 				<div id="storieslist" class="content">
-					<h3 class="is-size-3">Sidewalk Stories</h3>
+					<h3 class="is-size-3">Recent Sidewalk Stories</h3>
+					<p><button class="button is-success"><a href="/stories/">All Years</a></button>
+						<button class="button is-success"><a href="/stories/2021/">2021</a></button>
+						<button class="button is-success"><a href="/stories/2020/">2020</a></button></p>
 					<div class="columns is-tablet">
 						<div class="column is-4-desktop is-6-tablet" id="stories_1">
 						</div>
@@ -125,6 +151,8 @@
 				</div>
 				<div class="content">
 					<div id="blurb">
+						<h3 class="is-size-3">2021 Updates</h3>
+						<p>We've updated the site for Winter 2021! The City's new priorities are now visible on this front page as well as at the city priorities page. The 2020 priorities are now found at <a href="https://www.yytsidewalks.info/city-priorities/2020/">https://www.yytsidewalks.info/city-priorities/2020/</a> for reference. We're also working on a summary and analysis of the changes, which will be posted shortly as a separate page.</p>
 						<h3 class="is-size-3">What we're doing</h3>
 						<p>Getting around St. John's, NL, on foot on the sidewalks is can be pretty tricky - from vehicles that won't stop at crosswalks, to clearing snow, and obstructions in the sidewalk itself, it's not really a cake walk. And so, we're trying to pull all of the information we can get together in one place. We're hoping it will help City Council and those who keep an eye on them - you, the voters - informed about what's going on, and how we could do better to foster safe walking for all.</p>
 						<p>All of the data used on this website is open access, as is the code. For more information, see the About page.</p>
@@ -303,6 +331,7 @@
 				}else{
 					$('.datatoggle').click();
 					$('#showpriorities').click();
+					$('#showstories').click();
 				}
 			});
 			function buildcensusdata(){
@@ -487,7 +516,7 @@
 			layertoggles['stories']=false;
 			//add that data to the geojson layer created earlier
 			var activestories=[];
-			$.get('https://www.yytsidewalks.info/data.php?j=l&f=story',function(data){
+			$.get('https://www.yytsidewalks.info/data.php?j=l&f=story&sort=desc',function(data){
 				activestories=data;
 				storieslayer.addData(GeoJSON.parse(activestories, {Point: ['latitude', 'longitude']}));
 				makestories(6);

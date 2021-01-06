@@ -3,7 +3,7 @@
 	<head>
 		<script>
 			if(location.href.includes('https://yyt-sidewalks.github.io/site')){
-				location.href="https://www.yytsidewalks.info/obstructions/";
+				location.href="https://www.yytsidewalks.info/obstructions/2020/";
 			}
 		</script>
 		<meta charset="utf-8">
@@ -14,9 +14,9 @@
 		<meta property="og:title" content="Sidewalks in St John's, NL" />
 		<meta property="og:description" content="A site for tracking sidewalk and pedestrian safety and usage in St. John's, NL" />
 		<meta property="og:image" content="https://www.yytsidewalks.info/images/site-preview.jpg" class="meta_image">
-		<title>YYT Sidewalks - Obstructions</title>
-		<link rel="stylesheet" href="../css/main.css">
-		<script src="../lib/load.js"></script>
+		<title>YYT Sidewalks - 2020 Obstructions</title>
+		<link rel="stylesheet" href="../../css/main.css">
+		<script src="../../lib/load.js"></script>
 		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 <!--leaflet-->
@@ -26,7 +26,7 @@
 <script src='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.min.js'></script>
 <link href='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.css' rel='stylesheet' />
 <!--Tabletop and GeoJson-->
-<script src="../lib/geojson.js"></script>
+<script src="../../lib/geojson.js"></script>
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 		<style>
@@ -42,7 +42,7 @@
 			<div class="container is-fluid">
 				<div class="navbar-brand">
 					<a class="navbar-item" href="/">
-						<img src="../images/icons/pedestrian.png" alt="Sidewalks in St. John's, NL" height="28">
+						<img src="../../images/icons/pedestrian.png" alt="Sidewalks in St. John's, NL" height="28">
 					</a>
 					<div class="navbar-burger burger" data-target="navbar">
 						<span></span>
@@ -89,10 +89,10 @@
 		<section id="main" class="section">
 			<div class="container is-fluid">
 				<div class="content">
-					<div class="title is-size-2 is-size-4-touch">Obstructions</div>
+					<div class="title is-size-2 is-size-4-touch">2020 Obstructions</div>
 					<div class="subtitle is-size-6-touch">Items that are embedded within or obstruct easy movement within sidewalks.</div>
 					<div id="controls">
-						<button class="button is-success" id="addobstruction"><img src="../images/icons/icon-other.png" class="icon">Add an Obstruction</button>
+						<button class="button is-success" id="addobstruction_link"><img src="../../images/icons/icon-other.png" class="icon"><a href="/obstructions/?do=addobstruction">Add an Obstruction</a></button>
 						<span id="zoommsg">
 							<span class="spanlabel">To add, click a location on the map</span>
 						</span>
@@ -103,18 +103,18 @@
 					<div class="map">
 						<div id="map"></div>
 						<div class="maplegend">
-							<h5>Legend<img src="../images/icons/expand.png" class="icon" id="legendctl" title="Expand Legend"></h5>
+							<h5>Legend<img src="../../images/icons/expand.png" class="icon" id="legendctl" title="Expand Legend"></h5>
 							<span id="legend">
 								<ul class="legend_obstructions">
-									<li><img src="../images/icons/icon-hydrant.png" class="icon">Fire Hydrant</li>
-									<li><img src="../images/icons/icon-pole.png" class="icon">Telephone Pole</li>
-									<li><img src="../images/icons/icon-light.png" class="icon">Street Light</li>
-									<li><img src="../images/icons/icon-bridge.png" class="icon">Narrow Bridge</li>
-									<li><img src="../images/icons/icon-sign.png" class="icon">Street Sign</li>
-									<li><img src="../images/icons/icon-traffic.png" class="icon">Traffic Light</li>
-									<li><img src="../images/icons/icon-parking.png" class="icon">Parking Metre</li>
-									<li><img src="../images/icons/icon-stairs.png" class="icon">Sidewalk Stairs</li>
-									<li><img src="../images/icons/icon-other.png" class="icon">Other</li>
+									<li><img src="../../images/icons/icon-hydrant.png" class="icon">Fire Hydrant</li>
+									<li><img src="../../images/icons/icon-pole.png" class="icon">Telephone Pole</li>
+									<li><img src="../../images/icons/icon-light.png" class="icon">Street Light</li>
+									<li><img src="../../images/icons/icon-bridge.png" class="icon">Narrow Bridge</li>
+									<li><img src="../../images/icons/icon-sign.png" class="icon">Street Sign</li>
+									<li><img src="../../images/icons/icon-traffic.png" class="icon">Traffic Light</li>
+									<li><img src="../../images/icons/icon-parking.png" class="icon">Parking Metre</li>
+									<li><img src="../../images/icons/icon-stairs.png" class="icon">Sidewalk Stairs</li>
+									<li><img src="../../images/icons/icon-other.png" class="icon">Other</li>
 								</ul>
 							</span>
 						</div>
@@ -146,7 +146,7 @@
 					</p>
 					<p style="margin-top: 1rem;">
 						<a href="http://bulma.io">
-						<img src="../made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
+						<img src="../../made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
 						</a>
 					</p>
 				</div>
@@ -187,7 +187,7 @@
 			</form>
 		</div>
 	</div>
-	<script type="text/javascript" src="../lib/main.js"></script>
+	<script type="text/javascript" src="../../lib/main.js"></script>
 	<script>
 		collecting=true;
 		var map = L.map('map', {
@@ -222,7 +222,7 @@
 		//define icons
 		$.each(obtypes,function(k,v){
 			obtypeicons[v]= L.icon({
-				iconUrl: '../images/icons/icon-'+v+'.png',
+				iconUrl: '../../images/icons/icon-'+v+'.png',
 				iconSize: [40, 40], // size of the icon
 				iconAnchor: [20, 44], // point of the icon which will correspond to marker's location
 				popupAnchor:[-3, -76] // point from which the popup should open relative to the iconAnchor
@@ -262,7 +262,7 @@
 						fullsubmits.description=description;
 						fullsubmits.latitude=lat;
 						fullsubmits.longitude=lng;
-						$.post('https://www.yytsidewalks.info/data.php?j=a&f=obstruction',fullsubmits,function(data){
+						$.post('https://www.yytsidewalks.info/data.php?j=a&f=obstruction&year=2020',fullsubmits,function(data){
 							if(data['status']=='ok'){
 								marker.setPopupContent('<h4>Saved!</h4>');
 								setTimeout(function() {
@@ -327,7 +327,7 @@
 		var obstructiontotal=0;
 		var obstructiontypes=[];
 		var obstructiontypecount={};
-		$.get('https://www.yytsidewalks.info/data.php?j=l&f=obstruction',function(data){
+		$.get('https://www.yytsidewalks.info/data.php?j=l&f=obstruction&year=2020',function(data){
 			activedata=data;
 			var gpsData = GeoJSON.parse(activedata, {Point: ['latitude', 'longitude']});
 			//add that data to the geojson layer created earlier
@@ -352,6 +352,6 @@
 			});
 		}
 		</script>
-		<link rel="stylesheet" href="../css/leaflet.css">
+		<link rel="stylesheet" href="../../css/leaflet.css">
 	</body>
 </html>

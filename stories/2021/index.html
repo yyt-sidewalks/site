@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<script>
+			if(location.href.includes('https://yyt-sidewalks.github.io/site')){
+				location.href="https://www.yytsidewalks.info/stories/2021/";
+			}
+		</script>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta property="og:url" content="https://www.yytsidewalks.info" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Sidewalks in St John's, NL" />
+		<meta property="og:description" content="A site for tracking sidewalk and pedestrian safety and usage in St. John's, NL" />
+		<meta property="og:image" content="https://www.yytsidewalks.info/images/site-preview.jpg" class="meta_image">
+		<title>YYT Sidewalks - 2021 Stories</title>
+		<link rel="stylesheet" href="../../css/main.css">
+		<script src="../../lib/load.js"></script>
+		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+<!--leaflet-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+<!--Location Plugin-->
+<script src='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.min.js'></script>
+<link href='https://cdn.jsdelivr.net/leaflet.locatecontrol/0.49.0/L.Control.Locate.css' rel='stylesheet' />
+<!--Tabletop and GeoJson-->
+<script src="../../lib/geojson.js"></script>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.1.1/jquery-confirm.min.js"></script>
+	</head>
+	<body>
+		<nav class="navbar">
+			<div class="container is-fluid">
+				<div class="navbar-brand">
+					<a class="navbar-item" href="/">
+						<img src="../../images/icons/pedestrian.png" alt="Sidewalks in St. John's, NL" height="28">
+					</a>
+					<div class="navbar-burger burger" data-target="navbar">
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+				</div>
+				<div id="navbar" class="navbar-menu">
+					<div class="navbar-start">
+						<a class="navbar-item" href="/">Home</a>
+						<div class="navbar-item has-dropdown is-hoverable">
+							<a class="navbar-link" href="/about/">About</a>
+							<div class="navbar-dropdown">
+								<a class="navbar-item" href="/about/updates/">Updates</a>
+							</div>
+						</div>
+						<div class="navbar-item has-dropdown is-hoverable">
+							<a class="navbar-link" href="/stories/">Stories</a>
+							<div class="navbar-dropdown">
+
+								<a class="navbar-item" href="/stories/2021/">2021</a>
+								<a class="navbar-item" href="/stories/2020/">2020</a>
+							</div>
+						</div>
+						<div class="navbar-item has-dropdown is-hoverable">
+							<a class="navbar-link" href="/city-priorities/">City Clearing Priorities</a>
+							<div class="navbar-dropdown">
+								<a class="navbar-item" href="/city-priorities/2020/">2020</a>
+							</div>
+						</div>
+						<a class="navbar-item" href="/city-snow-removal/">City Snow Removal</a>
+						<div class="navbar-item has-dropdown is-hoverable">
+							<a class="navbar-link" href="/obstructions/">Obstructions</a>
+							<div class="navbar-dropdown">
+								<a class="navbar-item" href="/obstructions/2020/">2020</a>
+							</div>
+						</div>
+						<a class="navbar-item" href="/open-data/">Open Data</a>
+						<a class="navbar-item" href="/resources/">Resources</a>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<section id="main" class="section">
+			<div class="container is-fluid">
+				<div class="content">
+					<div class="title is-size-2 is-size-4-touch">2021 Stories</div>
+					<div class="subtitle is-size-6-touch">Tales of incidents, accidents, and hazardous walking in St. John's, NL</div>
+					<div id="controls">
+						<button class="button is-info" id="zoommap">Zoom</button>
+						<button class="button is-success" id="addstory_link"><img src="../../images/icons/story.png" class="icon"><a href="/stories/?do=addstory">Add a Story</a></button>
+						<span id="zoomcontrols">
+							<span class="button is-clear has-text-weight-bold">Reported Collisions</span>
+							<div class="select">
+								<select id="crashyears">
+									<option value="all">All Years</option>
+								</select>
+							</div>
+							<button class="button is-primary" id="showall">Hide</button>
+						</span>
+						<button class="button is-info" id="shrinkmap"><i class="fas fa-times"></i></button>
+					</div>
+				</div>
+				<div class="content">
+					<div class="field" id="mainmap">
+						<div class="control">
+							<div id="location" class="map">
+								<div id="map"></div>
+							</div>
+						</div>
+						<div id="storieslist" class="control">
+							<h3 class="is-size-3">Sidewalk Stories</h3>
+							<p><button class="button is-success"><a href="/stories/">All Years</a></button>
+								<button class="button is-success"><a href="/stories/2020/">2020</a></button></p>
+							<div class="columns is-tablet">
+								<div class="column is-4-desktop is-6-tablet" id="stories_1">
+								</div>
+								<div class="column is-4-desktop is-6-tablet" id="stories_2">
+								</div>
+								<div class="column is-4-desktop is-6-tablet" id="stories_3">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="content">
+					<div id="blurb">
+						<h3 class="is-size-3">About this page</h3>
+						<p>The data on this page is meant to help foster discussion about what we can do to make sidewalks safer for pedestrians. Contributors can tell their stories, and locate where something happened on a map. Hopefully, over time, there will be an account of where and what is wrong with our sidewalk safety in St. John's, NL.</p>
+						<h4 class="is-size-4">How to use this page</h4>
+						<p>To add a story, click 'add a story', and fill out the form. You need to tell us who you are, and a bit about the story - the rest is up to you. No photos can be added here, but you can link the story to another site, like Facebook or a news site, if you wish. This will add data to a googlespreadsheet, and will reload the map showing your point. When you're done, click 'save' at the bottom of the page.</p>
+						<h4>About the Collision Data</h4>
+						<p>For a full explanation of the collision data, see <a href="https://github.com/walkabilly/sj_crashes/blob/master/avalon_collisions.md">https://github.com/walkabilly/sj_crashes/blob/master/avalon_collisions.md</a>. The initial data was compiled by the Road Network Management Group, Newfoundland and Labrador Statistics Agency from the Collision Database Management System (CDMS), Government of Newfoundland and Labrador from RNC Police Reports for 2016 and 2017, and analyzed by Dr. Daniel Fuller of Memorial University of Newfoundland and Labrador. There are notable issues with how the RNC documents collisions or crashes involving pedestrians. As indicated, "There are a number of columns that including information about pedestrians. Unfortunately, that information is also often combined with NA (Not Applicable) in the same cell. It can be hard to tell an pedestrian from an NA."</p>
+					</div>
+				</div>
+			</div>
+		</section>
+		<footer class="footer has-text-centered">
+			<div class="container is-fluid">
+				<div class="columns">
+					<div class="column is-8-desktop is-offset-2-desktop">
+						<p>
+							<small>
+							Source code licensed <a href="http://opensource.org/licenses/mit-license.php">MIT</a>
+							</small>
+						</p>
+						<p style="margin-top: 1rem;">
+							<a href="http://bulma.io">
+							<img src="../../made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
+							</a>
+						</p>
+					</div>
+				</div>
+			</div>
+		</footer>
+		<script type="text/javascript" src="../../lib/main.js"></script>
+		<script>
+			$('.buildoption').each(function(){
+				var thisoption=$(this).attr('id');
+				$(this).data('fieldid',thisoption);
+				var theseoptions=storyoptions[thisoption];
+				$.each(theseoptions,function(k,v){
+					$('#'+thisoption).append('<option value="'+k+'">'+v+'</option>');
+				});
+			});
+			$('input.otheroption,#mainmap label,#mainmap .help').hide();
+			$('#mainmap').show();
+			var map = L.map('map', {
+				zoom: 19,
+				zoomControl: false
+			}); //Initialize the map
+		
+			//Add a basemap
+			var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+			}).addTo(map);
+			new L.Control.Zoom({ position: 'bottomleft' }).addTo(map);
+			//Add Location Options - override the plugin default popup and circle
+			var locOptions = {
+				drawCircle: false,
+				showPopup: false,
+				follow:true,
+				watch: true,
+				setView: true,
+				enableHighAccuracy: true,
+				position: 'bottomleft'
+			};
+			
+			//Add Location
+			var loc = L.control.locate(locOptions).addTo(map);
+			
+			var marker, circle, lat, lng; //create variables used throughout the map
+			marker=false;
+			var gps = new L.geoJson(null, {
+				pointToLayer: function(feature, latlng) {
+					var thisicon=L.icon({
+						iconUrl: '../../images/icons/story.png',
+						iconSize: [40, 40], // size of the icon
+						iconAnchor: [20, 44], // point of the icon which will correspond to marker's location
+						popupAnchor:[-3, -76] // point from which the popup should open relative to the iconAnchor
+					});
+					return L.marker(latlng, {icon: thisicon});
+				},
+				onEachFeature: function(feature, layer) {
+					var dateinfo=[],description='',popupcontent='';
+					if(feature.properties.date!=='0000-00-00'){
+						dateinfo.push(feature.properties.date);
+					}else{
+						if(feature.properties.timeofday){
+							dateinfo.push(storyoptions.timeofday[feature.properties.timeofday]);
+						}
+						if(feature.properties.timeofyear){
+							dateinfo.push(storyoptions.timeofyear[feature.properties.timeofyear]);
+						}
+						dateinfo.push(feature.properties.year);
+					}
+					if(feature.properties.description!==''){
+						description=feature.properties.description.substring(0, 300);
+					}
+					popupcontent='<h5>'+storyoptions.type[feature.properties.type]+' - '+dateinfo.join(' ')+'</h5><p><strong>'+feature.properties.who+' &#183; '+feature.properties.nicedate+'</strong><br>'+description+'</p><p><a class="button is-success" href="/stories/?story='+feature.properties.identifier+'">Read More</a></p>';
+					layer.bindPopup(popupcontent);
+					$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
+				}
+			});
+			var collisionlayer = new L.geoJson(null,{
+				pointToLayer: function(feature, latlng) {
+					var thisicon=L.icon({
+						iconUrl: '../../images/icons/accidentb.png',
+						iconSize: [32, 32], // size of the icon
+						iconAnchor: [20, 44], // point of the icon which will correspond to marker's location
+						popupAnchor:[-3, -76] // point from which the popup should open relative to the iconAnchor
+					});
+					return L.marker(latlng, {icon: thisicon});
+				},
+				onEachFeature: function(feature, layer) {
+					var popupcontent='<h5>Collision '+feature.properties.CollisionNumber+' - '+feature.properties.crash_date+'</h5><p><a class="button is-success" href="/stories/?collision='+feature.properties.CollisionNumber+'">Read More</a></p>';
+					layer.bindPopup(popupcontent);
+					$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
+				}
+			});
+			var thisstory=getUrlParameter('story');
+			var thiscollision=getUrlParameter('collision');
+			var passkey=getUrlParameter('key');
+			var isstory=false,iscollision=false,collision={};
+			if(thisstory==='' && thiscollision===''){
+				var thispage=location.href.split('?');
+				location.href=thispage[0];
+			}else if(thiscollision!=''){
+				$.ajax({
+					dataType: "json",
+					url: "crashes.json",
+					success: function(data) {
+						$(data.features).each(function(key, data) {
+							if(data.properties.CollisionNumber==thiscollision){
+								iscollision=true;
+								collision=data;
+								render('collision');
+							}
+						});
+						if(!iscollision){
+							render('nocollision');
+						}
+					}
+				});
+			}else{
+				if(thisstory!='' && passkey===false){
+					$.get('https://www.yytsidewalks.info/data.php?j=s&f=story&fid='+thisstory,function(data){
+						switch(data['status']){
+							case "missing":
+							case "nomatch":
+								render('nostory');
+							break;
+							case "ok":
+								isstory=true;
+								fullstory=data;
+								activestories=[];
+								activestories.push(fullstory);
+								render('story');
+							break;
+						}
+					});
+				}else{
+					$.get('https://www.yytsidewalks.info/data.php?j=l&f=story&year=2021',function(data){
+						if(isEmpty(data)){
+							render('none');
+						}else{
+							activestories=data;
+							render('all');
+						}
+					});
+				}
+			}
+			var fullsubmits={},crashyears=['2016','2017'],crashlayers={};
+			function render(e){
+				switch(e){
+					case "none":
+					case "all":
+						loc.start();
+						//setTimeout(function() {
+						if(lat) {
+							return false;
+						}else{
+							loc.stop();
+							map.setView([47.57,-52.71], 14);
+						}
+						//}, 2000);
+					
+						//Add form response points
+						//Add an empty geojson layer for the google sheet points and create the popup
+						$.each(crashyears,function(k,v){
+							$('#crashyears').append('<option value="'+v+'">'+v+'</option>');
+							var crashlayer = new L.geoJson(null,{
+								pointToLayer: function(feature, latlng) {
+									var thisicon=L.icon({
+										iconUrl: '../../images/icons/accidentb.png',
+										iconSize: [32, 32], // size of the icon
+										iconAnchor: [20, 44], // point of the icon which will correspond to marker's location
+										popupAnchor:[-3, -76] // point from which the popup should open relative to the iconAnchor
+									});
+									return L.marker(latlng, {icon: thisicon});
+								},
+								onEachFeature: function(feature, layer) {
+									var popupcontent='<h5>Collision '+feature.properties.CollisionNumber+' - '+feature.properties.crash_date+'</h5><p><a class="button is-success" href="/stories/?collision='+feature.properties.CollisionNumber+'">Read More</a></p>';
+									layer.bindPopup(popupcontent);
+									$('a.leaflet-popup-close-button').html('<i class="fas fa-times"></i>');
+								}
+							});
+							crashlayer.addTo(map);
+							crashlayers[v]=crashlayer;
+							$('#crashyears').change(function(){
+								togglelayers($(this).val());
+							});
+						});
+						$.ajax({
+							dataType: "json",
+							url: "crashes.json",
+							success: function(data) {
+								$(data.features).each(function(key, data) {
+									crashlayers[data.properties.year].addData(data);
+								});
+							}
+						});
+						$('#showall').click(function(){
+							if($(this).data('do')=='hide'){
+								togglelayers($('#crashyears').val());
+								$(this).data('do',$('#crashyears').val());
+								$(this).text('Hide');
+							}else{
+								togglelayers('hide');
+								$(this).data('do','hide');
+								$(this).text('Show');
+							}
+						});
+						$('button.multiselect').click(function(){
+							if($(this).hasClass('is-success')){
+								$(this).removeClass('is-success');
+								if($(this).hasClass('otheroption')){
+									$('#'+$(this).data('otherid')).hide();
+									$('#'+$(this).data('otherid')).val('');
+								}
+							}else{
+								$(this).addClass('is-success');
+								if($(this).hasClass('otheroption')){
+									$('#'+$(this).data('otherid')).show();
+								}
+							}
+						});
+					
+						map.on('locationfound', function(e) {
+							collectData(e);
+						});
+						if(e=='all'){
+							//Grab the google sheet data using tabletop - published to the web not just shared - and use geojson.min.js to convert into proper geojson format
+							var gpsData = GeoJSON.parse(activestories, {Point: ['latitude', 'longitude']});
+							//add that data to the geojson layer created earlier
+							gps.addData(gpsData);
+							gps.addTo(map);
+							makestories(100);
+						}else{
+							$('#stories_1').append('<div class="storybox message"><div class="message-body"><h5>No Stories!</h5><p>There are no stories added yet for 2021!</p><p>Click to <a href="/stories/?do=addstory">add a story</a>.</p></div></div>');
+						}
+						loc.stop();
+					break;
+					
+					case "story":
+						$('#addstory_link, #zoommap,.title,.subtitle,#zoomcontrols,#storieslist').hide();
+						$('#mainmap #map,#mainmap .map').css({'min-height':'300px','height':'300px','max-height':'300px'});
+						var gpsData = GeoJSON.parse(activestories, {Point: ['latitude', 'longitude']});
+						//add that data to the geojson layer created earlier
+						gps.addData(gpsData);
+						gps.addTo(map);
+						
+						var linkinfo=[];
+						if(!isEmpty(fullstory.link) && fullstory.link!=''){
+							$.each(fullstory.link.split('|'),function(k,v){
+								linkinfo.push('<a href="'+v.trim()+'" target="_blank">'+v.trim()+'</a>');
+							});
+						}
+						var dateinfo=[];
+						if(fullstory.date!=='0000-00-00' && !isEmpty(fullstory.date)){
+							dateinfo.push(fullstory.date);
+						}else{
+							if(fullstory.timeofday){
+								dateinfo.push(storyoptions.timeofday[fullstory.timeofday]);
+							}
+							if(fullstory.timeofyear){
+								dateinfo.push(storyoptions.timeofyear[fullstory.timeofyear]);
+							}
+							dateinfo.push(fullstory.year);
+						}
+						$.each(fullstory,function(k,v){
+							if(v==null){
+								fullstory[k]='';
+							}
+						});
+						$('#blurb').html('<h2>Story</h2><h4 id="story_who">'+fullstory['who']+'</h4><h3 id="story_whenwhat">'+storyoptions.type[fullstory.type]+' - '+dateinfo.join(' ')+'</h3><p id="story_description" class="is-size-5">'+fullstory['description']+'</p><p><strong>Sidewalk Conditions:</strong> '+fullstory.sidewalks+'<br><strong>Weather Conditions:</strong> '+fullstory.weather+'<br><strong>Vehicles Involved:</strong> '+fullstory.vehicles+' <br><strong>Impact of the Incident:</strong> '+fullstory.impact+'</p><p><strong>Source:</strong> '+storyoptions.source[fullstory.source]+'<br><strong>Link:</strong> <span id="storylinks">'+linkinfo.join('<br>')+'</span><br><strong>Added:</strong> '+fullstory['modified']+'</p><p><a class="button is-success" href="/stories/?do=addstory">Add a story</a><a class="button is-success" href="?story='+thisstory+'&key=">Edit this story</a></p>');
+
+						map._onResize();
+						map.setView([fullstory.latitude,fullstory.longitude], 18);
+					break;
+					case "collision":
+						$('#addstory_link, #zoommap,.title,.subtitle,#zoomcontrols,#storieslist').hide();
+						$('#mainmap #map,#mainmap .map').css({'min-height':'300px','height':'300px','max-height':'300px'});
+						//var gpsData = GeoJSON.parse(collision, {Point: ['latitude', 'longitude']});
+						//add that data to the geojson layer created earlier
+						collisionlayer.addData(collision);
+						collisionlayer.addTo(map);
+
+						var collisionfields={'CollisionSeverity':'Severity','CollisionConfiguration':'Configuration','WeatherCondition':'Weather','LightCondition':'Lighting','Road1Surface':'Road Surface','Road1Condition':'Road Condition','Vehicle1EventI': 'What Happened (1)','Vehicle1EventII': 'What Happened (2)','TrafficControl1':'Traffic Control','ContributingFactor1Driver1Condition':'Driver Condition Factor','ContributingFactor1Driver1Action': 'Driver Action Factor','Pedestrian1Action':'Pedestrian Action (1)','Pedestrian2Action':'Pedestrian Action (2)','Pedestrian1Location':'Pedestrian (1) Location','Pedestrian2Location':'Pedestrian (2) Location','ContributingFactorPedestrian1Action':'Pedestrian (1) Action Factor','ContributingFactorPedestrian2Action':'Pedestrian (2) Action Factor','ContributingFactorPedestrian1Condition':'Pedestrian (1) Condition Factor','ContributingFactorPedestrian2Condition':'Pedestrian (2) Condition Factor'};
+						var thisblurb=[];
+						$.each(collisionfields,function(k,v){
+							thisblurb.push('<strong>'+v+': </strong>'+collision.properties[k]);
+						});
+						var thisdate=new Date(collision.properties.crash_date);
+						$('#blurb').html('<h2>Collision</h2><h4 id="story_who">'+collision.properties.CollisionNumber+'</h4><h3 id="story_whenwhat">'+thisdate.toDateString()+'</h3><p id="story_description" class="is-size-5">'+thisblurb.join('<br>')+'</p><h4>About this Data</h4><p>For a full explanation of this data see <a href="https://github.com/walkabilly/sj_crashes/blob/master/avalon_collisions.md">https://github.com/walkabilly/sj_crashes/blob/master/avalon_collisions.md</a>. The initial data was compiled by the Road Network Management Group, Newfoundland and Labrador Statistics Agency from the Collision Database Management System (CDMS), Government of Newfoundland and Labrador from RNC Police Reports for 2016 and 2017, and analyzed by Dr. Daniel Fuller of Memorial University of Newfoundland and Labrador. There are notable issues with how the RNC documents collisions or crashes involving pedestrians. As indicated, "There are a number of columns that including information about pedestrians. Unfortunately, that information is also often combined with NA (Not Applicable) in the same cell. It can be hard to tell an pedestrian from an NA."</p>');
+
+						map._onResize();
+						map.setView([collision.geometry.coordinates[1],collision.geometry.coordinates[0]], 18);
+					break;
+					case "none":
+						$('#storieslist,#zoommap,#zoomcontrols').hide();
+					break;
+					case "nostory":
+						$('#storieslist,#zoommap,#zoomcontrols').hide();
+						$('#map').before('<h3>Story '+getUrlParameter('story')+'</h3>');
+						$('#blurb').html('<h5>Incorrect ID</h5><p>No story matches this id!</p>');
+					break;
+					case "nocollision":
+						$('#storieslist,#zoommap,#zoomcontrols').hide();
+						$('#map').before('<h3>Collision '+getUrlParameter('collision')+'</h3>');
+						$('#blurb').html('<h5>Incorrect ID</h5><p>No collision matches this id!</p>');
+					break;
+				}
+			}
+			function collectData(e) {
+				if(marker){
+					map.removeLayer(marker);
+					$('#longitude').val('');
+					$('#latitude').val('');
+				}
+				lat = e.latlng.lat;
+				lng = e.latlng.lng;
+		
+				marker = L.marker(e.latlng).addTo(map);
+				
+				//if you try and open the popup right away the location may not be ready, eventhough it's firing after locationfound
+				setTimeout(function() {
+					loc.stop();
+					var offset = map.getSize().y*0.2;
+					// Then move the map
+					map.panBy(new L.Point(0,-offset), {animate: false});
+				}, 100);
+				$('#longitude').val(lng);
+				$('#latitude').val(lat);
+			}
+			function togglelayers(l){
+				$.each(crashlayers,function(k,v){
+					map.removeLayer(v);
+				});
+				if(l=='all'){
+					$.each(crashlayers,function(k,v){
+						map.addLayer(v);
+					});
+					$('#crashyears').val('all');
+					$('#showall').text('Hide');
+				}else if(l=='hide'){
+					//do nothing
+				}else{
+					map.addLayer(crashlayers[l]);
+					$('#showall').text('Hide');
+				}
+			}
+		</script>
+		<link rel="stylesheet" href="../../css/leaflet.css">
+	</body>
+</html>

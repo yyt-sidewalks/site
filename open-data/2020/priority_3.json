@@ -1,0 +1,12 @@
+{
+"type": "FeatureCollection",
+"name": "Priority 3",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "Hutton Rd", "description": null, "tessellate": 1 }, "geometry": { "type": "LineString", "coordinates": [ [ -52.7038189, 47.5894293 ], [ -52.7033307, 47.5895161 ], [ -52.7027997, 47.589574 ], [ -52.7016302, 47.5896174 ] ] } },
+{ "type": "Feature", "properties": { "Name": "Rowan St (into Churchill Sq)", "description": null, "tessellate": 1 }, "geometry": { "type": "LineString", "coordinates": [ [ -52.722866, 47.574208 ], [ -52.722662, 47.574071 ], [ -52.722287, 47.573882 ], [ -52.721922, 47.573716 ], [ -52.721472, 47.573332 ] ] } },
+{ "type": "Feature", "properties": { "Name": "Bennett Ave", "description": null, "tessellate": 1 }, "geometry": { "type": "LineString", "coordinates": [ [ -52.728407, 47.553049 ], [ -52.727152, 47.552919 ], [ -52.7258, 47.552904 ], [ -52.725574, 47.552868 ], [ -52.724641, 47.55252 ], [ -52.723826, 47.552187 ], [ -52.723313, 47.551833 ] ] } },
+{ "type": "Feature", "properties": { "Name": "Canada Dr - Hamlyn to Columbus", "description": null, "tessellate": 1 }, "geometry": { "type": "LineString", "coordinates": [ [ -52.755739, 47.536879 ], [ -52.75549, 47.537006 ], [ -52.754246, 47.537578 ], [ -52.753698, 47.53773 ], [ -52.752851, 47.537788 ] ] } },
+{ "type": "Feature", "properties": { "Name": "Toronto Jasper Cheshire Sts", "description": null, "tessellate": 1 }, "geometry": { "type": "LineString", "coordinates": [ [ -52.7124341, 47.5954999 ], [ -52.7138933, 47.5980827 ], [ -52.7150842, 47.5975908 ], [ -52.7156528, 47.5981478 ] ] } }
+]
+}
