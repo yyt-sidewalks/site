@@ -1,8 +1,13 @@
 <?php require('header.php');
 $cookie = tmpfile();
 $userAgent = 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31';
-$today=date('Y-m-d');
-$headerurl="https://map.stjohns.ca/snow/SnowRemovalWS/SnowRemovalWS.asmx/GetSubmissions?mode=Production&strStartDateTime=2020-02-01T03%3A30%3A00.000Z&strEndDateTime=".$today."T03%3A30%3A00.000Z";
+if($_GET['d']){
+	$today=$_GET['d'];
+}else{
+	$today=date('Y-m-d');
+}
+https://map.stjohns.ca/snow/SnowRemovalWS/SnowRemovalWS.asmx/GetSubmissions?mode=Production&strStartDateTime=2021-01-20T03%3A30%3A00.000Z&strEndDateTime=2021-01-26T03%3A30%3A00.000Z
+$headerurl="https://map.stjohns.ca/snow/SnowRemovalWS/SnowRemovalWS.asmx/GetSubmissions?mode=Production&strStartDateTime=2021-01-20T03%3A30%3A00.000Z&strEndDateTime=2021-01-26T03%3A30%3A00.000Z";
 $grabheaders = curl_init();
 curl_setopt($grabheaders, CURLOPT_URL, $headerurl);
 curl_setopt($grabheaders, CURLOPT_RETURNTRANSFER, true);
@@ -12,14 +17,16 @@ curl_setopt($grabheaders, CURLOPT_USERAGENT, $userAgent);
 curl_setopt($grabheaders, CURLOPT_COOKIEFILE, $cookie);
 $grabdataheaders=curl_exec($grabheaders);
 curl_close($grabheaders);
-
+print $grabdataheaders;
 if(strlen(trim($grabdataheaders))>0){
+	print "HIIII";
     $cleanheader=trim(preg_replace("/\n\r|\n|\r/ui",'',$grabdataheaders));
     $cleanheader=str_replace('<?xml version="1.0" encoding="utf-8"?>','',$cleanheader);
     $cleanheader=str_replace('<string xmlns="http://SnowRemovalWS.stjohns.com/">','',$cleanheader);
     $cleanheader=trim(str_replace('</string>','',$cleanheader));
     $headerjson=json_decode($cleanheader,true);
     foreach($headerjson as $header){
+		print_r($header);
         $chkplanid=grabinfo('dailyplans','planid',$header['OBJECTID'],'1');
         if(!$chkplanid){
             $featuresurl="https://map.stjohns.ca/mapsrv/rest/services/SnowRemoval/SnowRemoval/FeatureServer/0/query?f=geojson&where=SubmitID%20%3D%20".$header['OBJECTID']."&returnGeometry=true&spatialRel=esriSpatialRelIntersects&outFields=*";

@@ -300,7 +300,7 @@
 							return false;
 						}else{
 							loc.stop();
-							map.setView([47.57,-52.71], 14);
+							map.setView([47.57,-52.71], 13);
 						}
 						//}, 2000);
 					
@@ -379,8 +379,8 @@
 							$('#stories_1').append('<div class="storybox message"><div class="message-body"><h5>No Stories!</h5><p>There are no stories added yet for 2020!</p><p>Click to <a href="/stories/?do=addstory">add a story</a>.</p></div></div>');
 						}
 						loc.stop();
+						$('#showall').click();
 					break;
-					
 					case "story":
 						$('#addstory_link, #zoommap,.title,.subtitle,#zoomcontrols,#storieslist').hide();
 						$('#mainmap #map,#mainmap .map').css({'min-height':'300px','height':'300px','max-height':'300px'});

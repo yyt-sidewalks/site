@@ -510,7 +510,7 @@
 							return false;
 						}else{
 							loc.stop();
-							map.setView([47.57,-52.71], 14);
+							map.setView([47.57,-52.71], 13);
 						}
 						//}, 2000);
 					
@@ -622,6 +622,8 @@
 												fullsubmits[$(this).data('fieldid')]=$(this).val();
 											});
 											var date='',fixdate=false;
+											var today = new Date();
+											var currentyear = today.getFullYear();
 											fullsubmits.date='';
 											date=date+$('#year').val()+'-';
 											date=date+$('#month').val()+'-';
@@ -634,7 +636,7 @@
 													if(parseInt($('#day').val())>31){
 														fixdate=true;
 													}
-													if(parseInt($('#year').val())>2020){
+													if(parseInt($('#year').val())>parseInt(currentyear)){
 														fixdate=true;
 													}
 													fullsubmits.date=date;
@@ -713,6 +715,7 @@
 							$('#stories_1').append('<div class="storybox message"><div class="message-body"><h5>No Stories!</h5><p>There are no stories added yet!</p><p>Click to <a href="/stories/?do=addstory">add a story</a>.</p></div></div>');
 						}
 						loc.stop();
+						$('#showall').click();
 					break;
 					case "edit":
 						$('#storyform').before('<h3>Editing Story '+fullstory.identifier+'</h3>');

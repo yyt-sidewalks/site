@@ -2153,7 +2153,9 @@ a.box:active {
 
 .content.is-large {
   font-size: 1.5rem; }
-
+.content a {
+  word-break: break-all;
+}
 .icon {
   align-items: center;
   display: inline-flex;
